@@ -22,13 +22,13 @@ class Queen < Piece
 end
 
 class WhiteQueen < Queen
-  def initialize
-    super('white')
+  def initialize(board, location)
+    super(board, location, 'white')
   end
 end
 
 class BlackQueen < Queen
-  def initialize
-    super('black')
+  def initialize(board, location)
+    super(board, location, 'black')
   end
 end

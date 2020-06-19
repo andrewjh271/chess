@@ -1,6 +1,12 @@
 require_relative 'piece'
 
 class Rook < Piece
+  private
+
+  attr_reader :has_moved
+
+  public
+
   def self.moves(arr)
     file = arr[0]
     rank = arr[1]
@@ -14,13 +20,7 @@ class Rook < Piece
     moves
   end
 
-  private
-
-  attr_reader :has_moved
-
-  public
-
-  def initialize(color)
+  def initialize(board, location, color)
     super
     @has_moved = false
   end
@@ -35,13 +35,13 @@ class Rook < Piece
 end
 
 class WhiteRook < Rook
-  def initialize
-    super('white')
+  def initialize(board, location)
+    super(board, location, 'white')
   end
 end
 
 class BlackRook < Rook
-  def initialize
-    super('black')
+  def initialize(board, location)
+    super(board, location, 'black')
   end
 end

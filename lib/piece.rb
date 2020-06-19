@@ -2,11 +2,15 @@ class Piece
   
   private 
   
-  attr_reader :color
+  attr_reader :board, :location, :color
 
   public
 
-  def initialize(color)
+  attr_reader :valid_moves, :valid_captures
+
+  def initialize(board, location, color)
+    @board = board
+    @location = location
     @color = color
   end
 

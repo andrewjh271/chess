@@ -20,13 +20,13 @@ class Bishop < Piece
 end
 
 class WhiteBishop < Bishop
-  def initialize
-    super('white')
+  def initialize(board, location)
+    super(board, location, 'white')
   end
 end
 
 class BlackBishop < Bishop
-  def initialize
-    super('black')
+  def initialize(board, location)
+    super(board, location, 'black')
   end
 end

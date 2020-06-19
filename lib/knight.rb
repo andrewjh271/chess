@@ -1,9 +1,13 @@
 require_relative 'piece'
 
 class Knight < Piece
-  def self.moves(arr)
-    file = arr[0]
-    rank = arr[1]
+
+  # attr_reader :valid_moves
+
+  def all_moves
+    # including those that go off board
+    file = location[0]
+    rank = location[1]
     moves = []
     (-2..2).each do |i|
       next if i.zero?
@@ -15,19 +19,32 @@ class Knight < Piece
     moves
   end
 
+  def in_bounds_moves
+    all_moves.select { |move| move[0].between?(0, board.MAX) && move[1].between?(0, board.MAX) }
+  end
+
+  def set_valid_moves
+    # (non-captures)
+    @valid_moves = in_bounds_moves.reject do |move|
+      board.squares[move[0], move[1]]
+    end
+  end
+
+
+
   def to_s
     white? ? "♘".magenta : "♘".black
   end
 end
 
 class WhiteKnight < Knight
-  def initialize
-    super('white')
+  def initialize(board, location)
+    super(board, location, 'white')
   end
 end
 
 class BlackKnight < Knight
-  def initialize
-    super('black')
+  def initialize(board, location)
+    super(board, location, 'black')
   end
 end
