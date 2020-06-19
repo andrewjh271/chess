@@ -2,8 +2,6 @@ require_relative 'piece'
 
 class Knight < Piece
 
-  # attr_reader :valid_moves
-
   def all_moves
     # including those that go off board
     file = location[0]
@@ -20,17 +18,23 @@ class Knight < Piece
   end
 
   def in_bounds_moves
-    all_moves.select { |move| move[0].between?(0, board.MAX) && move[1].between?(0, board.MAX) }
+    all_moves.select { |move| move[0].between?(0, Board::MAX) && move[1].between?(0, Board::MAX) }
   end
 
   def set_valid_moves
     # (non-captures)
     @valid_moves = in_bounds_moves.reject do |move|
-      board.squares[move[0], move[1]]
+      board.squares[move[0]][move[1]]
     end
   end
 
-
+  def set_valid_captures
+    # does not safeguard against capturing opponents king b/c it cannot be in check
+    @valid_captures = in_bounds_moves.reject do |move|
+      board.squares[move[0]][move[1]].nil? ||
+      board.squares[move[0]][move[1]].white? == white?
+    end
+  end
 
   def to_s
     white? ? "♘".magenta : "♘".black

@@ -12,6 +12,8 @@ class Piece
     @board = board
     @location = location
     @color = color
+    @valid_moves = []
+    @valid_captures = []
   end
 
   def white?
