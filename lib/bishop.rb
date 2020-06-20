@@ -1,17 +1,28 @@
 require_relative 'piece'
+require_relative 'direction_set'
 
 class Bishop < Piece
-  def self.moves(arr)
-    file = arr[0]
-    rank = arr[1]
-    moves = []
-    (-7..7).each do |i|
-      next if i.zero?
+  include DirectionSet
 
-      moves << [file + i, rank + i]
-      moves << [file + i, rank - i]
-    end
-    moves
+  private
+
+  attr_reader :directions
+
+  public
+
+  def initialize(board, location, color)
+    super
+    @directions = [-1, 1].repeated_permutation(2).to_a
+  end
+
+  def set_valid_moves
+    # non-captures
+    @valid_moves = find_valid_moves(directions)
+  end
+
+  def set_valid_captures
+    # does not safeguard against capturing opponents king b/c it cannot be in check
+    @valid_captures = find_valid_captures(directions)
   end
 
   def to_s

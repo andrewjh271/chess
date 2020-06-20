@@ -1,14 +1,38 @@
 require './lib/bishop.rb'
+require './lib/board.rb'
 
 describe Bishop do
-  describe '.moves' do
-    it 'returns all possible moves from a given set of coordinates' do
-      expect(Bishop.moves([5, 6])).to contain_exactly(
-        [6, 7], [7, 8], [8, 9], [9, 10], [10, 11], [11, 12], [12, 13],
-        [4, 5], [3, 4], [2, 3], [1, 2], [0, 1], [-1, 0], [-2, -1],
-        [4, 7], [3, 8], [2, 9], [1, 10], [0, 11], [-1, 12], [-2, 13],
-        [6, 5], [7, 4], [8, 3], [9, 2], [10, 1], [11, 0], [12, -1]
+  attr_reader :board
+
+  before { @board = Board.new }
+
+  describe '#set_valid_moves' do
+    it 'sets @valid_moves' do
+      bishop = Bishop.new(board, [6, 2], 'whie')
+      bishop.set_valid_moves
+      expect(bishop.valid_moves).to contain_exactly(
+        [5, 3], [4, 4], [3, 5], [7, 3]
       )
+    end
+  end
+
+  describe '#set_valid_captures' do
+    it 'sets @valid_captures' do
+      bishop = Bishop.new(board, [2, 3], 'black')
+      bishop.set_valid_captures
+      expect(bishop.valid_captures).to contain_exactly([0, 1], [4, 1])
+    end
+
+    it 'sets @valid_captures' do
+      bishop = Bishop.new(board, [7, 5], 'black')
+      bishop.set_valid_captures
+      expect(bishop.valid_captures).to contain_exactly([3, 1])
+    end
+
+    it 'sets @valid_captures' do
+      bishop = Bishop.new(board, [0, 3], 'white')
+      bishop.set_valid_captures
+      expect(bishop.valid_captures).to contain_exactly([3, 6])
     end
   end
 end
