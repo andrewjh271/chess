@@ -1,11 +1,20 @@
 require_relative 'piece'
+require_relative 'direction_set'
 
 class Rook < Piece
+  include DirectionSet
+
   private
 
   attr_reader :has_moved, :directions
 
   public
+
+  def initialize(board, location, color)
+    super
+    @has_moved = false
+    @directions = [[0, 1], [1, 0], [0, -1], [-1, 0]]
+  end
 
   # not needed  (I think...)
   def all_moves
@@ -28,51 +37,12 @@ class Rook < Piece
 
   def set_valid_moves
     # non-captures
-    file = location[0]
-    rank = location[1]
-    directions.each do |direction|
-      new_file = file + direction[0]
-      new_rank = rank + direction[1]
-      while new_file.between?(0, Board::MAX) && 
-            new_rank.between?(0, Board::MAX) &&
-            board.squares[new_file][new_rank].nil?
-        @valid_moves << [new_file, new_rank]
-        new_file += direction[0]
-        new_rank += direction[1]
-      end
-    end
+    @valid_moves = find_valid_moves(directions)
   end
 
   def set_valid_captures
     # does not safeguard against capturing opponents king b/c it cannot be in check
-    file = location[0]
-    rank = location[1]
-    directions.each do |direction|
-      new_file = file + direction[0]
-      new_rank = rank + direction[1]
-      while new_file.between?(0, Board::MAX) && 
-            new_rank.between?(0, Board::MAX) &&
-            board.squares[new_file][new_rank].nil?
-        new_file += direction[0]
-        new_rank += direction[1]
-      end
-      if new_file.between?(0, Board::MAX) && 
-         new_rank.between?(0, Board::MAX) &&
-         board.squares[new_file][new_rank].white? != white?
-        valid_captures << [new_file, new_rank]
-      end
-    end
-  end
-
-
-
-
-
-
-  def initialize(board, location, color)
-    super
-    @has_moved = false
-    @directions = [[0, 1], [1, 0], [0, -1], [-1, 0]]
+    @valid_captures = find_valid_captures(directions)
   end
 
   def to_s
