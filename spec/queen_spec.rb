@@ -1,18 +1,33 @@
 require './lib/queen.rb'
+require './lib/board.rb'
 
 describe Queen do
-  describe '.moves' do
-    it 'returns all possible moves from a given set of coordinates' do
-      expect(Queen.moves([0, 3])).to contain_exactly(
-        [0, -4], [0, -3], [0, -2], [0, -1], [0, 0], [0, 1], [0, 2],
-        [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9], [0, 10],
-        [-7, 3], [-6, 3], [-5, 3], [-4, 3], [-3, 3], [-2, 3], [-1, 3],
-        [1, 3], [2, 3], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3],
-        [1, 4], [2, 5], [3, 6], [4, 7], [5, 8], [6, 9], [7, 10],
-        [-1, 2], [-2, 1], [-3, 0], [-4, -1], [-5, -2], [-6, -3], [-7, -4],
-        [-1, 4], [-2, 5], [-3, 6], [-4, 7], [-5, 8], [-6, 9], [-7, 10],
-        [1, 2], [2, 1], [3, 0], [4, -1], [5, -2], [6, -3], [7, -4]
+  attr_reader :board
+
+  before { @board = Board.new }
+
+  describe '#set_valid_moves' do
+    it 'sets @valid_moves' do
+      queen = Queen.new(board, [3, 2], 'white')
+      queen.set_valid_moves
+      expect(queen.valid_moves).to contain_exactly(
+        [0, 2], [1, 2], [2, 2], [4, 2], [5, 2], [6, 2], [7, 2], [2, 3],
+        [1, 4], [0, 5], [3, 3], [3, 4], [3, 5], [4, 3], [5, 4], [6, 5]
       )
+    end
+  end
+
+  describe '#set_valid_captures' do
+    it 'sets @valid_captures' do
+      queen = Queen.new(board, [1, 5], 'white')
+      queen.set_valid_captures
+      expect(queen.valid_captures).to contain_exactly([0, 6], [1, 6], [2, 6])
+    end
+
+    it 'sets @valid_captures' do
+      queen = Queen.new(board, [5, 3], 'black')
+      queen.set_valid_captures
+      expect(queen.valid_captures).to contain_exactly([3, 1], [5, 1], [7, 1])
     end
   end
 end
