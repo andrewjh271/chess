@@ -61,24 +61,52 @@ class Board
             # when /[a-h]x/ then white_to_move ? WhitePawn : BlackPawn
             else white_to_move ? WhitePawn : BlackPawn
             end
-    target = to_coords(notation.slice!(/[a-h][1-8]/))
+    target_square = to_coords(notation.slice!(/[a-h][1-8]/))
     action = notation.slice!('x') ? 'capture' : 'move'
     candidates = []
     each_piece do |piece|
-      if action == 'capture'
-        candidates << piece if piece.valid_captures.include? target && piece.is_a?(target_piece)
-      else
-        candidates << piece if piece.is_a?(target_piece) && piece.valid_moves.include?(target)
-      end
+      next unless piece.is_a? target_piece
+
+      candidates << piece if action == 'capture' && piece.valid_captures.include?(target_square)
+      candidates << piece if action == 'move' && piece.valid_moves.include?(target_square)
     end
+    # binding.pry
     p notation
     p target_piece
-    p target
+    p target_square
     candidates.each { |c| puts "#{c}-#{to_alg(c.location)} "}
     puts
+    if candidates.length == 1
+      piece = candidates.first
+    else
+      piece = disambiguation(candidates, notation.slice!(0))
+    end
+    if piece
+      enter_valid_move(piece, target_square)
+    else
+      puts "Not a valid move"
+    end
   end
 
   private
+
+  def enter_valid_move(piece, target_square)
+    squares[piece.location[0]][piece.location[1]] = nil
+    squares[target_square[0]][target_square[1]] = piece
+    piece.location = [target_square[0], target_square[1]]
+    piece.has_moved = true if piece.respond_to?(:has_moved)
+    display
+    @white_to_move = white_to_move ? false : true
+    set_moves_and_captures
+  end
+
+  def disambiguation(candidates, selection)
+    if selection.match(/[a-h]/)
+      piece = candidates.find { |c| c.location[0] == selection.ord - 97 }
+    elsif selection.match(/[1-8]/)
+      piece = candidates.find { |c| c.location[1] == selection.to_i - 1 }
+    end
+  end
 
   def fill_board
     squares[0][0] = WhiteRook.new(self, [0, 0])
