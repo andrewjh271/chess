@@ -4,9 +4,11 @@ require 'pry'
 class Pawn < Piece
   private
 
-  attr_reader :color, :has_moved
+  attr_reader :color
 
   public
+
+  attr_accessor :has_moved
 
   def initialize(board, location, color)
     super

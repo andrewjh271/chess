@@ -6,9 +6,11 @@ class Rook < Piece
 
   private
 
-  attr_reader :has_moved, :directions
+  attr_reader :directions
 
   public
+
+  attr_accessor :has_moved
 
   def initialize(board, location, color)
     super

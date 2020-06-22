@@ -3,9 +3,11 @@ require_relative 'piece'
 class King < Piece
   private
 
-  attr_reader :in_check, :has_moved, :directions
+  attr_reader :in_check, :directions
 
   public
+
+  attr_accessor :has_moved
 
   def initialize(board, location, color)
     super
