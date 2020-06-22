@@ -7,7 +7,8 @@ class Piece
 
   public
 
-  attr_reader :valid_moves, :valid_captures, :location
+  attr_reader :valid_moves, :valid_captures
+  attr_accessor :location
 
   def initialize(board, location, color)
     @board = board
