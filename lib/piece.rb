@@ -2,11 +2,12 @@ class Piece
   
   private 
   
-  attr_reader :board, :location, :color
+  attr_reader :board, :color
+  # :location
 
   public
 
-  attr_reader :valid_moves, :valid_captures
+  attr_reader :valid_moves, :valid_captures, :location
 
   def initialize(board, location, color)
     @board = board
@@ -19,4 +20,5 @@ class Piece
   def white?
     color == 'white'
   end
+  
 end
