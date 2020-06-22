@@ -1,7 +1,10 @@
+require_relative 'piece'
+require 'pry'
+
 class Pawn < Piece
   private
 
-  attr_reader :color
+  attr_reader :color, :has_moved
 
   public
 
@@ -17,32 +20,60 @@ class Pawn < Piece
   def has_moved?
     has_moved
   end
+
+  def set_valid_moves(dir)
+    moves = []
+    file = location[0]
+    rank = location[1] + 1 * dir
+    unless has_moved?
+      moves << [file, rank + 1 * dir] if board.squares[file][rank + 1 * dir].nil? &&
+                                         board.squares[file][rank].nil?
+    end
+    moves << [file, rank] if rank.between?(0, Board::MAX) && board.squares[file][rank].nil?
+    @has_moved = true
+    @valid_moves = moves
+  end
+
+  def set_valid_captures(dir)
+    captures = []
+    file = location[0] - 1
+    rank = location[1] + 1 * dir
+    if rank.between?(0, Board::MAX)
+      captures << [file, rank] if file.between?(0, Board::MAX) && board.squares[file][rank] &&
+                                  board.squares[file][rank].white? != white?
+      file = location[0] + 1
+      captures << [file, rank] if file.between?(0, Board::MAX) && board.squares[file][rank] &&
+                                  board.squares[file][rank].white? != white?
+    end
+    @has_moved = true
+    @valid_captures = captures
+  end
 end
 
 class WhitePawn < Pawn
-  def self.moves(arr)
-
-  end
-
-  def self.captures(arr)
-
-  end
-
   def initialize(board, location)
     super(board, location, 'white')
+  end
+
+  def set_valid_moves
+    super(1)
+  end
+
+  def set_valid_captures
+    super(1)
   end
 end
 
 class BlackPawn < Pawn
-  def self.moves(arr)
-
-  end
-
-  def self.captures(arr)
-
-  end
-
   def initialize(board, location)
     super(board, location, 'black')
+  end
+
+  def set_valid_moves
+    super(-1)
+  end
+
+  def set_valid_captures
+    super(-1)
   end
 end
