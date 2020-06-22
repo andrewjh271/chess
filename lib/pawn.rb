@@ -19,20 +19,15 @@ class Pawn < Piece
     white? ? '♙'.magenta : '♙'.black
   end
 
-  def has_moved?
-    has_moved
-  end
-
   def set_valid_moves(dir)
     moves = []
     file = location[0]
     rank = location[1] + 1 * dir
-    unless has_moved?
+    unless has_moved
       moves << [file, rank + 1 * dir] if board.squares[file][rank + 1 * dir].nil? &&
                                          board.squares[file][rank].nil?
     end
     moves << [file, rank] if rank.between?(0, Board::MAX) && board.squares[file][rank].nil?
-    @has_moved = true
     @valid_moves = moves
   end
 
@@ -47,7 +42,6 @@ class Pawn < Piece
       captures << [file, rank] if file.between?(0, Board::MAX) && board.squares[file][rank] &&
                                   board.squares[file][rank].white? != white?
     end
-    @has_moved = true
     @valid_captures = captures
   end
 end
