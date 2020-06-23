@@ -30,9 +30,7 @@ class Board
   end
 
   def display
-    temp_moves = move_list.clone
-    # binding.pry
-    print_line = Proc.new do |i, k, rank|
+    print_line = proc do |i, k, rank|
       8.times do |j|
         piece = squares[j][rank] if rank
         print (i + j).even? ?
@@ -93,12 +91,6 @@ class Board
       candidates << piece if action == 'capture' && piece.valid_captures.include?(target_square)
       candidates << piece if action == 'move' && piece.valid_moves.include?(target_square)
     end
-    # binding.pry
-    # p notation
-    # p target_piece
-    # p target_square
-    # candidates.each { |c| puts "#{c}-#{to_alg(c.location)} "}
-    # puts
     if candidates.length == 1
       piece = candidates.first
     else
@@ -119,9 +111,7 @@ class Board
     piece.location = [target_square[0], target_square[1]]
     piece.has_moved = true if piece.respond_to?(:has_moved)
     if white_to_move
-      # binding.pry
-      extra_space = move_number < 10 ? ' ' : ''
-      @move_list << +"#{move_number}. #{extra_space}#{input}"
+      @move_list << +"#{move_number}. #{' ' if move_number < 10}#{input}"
       @white_to_move = false
     else
       justify = 10 - move_list.last.length
@@ -130,7 +120,6 @@ class Board
       @move_number += 1
     end
     display
-    # @white_to_move = white_to_move ? false : true
     set_moves_and_captures
   end
 
