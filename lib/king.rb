@@ -47,7 +47,7 @@ class King < Piece
   end
 
   def to_s
-    white? ? "♔".magenta : "♔".black
+    white? ? "♔".gray : "♔".black
   end
 
   def in_check?

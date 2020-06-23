@@ -16,7 +16,7 @@ class Pawn < Piece
   end
 
   def to_s
-    white? ? '♙'.magenta : '♙'.black
+    white? ? '♙'.gray : '♙'.black
   end
 
   def set_valid_moves(dir)

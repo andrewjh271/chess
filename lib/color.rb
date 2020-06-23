@@ -16,7 +16,6 @@ class String
   def bg_magenta;     "\e[45m#{self}\e[0m" end
   def bg_cyan;        "\e[46m#{self}\e[0m" end
   def bg_gray;        "\e[47m#{self}\e[0m" end
-  def bg_test;        "\e[15m#{self}\e[0m" end
   
   def bold;           "\e[1m#{self}\e[22m" end
   def italic;         "\e[3m#{self}\e[23m" end

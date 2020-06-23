@@ -26,7 +26,7 @@ class Bishop < Piece
   end
 
   def to_s
-    white? ? "♗".magenta : "♗".black
+    white? ? "♗".gray : "♗".black
   end
 end
 
