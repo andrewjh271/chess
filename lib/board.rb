@@ -30,36 +30,14 @@ class Board
   end
 
   def display
-    print_line = proc do |i, k, rank|
-      8.times do |j|
-        piece = squares[j][rank] if rank
-        print (i + j).even? ?
-          "   #{piece || ' '}".bg_cyan + "   ".bg_cyan :
-          "   #{piece || ' '}".bg_blue + "   ".bg_blue
-      end
-      display_moves(i * 3 + k)
-      puts
-    end
     8.times do |i|
-      print '  '
-      print_line.call(i, 0)
+      print_line(i, 0)
       print "#{8 - i} "
-      print_line.call(i, 1, 7 - i)
-      print '  '
-      print_line.call(i, 2)
+      print_line(i, 1, 7 - i)
+      print_line(i, 2)
     end
-    print '  '
-    8.times { |i| print "   #{(i + 97).chr}   " }
-    puts
-    puts
-  end
-
-  def display_moves(line)
-    print " #{move_list[line]}" if move_number > line
-    print "| #{move_list[line] + 25}" if move_number > line + 25
-    print "| #{move_list[line] + 50}" if move_number > line + 50
-    print "| #{move_list[line] + 75}" if move_number > line + 75
-    print "| #{move_list[line] + 100}" if move_number > line + 100
+    8.times { |i| print "     #{(i + 97).chr} " }
+    2.times { puts }
   end
 
   def each_piece
@@ -129,6 +107,28 @@ class Board
     elsif selection.match(/[1-8]/)
       piece = candidates.find { |c| c.location[1] == selection.to_i - 1 }
     end
+  end
+
+  def print_line(i, k, rank = nil)
+    print '  ' unless rank
+    8.times do |j|
+      piece = squares[j][rank] if rank
+      if (i + j).even?
+        print "   #{piece || ' '}".bg_cyan + "   ".bg_cyan
+      else
+        print "   #{piece || ' '}".bg_blue + "   ".bg_blue
+      end
+    end
+    display_moves(i * 3 + k)
+    puts
+  end
+
+  def display_moves(line)
+    print " #{move_list[line]}" if move_number > line
+    print "| #{move_list[line] + 25}" if move_number > line + 25
+    print "| #{move_list[line] + 50}" if move_number > line + 50
+    print "| #{move_list[line] + 75}" if move_number > line + 75
+    print "| #{move_list[line] + 100}" if move_number > line + 100
   end
 
   def fill_board
