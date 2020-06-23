@@ -22,24 +22,45 @@ board.display
 # print 'Na3'
 # board.move('Na3')
 # puts
-print 'd4: '
+
 board.move('d4')
-puts
-print 'd5: '
 board.move('d5')
-puts
-print 'c4: '
+
 board.move('c4')
-puts
-print 'Nf6: '
+board.move('c6')
+
+board.move('Nc3')
 board.move('Nf6')
-puts
-print 'Nf3'
+
 board.move('Nf3')
-puts
-print 'dxc4'
+board.move('e6')
+
+board.move('Bg5')
+board.move('h6')
+
+board.move('Bh4')
 board.move('dxc4')
-puts
-print 'Nbd2: '
-board.move('Nbd2')
-puts
+
+board.move('e4')
+board.move('g5')
+
+board.move('Bg3')
+board.move('b5')
+
+board.move('Be2')
+board.move('Bb7')
+
+board.move('e5')
+board.move('Nd5')
+
+board.move('Nd2')
+board.move('Nd7')
+
+board.move('a4')
+board.move('Qb6')
+
+board.move('Nde4')
+board.move('a5')
+# move 14... (main line semi-slav)
+# board.move('dxc4')
+# board.move('Nbd2')

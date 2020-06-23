@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'escape_sequences'
 require_relative 'color'
 require_relative 'knight'
@@ -13,12 +15,14 @@ class Board
   
   include EscapeSequences
 
-  attr_reader :squares, :white_to_move
+  attr_reader :squares, :white_to_move, :move_list, :move_number
   
   MAX = 7
 
   def initialize
     @squares = []
+    @move_list = []
+    @move_number = 1
     @white_to_move = true
     8.times { |i| @squares[i] = [] }
     fill_board
@@ -26,20 +30,38 @@ class Board
   end
 
   def display
-    print_line = Proc.new do |i, rank|
+    temp_moves = move_list.clone
+    # binding.pry
+    print_line = Proc.new do |i, k, rank|
       8.times do |j|
         piece = squares[j][rank] if rank
         print (i + j).even? ?
           "   #{piece || ' '}".bg_cyan + "   ".bg_cyan :
-          "   #{piece || ' '}".bg_gray + "   ".bg_gray
+          "   #{piece || ' '}".bg_blue + "   ".bg_blue
       end
+      display_moves(i * 3 + k)
       puts
     end
     8.times do |i|
-      print_line.call(i)
-      print_line.call(i, 7 - i)
-      print_line.call(i)
+      print '  '
+      print_line.call(i, 0)
+      print "#{8 - i} "
+      print_line.call(i, 1, 7 - i)
+      print '  '
+      print_line.call(i, 2)
     end
+    print '  '
+    8.times { |i| print "   #{(i + 97).chr}   " }
+    puts
+    puts
+  end
+
+  def display_moves(line)
+    print " #{move_list[line]}" if move_number > line
+    print "| #{move_list[line] + 25}" if move_number > line + 25
+    print "| #{move_list[line] + 50}" if move_number > line + 50
+    print "| #{move_list[line] + 75}" if move_number > line + 75
+    print "| #{move_list[line] + 100}" if move_number > line + 100
   end
 
   def each_piece
@@ -50,7 +72,8 @@ class Board
     end
   end
 
-  def move(notation)
+  def move(input)
+    notation = input.clone
     # origionally /[KQRBN]|[a-h]x/
     target_piece = case notation.slice!(/[KQRBN]/)
             when 'K' then white_to_move ? WhiteKing : BlackKing
@@ -71,18 +94,18 @@ class Board
       candidates << piece if action == 'move' && piece.valid_moves.include?(target_square)
     end
     # binding.pry
-    p notation
-    p target_piece
-    p target_square
-    candidates.each { |c| puts "#{c}-#{to_alg(c.location)} "}
-    puts
+    # p notation
+    # p target_piece
+    # p target_square
+    # candidates.each { |c| puts "#{c}-#{to_alg(c.location)} "}
+    # puts
     if candidates.length == 1
       piece = candidates.first
     else
       piece = disambiguation(candidates, notation.slice!(0))
     end
     if piece
-      enter_valid_move(piece, target_square)
+      enter_valid_move(piece, target_square, input)
     else
       puts "Not a valid move"
     end
@@ -90,13 +113,24 @@ class Board
 
   private
 
-  def enter_valid_move(piece, target_square)
+  def enter_valid_move(piece, target_square, input)
     squares[piece.location[0]][piece.location[1]] = nil
     squares[target_square[0]][target_square[1]] = piece
     piece.location = [target_square[0], target_square[1]]
     piece.has_moved = true if piece.respond_to?(:has_moved)
+    if white_to_move
+      # binding.pry
+      extra_space = move_number < 10 ? ' ' : ''
+      @move_list << +"#{move_number}. #{extra_space}#{input}"
+      @white_to_move = false
+    else
+      justify = 10 - move_list.last.length
+      @move_list.last << "#{' ' * justify}#{input}"
+      @white_to_move = true
+      @move_number += 1
+    end
     display
-    @white_to_move = white_to_move ? false : true
+    # @white_to_move = white_to_move ? false : true
     set_moves_and_captures
   end
 
