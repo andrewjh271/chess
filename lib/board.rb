@@ -15,7 +15,7 @@ class Board
   
   include EscapeSequences
 
-  attr_reader :squares, :white_to_move, :move_list, :move_number
+  attr_reader :squares, :white_to_move, :move_list, :move_number, :flip
   
   MAX = 7
 
@@ -24,6 +24,7 @@ class Board
     @move_list = []
     @move_number = 1
     @white_to_move = true
+    @flip = false
     8.times { |i| @squares[i] = [] }
     fill_board
     set_moves_and_captures
@@ -31,13 +32,22 @@ class Board
 
   def display
     8.times do |i|
+      m = flip ? i : 7 - i
       print_line(i, 0)
-      print "#{8 - i} "
-      print_line(i, 1, 7 - i)
+      print "#{m + 1} "
+      print_line(i, 1, m)
       print_line(i, 2)
     end
-    8.times { |i| print "     #{(i + 97).chr} " }
+    8.times do |i|
+      m = flip ? 7 - i : i
+      print "     #{(m + 97).chr} "
+    end
     2.times { puts }
+  end
+
+  def flip_board
+    @flip = flip ? false : true
+    display
   end
 
   def each_piece
@@ -112,7 +122,8 @@ class Board
   def print_line(i, k, rank = nil)
     print '  ' unless rank
     8.times do |j|
-      piece = squares[j][rank] if rank
+      m = flip ? 7 - j : j
+      piece = squares[m][rank] if rank
       if (i + j).even?
         print "   #{piece || ' '}".bg_cyan + "   ".bg_cyan
       else
