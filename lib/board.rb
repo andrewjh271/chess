@@ -65,18 +65,18 @@ class Board
       castle_queenside
     else
       notation = input.clone
-      # origionally /[KQRBN]|[a-h]x/
+      # removes parts of notation as they are used, and checks to make sure it's empty at end
       target_piece = case notation.slice!(/[KQRBN]/)
               when 'K' then white_to_move ? WhiteKing : BlackKing
               when 'Q' then white_to_move ? WhiteQueen : BlackQueen
               when 'R' then white_to_move ? WhiteRook : BlackRook
               when 'B' then white_to_move ? WhiteBishop : BlackBishop
               when 'N' then white_to_move ? WhiteKnight : BlackKnight
-              # when /[a-h]x/ then white_to_move ? WhitePawn : BlackPawn
               else white_to_move ? WhitePawn : BlackPawn
               end
       target_square = to_coords(notation.slice!(/[a-h][1-8]/))
       action = notation.slice!('x') ? 'capture' : 'move'
+      # candidates deals with case where multiple target pieces could move to target square
       candidates = []
       each_piece do |piece|
         next unless piece.is_a? target_piece
@@ -87,6 +87,7 @@ class Board
       if candidates.length == 1
         piece = candidates.first
       else
+        # finds which target piece is intended
         piece = disambiguation(candidates, notation.slice!(0))
       end
       if piece
@@ -114,8 +115,6 @@ class Board
     squares[target_square[0]][target_square[1]] = piece
     piece.location = [target_square[0], target_square[1]]
 
-
-
     update_move_list(input)
     piece.has_moved = true if piece.respond_to?(:has_moved)
     @white_to_move = white_to_move ? false : true
@@ -128,6 +127,7 @@ class Board
       @move_list << +"#{move_number}. #{' ' if move_number < 10}#{input}"
     else
       justify = 10 - move_list.last.length
+      # need to add justify_end as well
       @move_list.last << "#{' ' * justify}#{input}"
       @move_number += 1
     end
@@ -213,17 +213,20 @@ class Board
   def validate_castle(targets, empty_squares)
     return false if in_check?
     targets.each { |t| return false if squares[t[0]][t[1]].has_moved }
+    # ensures squares between are empty
     empty_squares.each { |e| return false unless squares[e[0]][e[1]].nil? }
 
     each_piece do |piece|
       next if piece.white? == white_to_move
 
+      # ensures king won't move into check
       return false unless (piece.valid_moves & empty_squares.first(2)).empty?
     end
     true
   end
 
   def castle(king, rook, new_king, new_rook, input)
+    # castling had its own process for ensuring king is not in and will not move into check
     squares[new_king[0]][new_king[1]] = squares[king[0]][king[1]]
     squares[king[0]][king[1]] = nil
     squares[new_rook[0]][new_rook[1]] = squares[rook[0]][rook[1]]
