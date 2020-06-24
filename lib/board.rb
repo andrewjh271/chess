@@ -59,36 +59,52 @@ class Board
   end
 
   def move(input)
-    notation = input.clone
-    # origionally /[KQRBN]|[a-h]x/
-    target_piece = case notation.slice!(/[KQRBN]/)
-            when 'K' then white_to_move ? WhiteKing : BlackKing
-            when 'Q' then white_to_move ? WhiteQueen : BlackQueen
-            when 'R' then white_to_move ? WhiteRook : BlackRook
-            when 'B' then white_to_move ? WhiteBishop : BlackBishop
-            when 'N' then white_to_move ? WhiteKnight : BlackKnight
-            # when /[a-h]x/ then white_to_move ? WhitePawn : BlackPawn
-            else white_to_move ? WhitePawn : BlackPawn
-            end
-    target_square = to_coords(notation.slice!(/[a-h][1-8]/))
-    action = notation.slice!('x') ? 'capture' : 'move'
-    candidates = []
-    each_piece do |piece|
-      next unless piece.is_a? target_piece
+    if input == '0-0'
+      castle_kingside
+    elsif input == '0-0-0'
+      castle_queenside
+    else
+      notation = input.clone
+      # origionally /[KQRBN]|[a-h]x/
+      target_piece = case notation.slice!(/[KQRBN]/)
+              when 'K' then white_to_move ? WhiteKing : BlackKing
+              when 'Q' then white_to_move ? WhiteQueen : BlackQueen
+              when 'R' then white_to_move ? WhiteRook : BlackRook
+              when 'B' then white_to_move ? WhiteBishop : BlackBishop
+              when 'N' then white_to_move ? WhiteKnight : BlackKnight
+              # when /[a-h]x/ then white_to_move ? WhitePawn : BlackPawn
+              else white_to_move ? WhitePawn : BlackPawn
+              end
+      target_square = to_coords(notation.slice!(/[a-h][1-8]/))
+      action = notation.slice!('x') ? 'capture' : 'move'
+      candidates = []
+      each_piece do |piece|
+        next unless piece.is_a? target_piece
+  
+        candidates << piece if action == 'capture' && piece.valid_captures.include?(target_square)
+        candidates << piece if action == 'move' && piece.valid_moves.include?(target_square)
+      end
+      if candidates.length == 1
+        piece = candidates.first
+      else
+        piece = disambiguation(candidates, notation.slice!(0))
+      end
+      if piece
+        enter_valid_move(piece, target_square, input)
+      else
+        puts "Not a valid move"
+      end
+    end
+  end
 
-      candidates << piece if action == 'capture' && piece.valid_captures.include?(target_square)
-      candidates << piece if action == 'move' && piece.valid_moves.include?(target_square)
+  def in_check?
+    target = white_to_move ? WhiteKing : BlackKing
+    each_piece do |piece|
+      next if piece.white? == white_to_move
+      # binding.pry
+      piece.valid_captures.each { |c| return true if squares[c[0]][c[1]].is_a? target }
     end
-    if candidates.length == 1
-      piece = candidates.first
-    else
-      piece = disambiguation(candidates, notation.slice!(0))
-    end
-    if piece
-      enter_valid_move(piece, target_square, input)
-    else
-      puts "Not a valid move"
-    end
+    false
   end
 
   private
@@ -97,18 +113,24 @@ class Board
     squares[piece.location[0]][piece.location[1]] = nil
     squares[target_square[0]][target_square[1]] = piece
     piece.location = [target_square[0], target_square[1]]
+
+
+
+    update_move_list(input)
     piece.has_moved = true if piece.respond_to?(:has_moved)
+    @white_to_move = white_to_move ? false : true
+    display
+    set_moves_and_captures
+  end
+
+  def update_move_list(input)
     if white_to_move
       @move_list << +"#{move_number}. #{' ' if move_number < 10}#{input}"
-      @white_to_move = false
     else
       justify = 10 - move_list.last.length
       @move_list.last << "#{' ' * justify}#{input}"
-      @white_to_move = true
       @move_number += 1
     end
-    display
-    set_moves_and_captures
   end
 
   def disambiguation(candidates, selection)
@@ -136,10 +158,10 @@ class Board
 
   def display_moves(line)
     print " #{move_list[line]}" if move_number > line
-    print "| #{move_list[line] + 25}" if move_number > line + 25
-    print "| #{move_list[line] + 50}" if move_number > line + 50
-    print "| #{move_list[line] + 75}" if move_number > line + 75
-    print "| #{move_list[line] + 100}" if move_number > line + 100
+    print "| #{move_list[line + 25]}" if move_number > line + 25
+    print "| #{move_list[line + 50]}" if move_number > line + 50
+    print "| #{move_list[line + 75]}" if move_number > line + 75
+    print "| #{move_list[line + 100]}" if move_number > line + 100
   end
 
   def fill_board
@@ -168,6 +190,14 @@ class Board
       piece.set_valid_moves
       piece.set_valid_captures
     end
+  end
+
+  def castle_kingside
+
+  end
+
+  def castle_queenside
+
   end
 
   def to_coords(notation)
