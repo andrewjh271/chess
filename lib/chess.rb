@@ -61,7 +61,17 @@ board.move('Qb6')
 board.move('Nde4')
 board.move('a5')
 
-board.flip_board
+# board.flip_board
 # move 14... (main line semi-slav)
-# board.move('dxc4')
+
+board.move('0-0')
+board.move('b4')
+
+board.move('Nb1')
+board.move('0-0-0')
+
+# board.move('0-0')
+# board.move('Nbd2')
+
+# board.move('0-0')
 # board.move('Nbd2')

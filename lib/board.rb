@@ -193,10 +193,51 @@ class Board
   end
 
   def castle_kingside
+    return false if in_check?
+    rank = white_to_move ? 0 : 7
+    targets = [[4, rank], [7, rank]]
+    empty_squares = [[5, rank], [6, rank]]
 
+    targets.each { |t| return false if squares[t[0]][t[1]].has_moved }
+    empty_squares.each { |e| return false unless squares[e[0]][e[1]].nil? }
+
+    each_piece do |piece|
+      next if piece.white? == white_to_move
+
+      return false unless (piece.valid_moves & empty_squares).empty?
+    end
+    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], '0-0')
   end
 
   def castle_queenside
+    return false if in_check?
+    rank = white_to_move ? 0 : 7
+    targets = [[4, rank], [0, rank]]
+    empty_squares = [[3, rank], [2, rank], [1, rank]]
+
+    targets.each { |t| return false if squares[t[0]][t[1]].has_moved }
+    empty_squares.each { |e| return false unless squares[e[0]][e[1]].nil? }
+
+    each_piece do |piece|
+      next if piece.white? == white_to_move
+
+      return false unless (piece.valid_moves & empty_squares.first(2)).empty?
+    end
+    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], '0-0-0')
+  end
+
+  def castle(king, rook, new_king, new_rook, input)
+    squares[new_king[0]][new_king[1]] = squares[king[0]][king[1]]
+    squares[king[0]][king[1]] = nil
+    squares[new_rook[0]][new_rook[1]] = squares[rook[0]][rook[1]]
+    squares[rook[0]][rook[1]] = nil
+
+    update_move_list(input)
+    squares[new_king[0]][new_king[1]].has_moved = true
+    squares[new_rook[0]][new_rook[1]].has_moved = true
+    @white_to_move = white_to_move ? false : true
+    display
+    set_moves_and_captures
 
   end
 
