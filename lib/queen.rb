@@ -26,7 +26,7 @@ class Queen < Piece
   end
 
   def to_s
-    white? ? '♕'.gray : '♕'.black
+    white? ? '♛'.gray : '♛'.black
   end
 end
 

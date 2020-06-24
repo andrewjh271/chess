@@ -193,28 +193,25 @@ class Board
   end
 
   def castle_kingside
-    return false if in_check?
     rank = white_to_move ? 0 : 7
     targets = [[4, rank], [7, rank]]
     empty_squares = [[5, rank], [6, rank]]
-
-    targets.each { |t| return false if squares[t[0]][t[1]].has_moved }
-    empty_squares.each { |e| return false unless squares[e[0]][e[1]].nil? }
-
-    each_piece do |piece|
-      next if piece.white? == white_to_move
-
-      return false unless (piece.valid_moves & empty_squares).empty?
-    end
+    return false unless validate_castle(targets, empty_squares)
+    
     castle(targets[0], targets[1], empty_squares[1], empty_squares[0], '0-0')
   end
 
   def castle_queenside
-    return false if in_check?
     rank = white_to_move ? 0 : 7
     targets = [[4, rank], [0, rank]]
     empty_squares = [[3, rank], [2, rank], [1, rank]]
+    return false unless validate_castle(targets, empty_squares)
 
+    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], '0-0-0')
+  end
+
+  def validate_castle(targets, empty_squares)
+    return false if in_check?
     targets.each { |t| return false if squares[t[0]][t[1]].has_moved }
     empty_squares.each { |e| return false unless squares[e[0]][e[1]].nil? }
 
@@ -223,7 +220,7 @@ class Board
 
       return false unless (piece.valid_moves & empty_squares.first(2)).empty?
     end
-    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], '0-0-0')
+    true
   end
 
   def castle(king, rook, new_king, new_rook, input)
@@ -238,7 +235,6 @@ class Board
     @white_to_move = white_to_move ? false : true
     display
     set_moves_and_captures
-
   end
 
   def to_coords(notation)
