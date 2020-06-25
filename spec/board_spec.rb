@@ -1,5 +1,4 @@
 require './lib/board.rb'
-# require './lib/bishop.rb'
 
 describe Board do
   
@@ -50,6 +49,7 @@ describe Board do
   end
 
   describe '#move' do
+    # check
     board = Board.new
 
     it 'does not allow move that results in king being in check' do
@@ -73,6 +73,44 @@ describe Board do
       board.move('Bb4')
 
       expect(board.move('Qd2')).to eq(true)
+    end
+
+    # en passant
+    board2 = Board.new
+
+    it 'allows en passant for white' do
+      board2.move('e4')
+      board2.move('d5')
+
+      board2.move('e5')
+      board2.move('f5')
+
+      expect(board2.move('exf4')).to eq(true)
+    end
+
+    it 'allows en passant for black' do
+      board2.move('d4')
+
+      board2.move('c4')
+      expect(board2.move('dxc4')).to eq(true)
+    end
+
+    it 'only allows en passant on first chance' do
+      board2.move('d4')
+      board2.move('a5')
+
+      board2.move('d5')
+      board2.move('c5')
+
+      board2.move('h4')
+      board2.move('a4')
+
+      expect(board2.move('dxc5')).to eq(false)
+    end
+
+    it 'works at edge of board' do
+      board2.move('b4')
+      expect(board2.move('axb4')).to eq(true)
     end
   end
 end

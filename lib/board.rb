@@ -81,10 +81,17 @@ class Board
       each_piece do |piece|
         next unless piece.is_a? target_piece
   
-        candidates << piece if action == 'capture' && piece.valid_captures.include?(target_square)
-        candidates << piece if action == 'move' && piece.valid_moves.include?(target_square)
+        if action == 'move' && piece.valid_moves.include?(target_square)
+          candidates << piece
+        elsif action == 'capture' && piece.valid_captures.include?(target_square)
+          candidates << piece
+        elsif action == 'capture' && piece.respond_to?(:en_passant) && piece.en_passant
+          return en_passant(piece, input)
+        end
       end
-      if candidates.length == 1
+      if candidates.length == 0
+        return false
+      elsif candidates.length == 1
         piece = candidates.first
       else
         # finds which target piece is intended
@@ -130,18 +137,47 @@ class Board
       test_captures(!white_to_move)
       return false
     else
-      piece.location = [target_square[0], target_square[1]]
       return true
     end
   end
 
   def enter_valid_move(piece, target_square, input)
-    # @squares and piece.location alreday updated in #safe_king?
+    # @squares already updated in #safe_king?
+    add_en_passant(piece, target_square)
+    piece.location = [target_square[0], target_square[1]]
     update_move_list(input)
     piece.has_moved = true if piece.respond_to?(:has_moved)
+    clear_en_passants
     @white_to_move = white_to_move ? false : true
-    display
     set_moves_and_captures
+    display
+  end
+
+  def add_en_passant(piece, target_square)
+    if piece.is_a?(Pawn) && (target_square[1] - piece.location[1]).abs == 2
+      # check for adjacent enemy pawns
+      target = white_to_move ? BlackPawn : WhitePawn
+      file = target_square[0]
+      rank = target_square[1]
+      if file > 0
+        adj = squares[file - 1][rank]
+        adj.add_en_passant(file) if adj && adj.is_a?(target)
+      end
+      if file < 7
+        adj = squares[file + 1][rank]
+        adj.add_en_passant(file) if adj && adj.is_a?(target)
+      end
+
+    end
+  end
+
+  def clear_en_passants
+    # only for side that just moved
+    each_piece do |piece|
+      next unless piece.is_a?(Pawn) && piece.white? == white_to_move
+
+      piece.remove_en_passant
+    end
   end
 
   def update_move_list(input)
@@ -264,9 +300,42 @@ class Board
     squares[new_king[0]][new_king[1]].location = [new_king[0], new_king[1]]
     squares[new_rook[0]][new_rook[1]].has_moved = true
     squares[new_rook[0]][new_rook[1]].location = [new_rook[0], new_rook[1]]
+    clear_en_passants
     @white_to_move = white_to_move ? false : true
-    display
     set_moves_and_captures
+    display
+  end
+
+  def en_passant(piece, input)
+    return false unless validate_en_passant(piece)
+
+    piece.location = piece.en_passant
+    update_move_list(input)
+    clear_en_passants
+    @white_to_move = white_to_move ? false : true
+    set_moves_and_captures
+    display
+    true
+  end
+
+  def validate_en_passant(piece)
+    # enters move and checks if current side's king is in check; repetition but needs special treatment
+    squares[piece.location[0]][piece.location[1]] = nil
+    squares[piece.en_passant[0]][piece.en_passant[1]] = piece
+    captured_piece = squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]
+    squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
+    test_captures(!white_to_move)
+
+    if in_check?
+      # undo
+      squares[piece.location[0]][piece.location[1]] = piece
+      squares[piece.en_passant[0]][piece.en_passant[1]] = nil
+      squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = captured_piece
+      test_captures(!white_to_move)
+      false
+    else
+      true
+    end
   end
 
   def to_coords(notation)

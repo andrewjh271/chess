@@ -8,7 +8,7 @@ class Pawn < Piece
 
   public
 
-  attr_accessor :has_moved
+  attr_accessor :has_moved, :en_passant, :en_passant_capture
 
   def initialize(board, location, color)
     super
@@ -58,6 +58,15 @@ class WhitePawn < Pawn
   def set_valid_captures
     super(1)
   end
+
+  def add_en_passant(file)
+    @en_passant = [file, 5]
+    @en_passant_capture = [file, 4]
+  end
+
+  def remove_en_passant
+    @en_passant = nil
+  end
 end
 
 class BlackPawn < Pawn
@@ -71,5 +80,14 @@ class BlackPawn < Pawn
 
   def set_valid_captures
     super(-1)
+  end
+
+  def add_en_passant(file)
+    @en_passant = [file, 2]
+    @en_passant_capture = [file, 3]
+  end
+
+  def remove_en_passant
+    @en_passant = nil
   end
 end
