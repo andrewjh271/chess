@@ -48,4 +48,31 @@ describe Board do
     end
 
   end
+
+  describe '#move' do
+    board = Board.new
+
+    it 'does not allow move that results in king being in check' do
+      board.move('e4')
+      board.move('e5')
+
+      board.move('Bc4')
+      board.move('Bc5')
+
+      board.move('Bxf7')
+      expect(board.move('Nc6')).to eq(false)
+      expect(board.move('Qh4')).to eq(false)
+    end
+
+    it 'does allow moves that captures checking piece' do
+      expect(board.move('Kxf7')).to eq(true)
+    end
+
+    it 'does allow moves that block check' do
+      board.move('d4')
+      board.move('Bb4')
+
+      expect(board.move('Qd2')).to eq(true)
+    end
+  end
 end

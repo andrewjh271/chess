@@ -91,7 +91,14 @@ class Board
         piece = disambiguation(candidates, notation.slice!(0))
       end
       if piece
-        enter_valid_move(piece, target_square, input)
+        if safe_king?(piece, target_square)
+          enter_valid_move(piece, target_square, input)
+          # binding.pry
+          return true
+        else
+          puts "Invalid move - king in check"
+          return false
+        end
       else
         puts "Not a valid move"
       end
@@ -110,11 +117,26 @@ class Board
 
   private
 
-  def enter_valid_move(piece, target_square, input)
+  def safe_king?(piece, target_square)
+    # enters move and checks if current side's king is in check
     squares[piece.location[0]][piece.location[1]] = nil
     squares[target_square[0]][target_square[1]] = piece
-    piece.location = [target_square[0], target_square[1]]
+    test_captures(!white_to_move)
 
+    if in_check?
+      # undo
+      squares[piece.location[0]][piece.location[1]] = piece
+      squares[target_square[0]][target_square[1]] = nil
+      test_captures(!white_to_move)
+      return false
+    else
+      piece.location = [target_square[0], target_square[1]]
+      return true
+    end
+  end
+
+  def enter_valid_move(piece, target_square, input)
+    # @squares and piece.location alreday updated in #safe_king?
     update_move_list(input)
     piece.has_moved = true if piece.respond_to?(:has_moved)
     @white_to_move = white_to_move ? false : true
@@ -192,6 +214,10 @@ class Board
     end
   end
 
+  def test_captures(test_white)
+    each_piece { |piece| piece.set_valid_captures if piece.white? == test_white }
+  end
+
   def castle_kingside
     rank = white_to_move ? 0 : 7
     targets = [[4, rank], [7, rank]]
@@ -233,8 +259,11 @@ class Board
     squares[rook[0]][rook[1]] = nil
 
     update_move_list(input)
+    # replaces #enter_valid_move; some repetition but castling's requirements don't fit
     squares[new_king[0]][new_king[1]].has_moved = true
+    squares[new_king[0]][new_king[1]].location = [new_king[0], new_king[1]]
     squares[new_rook[0]][new_rook[1]].has_moved = true
+    squares[new_rook[0]][new_rook[1]].location = [new_rook[0], new_rook[1]]
     @white_to_move = white_to_move ? false : true
     display
     set_moves_and_captures
