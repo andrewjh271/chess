@@ -167,19 +167,6 @@ class Board
   end
 
   def safe_king?
-  # def safe_king?(piece, target_square)
-    # enters move and checks if current side's king is in check
-    # squares[piece.location[0]][piece.location[1]] = nil
-    # squares[target_square[0]][target_square[1]] = piece
-    # test_captures(!white_to_move)
-
-    # result = !in_check?
-
-    # # undo - means extra operations if valid move, but former status needed if #promote fails
-    # squares[piece.location[0]][piece.location[1]] = piece
-    # squares[target_square[0]][target_square[1]] = nil
-    # test_captures(!white_to_move)
-    # result
     !in_check?
   end
 
@@ -382,25 +369,6 @@ class Board
   end
 
   def validate_en_passant(piece)
-    # enters move and checks if current side's king is in check; there's repetition here with
-    #safe_king?, but en_passant needs special treatment
-
-    # squares[piece.location[0]][piece.location[1]] = nil
-    # squares[piece.en_passant[0]][piece.en_passant[1]] = piece
-    # captured_piece = squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]
-    # squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
-    # test_captures(!white_to_move)
-
-    # if in_check?
-    #   # undo
-    #   squares[piece.location[0]][piece.location[1]] = piece
-    #   squares[piece.en_passant[0]][piece.en_passant[1]] = nil
-    #   squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = captured_piece
-    #   test_captures(!white_to_move)
-    #   false
-    # else
-    #   true
-    # end
     test_move(piece)
     result = !in_check?
     undo_test_move(piece)
