@@ -66,7 +66,7 @@ class Board
     else
       notation = input.clone
       # removes parts of notation as they are used, and checks to make sure it's empty at end
-      target_piece = case notation[0].slice!(/[KQRBN]/)
+      target_piece = case notation.slice!(/^[KQRBN]/)
                      when 'K' then white_to_move ? WhiteKing : BlackKing
                      when 'Q' then white_to_move ? WhiteQueen : BlackQueen
                      when 'R' then white_to_move ? WhiteRook : BlackRook
