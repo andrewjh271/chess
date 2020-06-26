@@ -66,25 +66,31 @@ class Board
     else
       notation = input.clone
       # removes parts of notation as they are used, and checks to make sure it's empty at end
-      target_piece = case notation.slice!(/[KQRBN]/)
-              when 'K' then white_to_move ? WhiteKing : BlackKing
-              when 'Q' then white_to_move ? WhiteQueen : BlackQueen
-              when 'R' then white_to_move ? WhiteRook : BlackRook
-              when 'B' then white_to_move ? WhiteBishop : BlackBishop
-              when 'N' then white_to_move ? WhiteKnight : BlackKnight
-              else white_to_move ? WhitePawn : BlackPawn
-              end
+      target_piece = case notation[0].slice!(/[KQRBN]/)
+                     when 'K' then white_to_move ? WhiteKing : BlackKing
+                     when 'Q' then white_to_move ? WhiteQueen : BlackQueen
+                     when 'R' then white_to_move ? WhiteRook : BlackRook
+                     when 'B' then white_to_move ? WhiteBishop : BlackBishop
+                     when 'N' then white_to_move ? WhiteKnight : BlackKnight
+                     else white_to_move ? WhitePawn : BlackPawn
+                     end
       target_square = to_coords(notation.slice!(/[a-h][1-8]/))
       action = notation.slice!('x') ? 'capture' : 'move'
       # candidates deals with case where multiple target pieces could move to target square
       candidates = []
       each_piece do |piece|
         next unless piece.is_a? target_piece
-  
+        
         if action == 'move' && piece.valid_moves.include?(target_square)
           candidates << piece
         elsif action == 'capture' && piece.valid_captures.include?(target_square)
-          candidates << piece
+          # special treatment needed for Pawn because of chess algebraic notation
+          if piece.is_a?(Pawn) && piece.location[0] == notation[0].ord - 97
+            notation.slice!(0)
+            candidates << piece
+          elsif !piece.is_a?(Pawn)
+            candidates << piece
+          end
         elsif action == 'capture' && piece.respond_to?(:en_passant) && piece.en_passant
           return en_passant(piece, input)
         end
@@ -99,8 +105,12 @@ class Board
       end
       if piece
         if safe_king?(piece, target_square)
+          # if piece is a Pawn that has reached the end of the board
+          if piece.is_a?(Pawn) && !target_square[1].between?(1, 6)
+            piece = promote(piece, notation.slice!(0, 2))
+            return false unless piece
+          end
           enter_valid_move(piece, target_square, input)
-          # binding.pry
           return true
         else
           puts "Invalid move - king in check"
@@ -116,7 +126,7 @@ class Board
     target = white_to_move ? WhiteKing : BlackKing
     each_piece do |piece|
       next if piece.white? == white_to_move
-      # binding.pry
+
       piece.valid_captures.each { |c| return true if squares[c[0]][c[1]].is_a? target }
     end
     false
@@ -130,19 +140,18 @@ class Board
     squares[target_square[0]][target_square[1]] = piece
     test_captures(!white_to_move)
 
-    if in_check?
-      # undo
-      squares[piece.location[0]][piece.location[1]] = piece
-      squares[target_square[0]][target_square[1]] = nil
-      test_captures(!white_to_move)
-      return false
-    else
-      return true
-    end
+    result = !in_check?
+
+    # undo - means extra operations if valid move, but former status needed if #promote fails
+    squares[piece.location[0]][piece.location[1]] = piece
+    squares[target_square[0]][target_square[1]] = nil
+    test_captures(!white_to_move)
+    result
   end
 
   def enter_valid_move(piece, target_square, input)
-    # @squares already updated in #safe_king?
+    squares[piece.location[0]][piece.location[1]] = nil
+    squares[target_square[0]][target_square[1]] = piece
     add_en_passant(piece, target_square)
     piece.location = [target_square[0], target_square[1]]
     update_move_list(input)
@@ -167,7 +176,6 @@ class Board
         adj = squares[file + 1][rank]
         adj.add_en_passant(file) if adj && adj.is_a?(target)
       end
-
     end
   end
 
@@ -184,7 +192,7 @@ class Board
     if white_to_move
       @move_list << +"#{move_number}. #{' ' if move_number < 10}#{input}"
     else
-      justify = 10 - move_list.last.length
+      justify = 11 - move_list.last.length
       # need to add justify_end as well
       @move_list.last << "#{' ' * justify}#{input}"
       @move_number += 1
@@ -318,8 +326,26 @@ class Board
     true
   end
 
+  def promote(piece, notation)
+    return false unless notation[0] == '='
+
+    sq = [piece.location[0], piece.location[1]]
+    case notation[1]
+    when 'Q' then white_to_move ? WhiteQueen.new(self, [sq[0], sq[1]]) :
+                                  BlackQueen.new(self, [sq[0], sq[1]])
+    when 'R' then white_to_move ? WhiteRook.new(self, [sq[0], sq[1]]) :
+                                  BlackRook.new(self, [sq[0], sq[1]])
+    when 'B' then white_to_move ? WhiteBishop.new(self, [sq[0], sq[1]]) :
+                                  BlackBishop.new(self, [sq[0], sq[1]])
+    when 'N' then white_to_move ? WhiteKnight.new(self, [sq[0], sq[1]]) :
+                                  BlackKnight.new(self, [sq[0], sq[1]])
+    else false
+    end
+  end
+
   def validate_en_passant(piece)
-    # enters move and checks if current side's king is in check; repetition but needs special treatment
+    # enters move and checks if current side's king is in check; there's repetition here with
+    #safe_king?, but en_passant needs special treatment
     squares[piece.location[0]][piece.location[1]] = nil
     squares[piece.en_passant[0]][piece.en_passant[1]] = piece
     captured_piece = squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]

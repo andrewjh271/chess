@@ -112,5 +112,38 @@ describe Board do
       board2.move('b4')
       expect(board2.move('axb4')).to eq(true)
     end
+
+    # promotion
+    board3 = Board.new
+    
+    it 'allows capture promotion to WhiteKnight' do
+      board3.move('d4')
+      board3.move('e5')
+
+      board3.move('dxe5')
+      board3.move('f6')
+
+      board3.move('exf6')
+      board3.move('d5')
+
+      board3.move('fxg7')
+      board3.move('d4')
+
+      board3.move('gxh8=N')
+      expect(board3.squares[7][7].is_a?(WhiteKnight)).to eq(true)
+    end
+
+    it 'allows promotion to BlackQueen' do
+      board3.move('d3')
+
+      board3.move('Bg5')
+      board3.move('dxc2')
+
+      board3.move('Nf3')
+      board3.move('c1=Q')
+      expect(board3.squares[2][0].is_a?(BlackQueen)).to eq(true)
+    end
+
   end
+
 end
