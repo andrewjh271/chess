@@ -104,20 +104,27 @@ class Board
         piece = disambiguation(candidates, notation.slice!(0))
       end
       if piece
-        if safe_king?(piece, target_square)
-          # if piece is a Pawn that has reached the end of the board
-          if piece.is_a?(Pawn) && !target_square[1].between?(1, 6)
-            piece = promote(piece, notation.slice!(0, 2))
-            return false unless piece
-          end
-          enter_valid_move(piece, target_square, input)
-          return true
-        else
-          puts "Invalid move - king in check"
+        test_move(piece, target_square)
+        unless safe_king?
+          puts "Invalid move: king in check"
+          undo_test_move(piece, target_square)
           return false
         end
+        # if piece is a Pawn that has reached the end of the board
+        if piece.is_a?(Pawn) && !target_square[1].between?(1, 6)
+          piece = promote(piece, notation.slice!(0, 2))
+          unless piece
+            puts "Invalid move: promotion input not valid"
+            undo_test_move(piece, target_square)
+            return false
+          end
+        end
+        undo_test_move(piece, target_square)
+        enter_valid_move(piece, target_square, input)
+        return true
       else
         puts "Not a valid move"
+        return false
       end
     end
   end
@@ -134,19 +141,46 @@ class Board
 
   private
 
-  def safe_king?(piece, target_square)
-    # enters move and checks if current side's king is in check
+  def test_move(piece, target_square = nil)
     squares[piece.location[0]][piece.location[1]] = nil
-    squares[target_square[0]][target_square[1]] = piece
+    if target_square
+      squares[target_square[0]][target_square[1]] = piece
+    else
+      # must be en_passant
+      squares[piece.en_passant[0]][piece.en_passant[1]] = piece
+      @captured_piece = squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]
+      squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
+    end
     test_captures(!white_to_move)
+  end
 
-    result = !in_check?
-
-    # undo - means extra operations if valid move, but former status needed if #promote fails
+  def undo_test_move(piece, target_square = nil)
     squares[piece.location[0]][piece.location[1]] = piece
-    squares[target_square[0]][target_square[1]] = nil
+    if target_square
+      squares[target_square[0]][target_square[1]] = nil
+    else
+      # must be en_passant
+      squares[piece.en_passant[0]][piece.en_passant[1]] = nil
+      squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = @captured_piece
+    end
     test_captures(!white_to_move)
-    result
+  end
+
+  def safe_king?
+  # def safe_king?(piece, target_square)
+    # enters move and checks if current side's king is in check
+    # squares[piece.location[0]][piece.location[1]] = nil
+    # squares[target_square[0]][target_square[1]] = piece
+    # test_captures(!white_to_move)
+
+    # result = !in_check?
+
+    # # undo - means extra operations if valid move, but former status needed if #promote fails
+    # squares[piece.location[0]][piece.location[1]] = piece
+    # squares[target_square[0]][target_square[1]] = nil
+    # test_captures(!white_to_move)
+    # result
+    !in_check?
   end
 
   def enter_valid_move(piece, target_square, input)
@@ -317,6 +351,10 @@ class Board
   def en_passant(piece, input)
     return false unless validate_en_passant(piece)
 
+    squares[piece.location[0]][piece.location[1]] = nil
+    squares[piece.en_passant[0]][piece.en_passant[1]] = piece
+    squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
+
     piece.location = piece.en_passant
     update_move_list(input)
     clear_en_passants
@@ -346,22 +384,27 @@ class Board
   def validate_en_passant(piece)
     # enters move and checks if current side's king is in check; there's repetition here with
     #safe_king?, but en_passant needs special treatment
-    squares[piece.location[0]][piece.location[1]] = nil
-    squares[piece.en_passant[0]][piece.en_passant[1]] = piece
-    captured_piece = squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]
-    squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
-    test_captures(!white_to_move)
 
-    if in_check?
-      # undo
-      squares[piece.location[0]][piece.location[1]] = piece
-      squares[piece.en_passant[0]][piece.en_passant[1]] = nil
-      squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = captured_piece
-      test_captures(!white_to_move)
-      false
-    else
-      true
-    end
+    # squares[piece.location[0]][piece.location[1]] = nil
+    # squares[piece.en_passant[0]][piece.en_passant[1]] = piece
+    # captured_piece = squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]
+    # squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
+    # test_captures(!white_to_move)
+
+    # if in_check?
+    #   # undo
+    #   squares[piece.location[0]][piece.location[1]] = piece
+    #   squares[piece.en_passant[0]][piece.en_passant[1]] = nil
+    #   squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = captured_piece
+    #   test_captures(!white_to_move)
+    #   false
+    # else
+    #   true
+    # end
+    test_move(piece)
+    result = !in_check?
+    undo_test_move(piece)
+    result
   end
 
   def to_coords(notation)

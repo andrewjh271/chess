@@ -75,3 +75,26 @@ board.move('0-0-0')
 
 # board.move('0-0')
 # board.move('Nbd2')
+
+board2 = Board.new
+
+board2.move('e4')
+board2.move('d5')
+
+board2.move('e5')
+board2.move('f5')
+
+board2.move('exf4')
+board2.move('d4')
+
+board2.move('c4')
+board2.move('dxc4')
+
+board2.move('d4')
+board2.move('a5')
+
+board2.move('d5')
+board2.move('c5')
+
+board2.move('h4')
+board2.move('a4')
