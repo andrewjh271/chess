@@ -130,7 +130,7 @@ describe Board do
       board3.move('d4')
 
       board3.move('gxh8=N')
-      expect(board3.squares[7][7].is_a?(WhiteKnight)).to eq(true)
+      expect(board3.squares[7][7]).to be_a(WhiteKnight)
     end
 
     it 'allows promotion to BlackQueen' do
@@ -141,7 +141,7 @@ describe Board do
 
       board3.move('Nf3')
       board3.move('c1=Q')
-      expect(board3.squares[2][0].is_a?(BlackQueen)).to eq(true)
+      expect(board3.squares[2][0]).to be_a(BlackQueen)
     end
 
   end
