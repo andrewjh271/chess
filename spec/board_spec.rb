@@ -192,6 +192,30 @@ describe Board do
         expect(board4.move('Bh4+')).to eq(true)
       end
 
+      it 'works with en passant when no + for check' do
+        board4.move('Ke2')
+        board4.move('Kd6')
+
+        board4.move('Ng6')
+        board4.move('c5')
+
+        board4.move('a4')
+        board4.move('c4')
+
+        board4.move('d4')
+        expect(board4.move('cxd3')).to eq(true)
+      end
+
+      it 'works with en passant when + is given for check' do
+        board4.move('Kxd3')
+        board4.move('Kc7')
+
+        board4.move('a5')
+        board4.move('b5')
+
+        expect(board4.move('axb6+')).to eq(true)
+      end
+
     end
 
   end

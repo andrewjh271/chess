@@ -93,7 +93,7 @@ class Board
             candidates << piece
           end
         elsif action == 'capture' && piece.respond_to?(:en_passant) && piece.en_passant
-          return en_passant(piece, input)
+          return en_passant(piece, input, notation)
         end
       end
       if candidates.length == 0
@@ -107,7 +107,7 @@ class Board
       if piece
         test_move(piece, target_square)
         unless safe_king?
-          puts "Invalid move: king in check"
+          puts 'Invalid move: king in check'
           undo_test_move(piece, target_square)
           return false
         end
@@ -365,9 +365,11 @@ class Board
     display
   end
 
-  def en_passant(piece, input)
-    return false unless validate_en_passant(piece)
+  def en_passant(piece, input, notation)
+    return false unless validate_en_passant(piece, input, notation)
 
+    # adds + or # for check or checkmate if not already in input
+    input << remainder.first unless notation == remainder.first
     squares[piece.location[0]][piece.location[1]] = nil
     squares[piece.en_passant[0]][piece.en_passant[1]] = piece
     squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
@@ -397,11 +399,29 @@ class Board
     end
   end
 
-  def validate_en_passant(piece)
+  def validate_en_passant(piece, input, notation)
+    if piece.location[0] == notation[0].ord - 97
+      notation.slice!(0)
+    else
+      puts 'Invalid move: pawn not found'
+      return false
+    end
     test_move(piece)
-    result = !in_check?
-    undo_test_move(piece)
-    result
+    unless safe_king?
+      puts 'Invalid move: king in check'
+      undo_test_move(piece)
+      return false
+    end
+    # validates remaining user input
+    set_remainder
+    if remainder.include?(notation)
+      undo_test_move(piece)
+      true
+    else
+      puts "Invalid move: extra characters"
+      undo_test_move(piece)
+      false
+    end
   end
 
   def to_coords(notation)
