@@ -340,7 +340,7 @@ class Board
     each_piece do |piece|
       next if piece.white? == white_to_move
 
-      # ensures king won't move into check
+      # ensures king won't move into check (makes sure intersection of two arrays is empty)
       return false unless (piece.valid_moves & empty_squares.first(2)).empty?
     end
     true
