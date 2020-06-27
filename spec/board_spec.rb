@@ -4,14 +4,19 @@ describe Board do
   
   describe '#in_check?' do
     board = Board.new
-    board.move('e4')
-    board.move('e5')
-    board.move('Bc4')
-    board.move('Bc5')
+    # board.move('e4')
+    # board.move('e5')
+    # board.move('Bc4')
+    # board.move('Bc5')
 
     it { expect(board).not_to be_in_check }
 
     it "returns true if current side's king is in check" do
+      board.move('e4')
+      board.move('e5')
+      board.move('Bc4')
+      board.move('Bc5')
+
       board.move('Bxf7')
       expect(board).to be_in_check
     end
@@ -145,6 +150,48 @@ describe Board do
         board3.move('c1=Q')
         expect(board3.squares[2][0]).to be_a(BlackQueen)
       end
+    end
+
+    context '+ and # appended to moves' do
+      board4 = Board.new
+      it 'allows + if move comes with check' do
+        board4.move('e4')
+        board4.move('e5')
+
+        board4.move('Bc4')
+        board4.move('Bc5')
+
+        expect(board4.move('Bxf7+')).to eq(true)
+      end
+
+      it 'does not allow + if move does not come with check' do
+        expect(board4.move('Kxf7+')).to eq(false)
+        expect(board4.move('Kxf7')).to eq(true)
+      end
+
+      it 'allows + if different move comes with check' do
+        board4.move('Nf3')
+        expect(board4.move('Bxf2+')).to eq(true)
+      end
+
+      it 'does not allow + if different move does not come with check' do
+        expect(board4.move('Kf1+')).to eq(false)
+        expect(board4.move('Kf1')).to eq(true)
+      end
+
+      it 'does not require + even if move comes with check' do
+        board4.move('Qf6')
+
+        expect(board4.move('Nxe5')).to eq(true)
+      end
+
+      it 'allows + for discovered check' do
+        board4.move('Ke7')
+
+        board4.move('Qh5')
+        expect(board4.move('Bh4+')).to eq(true)
+      end
+
     end
 
   end

@@ -15,7 +15,8 @@ class Board
   
   include EscapeSequences
 
-  attr_reader :squares, :white_to_move, :move_list, :move_number, :flip
+  attr_reader :squares, :white_to_move, :move_list, :move_number, :flip,
+              :remainder, :old_location, :captured_piece
   
   MAX = 7
 
@@ -110,7 +111,7 @@ class Board
           undo_test_move(piece, target_square)
           return false
         end
-        # if piece is a Pawn that has reached the end of the board
+        # pawn promotion
         if piece.is_a?(Pawn) && !target_square[1].between?(1, 6)
           piece = promote(piece, notation.slice!(0, 2))
           unless piece
@@ -118,6 +119,16 @@ class Board
             undo_test_move(piece, target_square)
             return false
           end
+        end
+        # validates remaining user input
+        set_remainder
+        if remainder.include?(notation)
+          # adds + or # for check or checkmate if not already in input
+          input << remainder.first unless notation == remainder.first
+        else
+          puts "Invalid move: extra characters"
+          undo_test_move(piece, target_square)
+          return false
         end
         undo_test_move(piece, target_square)
         enter_valid_move(piece, target_square, input)
@@ -143,27 +154,32 @@ class Board
 
   def test_move(piece, target_square = nil)
     squares[piece.location[0]][piece.location[1]] = nil
+    @old_location = piece.location
     if target_square
+      @captured_piece = squares[target_square[0]][target_square[1]]
       squares[target_square[0]][target_square[1]] = piece
+      piece.location = [target_square[0], target_square[1]]
     else
       # must be en_passant
       squares[piece.en_passant[0]][piece.en_passant[1]] = piece
       @captured_piece = squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]
       squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
+      piece.location = [piece.en_passant[0], piece.en_passant[1]]
     end
-    test_captures(!white_to_move)
+    test_captures
   end
 
   def undo_test_move(piece, target_square = nil)
-    squares[piece.location[0]][piece.location[1]] = piece
+    squares[old_location[0]][old_location[1]] = piece
     if target_square
-      squares[target_square[0]][target_square[1]] = nil
+      squares[target_square[0]][target_square[1]] = captured_piece
     else
       # must be en_passant
       squares[piece.en_passant[0]][piece.en_passant[1]] = nil
-      squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = @captured_piece
+      squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = captured_piece
     end
-    test_captures(!white_to_move)
+    piece.location = [old_location[0], old_location[1]]
+    test_captures
   end
 
   def safe_king?
@@ -181,6 +197,20 @@ class Board
     @white_to_move = white_to_move ? false : true
     set_moves_and_captures
     display
+  end
+
+  def set_remainder
+    # checks whether side not to move will be put in check or checkmate
+    @white_to_move = white_to_move ? false : true
+    # binding.pry
+    if in_check?
+      @remainder = ['+', ''] 
+    # elsif checkmate?
+    #   @remainder = ['#', '']
+    else
+      @remainder = ['']
+    end
+    @white_to_move = white_to_move ? false : true
   end
 
   def add_en_passant(piece, target_square)
@@ -279,8 +309,8 @@ class Board
     end
   end
 
-  def test_captures(test_white)
-    each_piece { |piece| piece.set_valid_captures if piece.white? == test_white }
+  def test_captures
+    each_piece(&:set_valid_captures)
   end
 
   def castle_kingside
@@ -341,7 +371,6 @@ class Board
     squares[piece.location[0]][piece.location[1]] = nil
     squares[piece.en_passant[0]][piece.en_passant[1]] = piece
     squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
-
     piece.location = piece.en_passant
     update_move_list(input)
     clear_en_passants
