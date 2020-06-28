@@ -243,9 +243,9 @@ class Board
     if white_to_move
       @move_list << +"#{move_number}. #{' ' if move_number < 10}#{input}"
     else
-      justify = 11 - move_list.last.length
-      # need to add justify_end as well
-      @move_list.last << "#{' ' * justify}#{input}"
+      justify_left = 11 - move_list.last.length
+      justify_right = 7 - input.length
+      @move_list.last << "#{' ' * justify_left}#{input}#{' ' * justify_right}"
       @move_number += 1
     end
   end
