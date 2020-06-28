@@ -211,6 +211,165 @@ describe Board do
 
         expect(board.move('axb6+')).to eq(true)
       end
+    end
+
+    context 'Can handle a full game with lots of bad input along the way' do
+      board = Board.new
+
+      it 'works with first set of Pawn moves' do
+        # board.flip_board
+        board.move('e4')
+        board.move('e6')
+
+        board.move('d4')
+        board.move('d5')
+
+        board.move('e5')
+        expect(board.move('c4')).to eq(false)
+        expect(board.move('c5')).to eq(true)
+        expect(board.squares[3][3]).to be_a(WhitePawn)
+      end
+
+      it 'works with first Knight, Bishop, and Queen moves' do
+        board.move('c3')
+        board.move('Nc6')
+
+        expect(board.move('Nf2')).to eq(false)
+        expect(board.move('Nf3')).to eq(true)
+        expect(board.move('Bf5')).to eq(false)
+        expect(board.move('Bd7')).to eq(true)
+
+        board.move('a3')
+        board.move('f6')
+
+        board.move('Bd3')
+        expect(board.move('Qd6')).to eq(false)
+        expect(board.move('Qc7')).to eq(true)
+
+        expect(board.squares[2][6]).to be_a(BlackQueen)
+        expect(board.squares[3][2]).to be_a(WhiteBishop)
+        expect(board.squares[5][2]).to be_a(WhiteKnight)
+      end
+
+      it 'works with castling' do
+        expect(board.move('0-0-0')).to eq(false)
+        expect(board.move('0-0')).to eq(true)
+        expect(board.move('0-0')).to eq(false)
+        expect(board.move('0-0-0')).to eq(true)
+        expect(board.squares[6][0]).to be_a(WhiteKing)
+        expect(board.squares[3][7]).to be_a(BlackRook)
+      end
+
+      it 'works with valid and invalid captures' do
+        board.move('Qe2')
+        board.move('h6')
+
+        board.move('b4')
+        board.move('c4')
+
+        board.move('Bc2')
+        board.move('f5')
+
+        board.move('Nh4')
+        board.move('Be8')
+
+        board.move('f4')
+        board.move('Be7')
+
+        expect(board.move('Nxg6')).to eq(false)
+        expect(board.move('Nxf5')).to eq(true)
+        expect(board.move('gxf5')).to eq(false)
+        expect(board.move('exf5')).to eq(true)
+        expect(board.squares[5][4]).to be_a(BlackPawn)
+        expect(board.squares[5][4].location).to eq([5, 4])
+      end
+
+      it 'works with valid +' do
+        expect(board.move('Bxf5+')).to eq(true)
+      end
+
+      it 'does not accept move that results in check' do
+        expect(board.move('g5')).to eq(false)
+        expect(board.move('Nxe5')).to eq(false)
+      end
+
+      it 'does not accept move with invalid +' do
+        expect(board.move('Kb8+')).to eq(false)
+        expect(board.move('Kb8')).to eq(true)
+      end
+
+      it 'is not derailed by more invalid captures' do
+        board.move('Qg4')
+        board.move('g5')
+
+        expect(board.move('Qxf4')).to eq(false)
+        expect(board.move('Bxg5')).to eq(false)
+        expect(board.move('fxg5')).to eq(true)
+        expect(board.move('Nxh6')).to eq(false)
+        expect(board.move('hxg5')).to eq(true)
+        expect(board.squares[6][4]).to be_a(BlackPawn)
+
+        board.move('Bxg5')
+        board.move('Bh5')
+
+        board.move('Qg3')
+        board.move('Bxg5')
+
+        expect(board.move('Qxg8')).to eq(false)
+        expect(board.move('Qxg5')).to eq(true)
+      end
+
+      it 'expects disambiguity if multiple Knights can move to square' do
+        expect(board.move('Ne7')).to eq(false)
+        expect(board.move('Nfe7')).to eq(false)
+        expect(board.move('Nge7')).to eq(true)
+        expect(board.squares[6][7]).to be_nil
+      end
+
+      it 'expects disambiguity if multiple Rooks can move to square' do
+        board.move('Nd2')
+        expect(board.move('Rg8')).to eq(false)
+        # rank (8) is not the needed disambiguity
+        expect(board.move('R8g8')).to eq(false)
+        expect(board.move('Rdg8')).to eq(true)
+        expect(board.squares[3][7]).to be_nil
+      end
+
+      it 'finishes game' do
+        board.move('Qe3')
+        board.move('Nxf5')
+
+        board.move('Rxf5')
+        board.move('Qh7')
+
+        board.move('Rf6')
+        board.move('Be2')
+
+        board.move('h3')
+        board.move('Bd3')
+
+        board.move('Kh2')
+        board.move('Ne7')
+
+        board.move('Nf3')
+        board.move('Nf5')
+
+        board.move('Qf4')
+        board.move('Ka8')
+
+        board.move('Rg1')
+        board.move('Qh5')
+
+        board.move('e6')
+        board.move('Be4')
+
+        board.move('Rf1')
+        board.move('Rg3')
+
+        board.move('Rxf5')
+        board.move('Qxh3+')
+        # add test for checkmate
+      end
 
     end
 
