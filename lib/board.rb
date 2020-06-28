@@ -251,11 +251,16 @@ class Board
   end
 
   def disambiguation(candidates, selection)
+    return false unless selection
+    
+    # only accepts the rank or file that narrows down candidates 
+    finalists = []
     if selection.match(/[a-h]/)
-      piece = candidates.find { |c| c.location[0] == selection.ord - 97 }
+      candidates.each { |c| finalists << c if c.location[0] == selection.ord - 97 }
     elsif selection.match(/[1-8]/)
-      piece = candidates.find { |c| c.location[1] == selection.to_i - 1 }
+      candidates.each { |c| finalists << c if c.location[1] == selection.to_i - 1 }
     end
+    return finalists.first if finalists.length == 1
   end
 
   def print_line(i, k, rank = nil)
@@ -363,6 +368,7 @@ class Board
     @white_to_move = white_to_move ? false : true
     set_moves_and_captures
     display
+    true
   end
 
   def en_passant(piece, input, notation)
