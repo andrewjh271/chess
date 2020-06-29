@@ -87,14 +87,14 @@ describe Board do
         board.move('e5')
         board.move('f5')
 
-        expect(board.move('exf4')).to eq(true)
+        expect(board.move('exf6')).to eq(true)
       end
 
       it 'allows en passant for black' do
         board.move('d4')
 
         board.move('c4')
-        expect(board.move('dxc4')).to eq(true)
+        expect(board.move('dxc3')).to eq(true)
       end
 
       it 'only allows en passant on first chance' do
@@ -107,12 +107,37 @@ describe Board do
         board.move('h4')
         board.move('a4')
 
-        expect(board.move('dxc5')).to eq(false)
+        expect(board.move('dxc6')).to eq(false)
       end
 
       it 'works at edge of board' do
         board.move('b4')
-        expect(board.move('axb4')).to eq(true)
+        expect(board.move('axb3')).to eq(true)
+      end
+
+      it 'does not allow invalid captures' do
+        board = Board.new
+
+        board.move('e4')
+        board.move('g5')
+
+        board.move('e5')
+        board.move('f5')
+
+        board.move('exf6')
+        board.move('e5')
+
+        board.move('Nc3')
+        board.move('e4')
+
+        board.move('Nd5')
+        board.move('e3')
+
+        board.move('fxe3')
+        board.move('g4')
+
+        board.move('h4')
+        expect(board.move('gxf3')).to eq(false)
       end
     end
 

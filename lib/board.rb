@@ -85,7 +85,7 @@ class Board
           elsif !piece.is_a?(Pawn)
             candidates << piece
           end
-        elsif action == 'capture' && piece.respond_to?(:en_passant) && piece.en_passant
+        elsif action == 'capture' && piece.respond_to?(:en_passant) && piece.en_passant == target_square
           return en_passant(piece, input, notation)
         end
       end
@@ -154,6 +154,27 @@ class Board
     when 'N' then white_to_move ? WhiteKnight : BlackKnight
     else white_to_move ? WhitePawn : BlackPawn
     end
+  end
+
+  def find_candidates(target_piece, target_square, action)
+    candidates = []
+      each_piece do |piece|
+        next unless piece.is_a? target_piece
+        
+        if action == 'move' && piece.valid_moves.include?(target_square)
+          candidates << piece
+        elsif action == 'capture' && piece.valid_captures.include?(target_square)
+          # special treatment needed for Pawn because of chess algebraic notation
+          if piece.is_a?(Pawn) && piece.location[0] == notation[0].ord - 97
+            notation.slice!(0)
+            candidates << piece
+          elsif !piece.is_a?(Pawn)
+            candidates << piece
+          end
+        elsif action == 'capture' && piece.respond_to?(:en_passant) && piece.en_passant
+          return en_passant(piece, input, notation)
+        end
+      end
   end
 
   def test_move(piece, target_square = nil)
