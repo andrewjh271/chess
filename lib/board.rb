@@ -60,10 +60,10 @@ class Board
   end
 
   def move(input)
-    if input == '0-0'
-      castle_kingside
-    elsif input == '0-0-0'
-      castle_queenside
+    if input.slice!('0-0-0')
+      castle_queenside(input)
+    elsif input.slice!('0-0')
+      castle_kingside(input)
     else
       notation = input.clone
       # removes parts of notation as they are used, and checks to make sure it's empty at end
@@ -318,22 +318,22 @@ class Board
     each_piece(&:set_valid_captures)
   end
 
-  def castle_kingside
+  def castle_kingside(notation)
     rank = white_to_move ? 0 : 7
     targets = [[4, rank], [7, rank]]
     empty_squares = [[5, rank], [6, rank]]
     return false unless validate_castle(targets, empty_squares)
     
-    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], '0-0')
+    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], +'0-0', notation)
   end
 
-  def castle_queenside
+  def castle_queenside(notation)
     rank = white_to_move ? 0 : 7
     targets = [[4, rank], [0, rank]]
     empty_squares = [[3, rank], [2, rank], [1, rank]]
     return false unless validate_castle(targets, empty_squares)
 
-    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], '0-0-0')
+    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], +'0-0-0', notation)
   end
 
   def validate_castle(targets, empty_squares)
@@ -345,25 +345,50 @@ class Board
     each_piece do |piece|
       next if piece.white? == white_to_move
 
-      # ensures king won't move into check (makes sure intersection of two arrays is empty)
+      # ensures king won't move into check along the way
+      # by making sure intersection of two arrays is empty
       return false unless (piece.valid_moves & empty_squares.first(2)).empty?
     end
     true
   end
 
-  def castle(king, rook, new_king, new_rook, input)
-    # castling had its own process for ensuring king is not in and will not move into check
+  def test_castle(king, rook, new_king, new_rook)
     squares[new_king[0]][new_king[1]] = squares[king[0]][king[1]]
     squares[king[0]][king[1]] = nil
     squares[new_rook[0]][new_rook[1]] = squares[rook[0]][rook[1]]
     squares[rook[0]][rook[1]] = nil
 
-    update_move_list(input)
-    # replaces #enter_valid_move; some repetition but castling's requirements don't fit
-    squares[new_king[0]][new_king[1]].has_moved = true
     squares[new_king[0]][new_king[1]].location = [new_king[0], new_king[1]]
-    squares[new_rook[0]][new_rook[1]].has_moved = true
     squares[new_rook[0]][new_rook[1]].location = [new_rook[0], new_rook[1]]
+    test_captures
+  end
+
+  def undo_test_castle(king, rook, new_king, new_rook)
+    squares[king[0]][king[1]] = squares[new_king[0]][new_king[1]]
+    squares[new_king[0]][new_king[1]] = nil
+    squares[rook[0]][rook[1]] = squares[new_rook[0]][new_rook[1]]
+    squares[new_rook[0]][new_rook[1]] = nil
+
+    squares[king[0]][king[1]].location = [king[0], king[1]]
+    squares[rook[0]][rook[1]].location = [rook[0], rook[1]]
+    test_captures
+  end
+
+  def castle(king, rook, new_king, new_rook, input, notation)
+    test_castle(king, rook, new_king, new_rook)
+    set_remainder
+    if remainder.include?(notation)
+      # adds + or # for check or checkmate if not already in input
+      input << remainder.first
+    else
+      puts "Invalid move: extra characters"
+      undo_test_castle(king, rook, new_king, new_rook)
+      return false
+    end
+    # leaves assignments from #test_castle b/c nothing else to check
+    update_move_list(input)
+    squares[new_king[0]][new_king[1]].has_moved = true
+    squares[new_rook[0]][new_rook[1]].has_moved = true
     clear_en_passants
     @white_to_move = white_to_move ? false : true
     set_moves_and_captures

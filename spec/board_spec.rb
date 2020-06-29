@@ -211,6 +211,66 @@ describe Board do
 
         expect(board.move('axb6+')).to eq(true)
       end
+
+      it 'works with kingside castling when no + for check' do
+        board = Board.new
+        board.move('e4')
+        board.move('f5')
+
+        board.move('exf5')
+        board.move('g6')
+
+        board.move('fxg6')
+        board.move('hxg6')
+
+        board.move('d4')
+        board.move('Nh6')
+
+        board.move('Bc4')
+        board.move('g5')
+
+        board.move('f3')
+        board.move('g4')
+
+        board.move('Bxh6')
+        board.move('gxf3')
+
+        board.move('Nxf3')
+        board.move('Bxh6')
+
+        board.move('Ng5')
+        board.move('Kf8')
+
+        expect(board.move('0-0')).to eq(true)
+      end
+
+      it 'works with queenside castling when + is given for check' do
+        board = Board.new
+
+        board.move('d4')
+        board.move('c5')
+
+        board.move('dxc5')
+        board.move('Qb6')
+
+        board.move('cxb6')
+        board.move('d5')
+
+        board.move('Bg5')
+        board.move('Bh3')
+
+        board.move('Nd2')
+        board.move('Na6')
+
+        board.move('Ne4')
+        board.move('dxe4')
+
+        board.move('Qc1')
+        board.move('Bxg2')
+
+        board.move('Kd1')
+        expect(board.move('0-0-0+')).to eq(true)
+      end
     end
 
     context 'Can handle a full game with lots of bad input along the way' do
@@ -251,10 +311,12 @@ describe Board do
         expect(board.squares[5][2]).to be_a(WhiteKnight)
       end
 
-      it 'works with castling' do
+      it 'works with castling and does not accept invalid castling' do
         expect(board.move('0-0-0')).to eq(false)
+        expect(board.move('0-0+')).to eq(false)
         expect(board.move('0-0')).to eq(true)
         expect(board.move('0-0')).to eq(false)
+        expect(board.move('0-0-0+')).to eq(false)
         expect(board.move('0-0-0')).to eq(true)
         expect(board.squares[6][0]).to be_a(WhiteKing)
         expect(board.squares[3][7]).to be_a(BlackRook)
