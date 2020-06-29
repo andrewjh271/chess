@@ -67,14 +67,7 @@ class Board
     else
       notation = input.clone
       # removes parts of notation as they are used, and checks to make sure it's empty at end
-      target_piece = case notation.slice!(/^[KQRBN]/)
-                     when 'K' then white_to_move ? WhiteKing : BlackKing
-                     when 'Q' then white_to_move ? WhiteQueen : BlackQueen
-                     when 'R' then white_to_move ? WhiteRook : BlackRook
-                     when 'B' then white_to_move ? WhiteBishop : BlackBishop
-                     when 'N' then white_to_move ? WhiteKnight : BlackKnight
-                     else white_to_move ? WhitePawn : BlackPawn
-                     end
+      target_piece = find_target_piece(notation.slice!(/^[KQRBN]/))
       target_square = to_coords(notation.slice!(/[a-h][1-8]/))
       action = notation.slice!('x') ? 'capture' : 'move'
       # candidates deals with case where multiple target pieces could move to target square
@@ -151,6 +144,17 @@ class Board
   end
 
   private
+
+  def find_target_piece(string)
+    case string
+    when 'K' then white_to_move ? WhiteKing : BlackKing
+    when 'Q' then white_to_move ? WhiteQueen : BlackQueen
+    when 'R' then white_to_move ? WhiteRook : BlackRook
+    when 'B' then white_to_move ? WhiteBishop : BlackBishop
+    when 'N' then white_to_move ? WhiteKnight : BlackKnight
+    else white_to_move ? WhitePawn : BlackPawn
+    end
+  end
 
   def test_move(piece, target_square = nil)
     squares[piece.location[0]][piece.location[1]] = nil
