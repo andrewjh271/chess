@@ -23,7 +23,7 @@ class Board
   def initialize
     @squares = []
     @move_list = []
-    @move_number = 1
+    @move_number = 0
     @white_to_move = true
     @flip = false
     @old_locations = []
@@ -261,6 +261,9 @@ class Board
         end
         undo_test_move(piece, capture)
       end
+      # need to add en passant
+      # castling can't be only valid move
+      # move logic to new method to share with stalemate?
     end
     true
   end
@@ -299,12 +302,12 @@ class Board
 
   def update_move_list(input)
     if white_to_move
+      @move_number += 1
       @move_list << +"#{move_number}. #{' ' if move_number < 10}#{input}"
     else
       justify_left = 11 - move_list.last.length
       justify_right = 7 - input.length
       @move_list.last << "#{' ' * justify_left}#{input}#{' ' * justify_right}"
-      @move_number += 1
     end
   end
 
@@ -325,10 +328,10 @@ class Board
 
   def display_moves(line)
     print " #{move_list[line]}" if move_number > line
-    print "| #{move_list[line + 25]}" if move_number > line + 25
-    print "| #{move_list[line + 50]}" if move_number > line + 50
-    print "| #{move_list[line + 75]}" if move_number > line + 75
-    print "| #{move_list[line + 100]}" if move_number > line + 100
+    print "| #{move_list[line + 24]}" if move_number > line + 24
+    print "| #{move_list[line + 48]}" if move_number > line + 48
+    print "| #{move_list[line + 72]}" if move_number > line + 72
+    print "| #{move_list[line + 96]}" if move_number > line + 96
   end
 
   def fill_board
