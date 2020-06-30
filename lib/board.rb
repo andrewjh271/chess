@@ -51,14 +51,6 @@ class Board
     display
   end
 
-  def each_piece
-    squares.each do |rank|
-      rank.each do |square|
-        square ? (yield square) : next
-      end
-    end
-  end
-
   def move(input)
     if input.slice!('0-0-0')
       castle_queenside(input)
@@ -125,6 +117,14 @@ class Board
 
   private
 
+  def each_piece
+    squares.each do |rank|
+      rank.each do |square|
+        square ? (yield square) : next
+      end
+    end
+  end
+
   def find_target_piece(string)
     case string
     when 'K' then white_to_move ? WhiteKing : BlackKing
@@ -133,23 +133,6 @@ class Board
     when 'B' then white_to_move ? WhiteBishop : BlackBishop
     when 'N' then white_to_move ? WhiteKnight : BlackKnight
     else white_to_move ? WhitePawn : BlackPawn
-    end
-  end
-
-  def find_pawn_file(char)
-    char if char && char.match(/[a-h]/)
-  end
-
-  def find_piece(target_piece, target_square, action, notation)
-
-    candidates = find_candidates(target_piece, target_square, action)
-    if candidates.length == 0
-      false
-    elsif candidates.length == 1
-      candidates.first
-    else
-      # finds which target piece is intended
-      disambiguation(candidates, notation.slice!(0))
     end
   end
 
@@ -174,6 +157,22 @@ class Board
     false
   end
 
+  def find_pawn_file(char)
+    char if char && char.match(/[a-h]/)
+  end
+
+  def find_piece(target_piece, target_square, action, notation)
+    candidates = find_candidates(target_piece, target_square, action)
+    if candidates.length == 0
+      false
+    elsif candidates.length == 1
+      candidates.first
+    else
+      # finds which target piece is intended
+      disambiguation(candidates, notation.slice!(0))
+    end
+  end
+
   def find_candidates(target_piece, target_square, action)
     # deals with case where multiple target pieces could move to target square
     candidates = []
@@ -187,6 +186,19 @@ class Board
       end
     end
     candidates
+  end
+
+  def disambiguation(candidates, selection)
+    return false unless selection
+    
+    # only accepts the rank or file that narrows down candidates 
+    finalists = []
+    if selection.match(/[a-h]/)
+      candidates.each { |c| finalists << c if c.location[0] == selection.ord - 97 }
+    elsif selection.match(/[1-8]/)
+      candidates.each { |c| finalists << c if c.location[1] == selection.to_i - 1 }
+    end
+    return finalists.first if finalists.length == 1
   end
 
   def test_move(piece, target_square = nil)
@@ -223,19 +235,6 @@ class Board
     !in_check?
   end
 
-  def enter_valid_move(piece, target_square, input)
-    squares[piece.location[0]][piece.location[1]] = nil
-    squares[target_square[0]][target_square[1]] = piece
-    add_en_passant(piece, target_square)
-    piece.location = [target_square[0], target_square[1]]
-    update_move_list(input)
-    piece.has_moved = true if piece.respond_to?(:has_moved)
-    clear_en_passants
-    @white_to_move = white_to_move ? false : true
-    set_moves_and_captures
-    display
-  end
-
   def set_remainder
     # checks whether side not to move will be put in check or checkmate
     @white_to_move = white_to_move ? false : true
@@ -250,30 +249,22 @@ class Board
     @white_to_move = white_to_move ? false : true
   end
 
-  def add_en_passant(piece, target_square)
-    if piece.is_a?(Pawn) && (target_square[1] - piece.location[1]).abs == 2
-      # check for adjacent enemy pawns
-      target = white_to_move ? BlackPawn : WhitePawn
-      file = target_square[0]
-      rank = target_square[1]
-      if file > 0
-        adj = squares[file - 1][rank]
-        adj.add_en_passant(file) if adj && adj.is_a?(target)
-      end
-      if file < 7
-        adj = squares[file + 1][rank]
-        adj.add_en_passant(file) if adj && adj.is_a?(target)
-      end
-    end
+  def enter_valid_move(piece, target_square, input)
+    squares[piece.location[0]][piece.location[1]] = nil
+    squares[target_square[0]][target_square[1]] = piece
+    add_en_passant(piece, target_square)
+    piece.location = [target_square[0], target_square[1]]
+    update_move_list(input)
+    piece.has_moved = true if piece.respond_to?(:has_moved)
+    finalize_move
   end
 
-  def clear_en_passants
-    # only for side that just moved
-    each_piece do |piece|
-      next unless piece.is_a?(Pawn) && piece.white? == white_to_move
-
-      piece.remove_en_passant
-    end
+  def finalize_move
+    clear_en_passants
+    @white_to_move = white_to_move ? false : true
+    set_moves_and_captures
+    display # remove eventually
+    true
   end
 
   def update_move_list(input)
@@ -285,19 +276,6 @@ class Board
       @move_list.last << "#{' ' * justify_left}#{input}#{' ' * justify_right}"
       @move_number += 1
     end
-  end
-
-  def disambiguation(candidates, selection)
-    return false unless selection
-    
-    # only accepts the rank or file that narrows down candidates 
-    finalists = []
-    if selection.match(/[a-h]/)
-      candidates.each { |c| finalists << c if c.location[0] == selection.ord - 97 }
-    elsif selection.match(/[1-8]/)
-      candidates.each { |c| finalists << c if c.location[1] == selection.to_i - 1 }
-    end
-    return finalists.first if finalists.length == 1
   end
 
   def print_line(i, k, rank = nil)
@@ -383,7 +361,6 @@ class Board
       next if piece.white? == white_to_move
 
       # ensures king won't move into check along the way
-      # by making sure intersection of two arrays is empty
       return false unless (piece.valid_moves & empty_squares.first(2)).empty?
     end
     true
@@ -426,11 +403,7 @@ class Board
     update_move_list(input)
     squares[new_king[0]][new_king[1]].has_moved = true
     squares[new_rook[0]][new_rook[1]].has_moved = true
-    clear_en_passants
-    @white_to_move = white_to_move ? false : true
-    set_moves_and_captures
-    display
-    true
+    finalize_move
   end
 
   def en_passant(piece, input, notation)
@@ -443,11 +416,7 @@ class Board
     squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
     piece.location = piece.en_passant
     update_move_list(input)
-    clear_en_passants
-    @white_to_move = white_to_move ? false : true
-    set_moves_and_captures
-    display
-    true
+    finalize_move
   end
 
   def promote(piece, notation)
@@ -468,12 +437,6 @@ class Board
   end
 
   def validate_en_passant(piece, input, notation)
-    # if piece.location[0] == notation[0].ord - 97
-    #   notation.slice!(0)
-    # else
-    #   puts 'Invalid move: pawn not found'
-    #   return false
-    # end
     test_move(piece)
     unless safe_king?
       puts 'Invalid move: king in check'
@@ -492,6 +455,32 @@ class Board
     end
   end
 
+  def add_en_passant(piece, target_square)
+    if piece.is_a?(Pawn) && (target_square[1] - piece.location[1]).abs == 2
+      # check for adjacent enemy pawns
+      target = white_to_move ? BlackPawn : WhitePawn
+      file = target_square[0]
+      rank = target_square[1]
+      if file > 0
+        adj = squares[file - 1][rank]
+        adj.add_en_passant(file) if adj && adj.is_a?(target)
+      end
+      if file < 7
+        adj = squares[file + 1][rank]
+        adj.add_en_passant(file) if adj && adj.is_a?(target)
+      end
+    end
+  end
+
+  def clear_en_passants
+    # only for side that just moved
+    each_piece do |piece|
+      next unless piece.is_a?(Pawn) && piece.white? == white_to_move
+
+      piece.remove_en_passant
+    end
+  end
+
   def to_coords(notation)
     [notation[0].ord - 97, notation[1].to_i - 1]
   end
@@ -499,5 +488,5 @@ class Board
   def to_alg(coordinates)
     (coordinates[0] + 97).chr + (coordinates[1] + 1).to_s
   end
-
 end
+
