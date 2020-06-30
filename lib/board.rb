@@ -70,32 +70,12 @@ class Board
       target_piece = find_target_piece(notation.slice!(/^[KQRBN]/))
       target_square = to_coords(notation.slice!(/[a-h][1-8]/))
       action = notation.slice!('x') ? 'capture' : 'move'
-      # candidates deals with case where multiple target pieces could move to target square
-      candidates = []
-      each_piece do |piece|
-        next unless piece.is_a? target_piece
-        
-        if action == 'move' && piece.valid_moves.include?(target_square)
-          candidates << piece
-        elsif action == 'capture' && piece.valid_captures.include?(target_square)
-          # special treatment needed for Pawn because of chess algebraic notation
-          if piece.is_a?(Pawn) && piece.location[0] == notation[0].ord - 97
-            notation.slice!(0)
-            candidates << piece
-          elsif !piece.is_a?(Pawn)
-            candidates << piece
-          end
-        elsif action == 'capture' && piece.respond_to?(:en_passant) && piece.en_passant == target_square
-          return en_passant(piece, input, notation)
-        end
-      end
-      if candidates.length == 0
-        return false
-      elsif candidates.length == 1
-        piece = candidates.first
+      if [WhitePawn, BlackPawn].include?(target_piece)
+        piece = find_pawn(target_piece, target_square, action, input, notation)
+        # en_passant returns true instead of piece location
+        return piece if [true, false].include? piece
       else
-        # finds which target piece is intended
-        piece = disambiguation(candidates, notation.slice!(0))
+        piece = find_piece(target_piece, target_square, action, notation)
       end
       if piece
         test_move(piece, target_square)
@@ -105,7 +85,7 @@ class Board
           return false
         end
         # pawn promotion
-        if piece.is_a?(Pawn) && !target_square[1].between?(1, 6)
+        if piece.is_a?(Pawn) && [0,7].include?(target_square[1])
           piece = promote(piece, notation.slice!(0, 2))
           unless piece
             puts "Invalid move: promotion input not valid"
@@ -156,25 +136,57 @@ class Board
     end
   end
 
-  def find_candidates(target_piece, target_square, action)
-    candidates = []
-      each_piece do |piece|
-        next unless piece.is_a? target_piece
-        
-        if action == 'move' && piece.valid_moves.include?(target_square)
-          candidates << piece
-        elsif action == 'capture' && piece.valid_captures.include?(target_square)
-          # special treatment needed for Pawn because of chess algebraic notation
-          if piece.is_a?(Pawn) && piece.location[0] == notation[0].ord - 97
-            notation.slice!(0)
-            candidates << piece
-          elsif !piece.is_a?(Pawn)
-            candidates << piece
-          end
-        elsif action == 'capture' && piece.respond_to?(:en_passant) && piece.en_passant
-          return en_passant(piece, input, notation)
+  def find_pawn_file(char)
+    char if char && char.match(/[a-h]/)
+  end
+
+  def find_piece(target_piece, target_square, action, notation)
+
+    candidates = find_candidates(target_piece, target_square, action)
+    if candidates.length == 0
+      false
+    elsif candidates.length == 1
+      candidates.first
+    else
+      # finds which target piece is intended
+      disambiguation(candidates, notation.slice!(0))
+    end
+  end
+
+  def find_pawn(target_piece, target_square, action, input, notation)
+    if action == 'capture'
+      file = find_pawn_file(notation.slice!(0)) 
+      return false unless file
+    end
+    each_piece do |piece|
+      next unless piece.is_a? target_piece
+
+      if action == 'move' && piece.valid_moves.include?(target_square)
+        return piece
+      elsif action == 'capture' && piece.valid_captures.include?(target_square)
+        return piece if piece.location[0] == file.ord - 97
+      elsif action == 'capture'
+        if piece.location[0] == file.ord - 97 && piece.en_passant == target_square
+          return en_passant(piece, input, notation) 
         end
       end
+    end
+    false
+  end
+
+  def find_candidates(target_piece, target_square, action)
+    # deals with case where multiple target pieces could move to target square
+    candidates = []
+    each_piece do |piece|
+      next unless piece.is_a? target_piece
+      
+      if action == 'move' && piece.valid_moves.include?(target_square)
+        candidates << piece
+      elsif action == 'capture' && piece.valid_captures.include?(target_square)
+        candidates << piece
+      end
+    end
+    candidates
   end
 
   def test_move(piece, target_square = nil)
@@ -456,12 +468,12 @@ class Board
   end
 
   def validate_en_passant(piece, input, notation)
-    if piece.location[0] == notation[0].ord - 97
-      notation.slice!(0)
-    else
-      puts 'Invalid move: pawn not found'
-      return false
-    end
+    # if piece.location[0] == notation[0].ord - 97
+    #   notation.slice!(0)
+    # else
+    #   puts 'Invalid move: pawn not found'
+    #   return false
+    # end
     test_move(piece)
     unless safe_king?
       puts 'Invalid move: king in check'

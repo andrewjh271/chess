@@ -12,6 +12,7 @@ describe Board do
       board.move('e5')
       board.move('Bc4')
       board.move('Bc5')
+      expect(board.move('Bc2')).to eq(false)
 
       board.move('Bxf7')
       expect(board).to be_in_check
@@ -138,6 +139,30 @@ describe Board do
 
         board.move('h4')
         expect(board.move('gxf3')).to eq(false)
+        expect(board.move('fxh3')).to eq(false)
+        expect(board.move('gxh3')).to eq(true)
+      end
+
+      it 'finds correct pawn if multiple en_passants are possible' do
+        board = Board.new
+
+        board.move('e4')
+        board.move('c6')
+
+        board.move('g4')
+        board.move('b5')
+
+        board.move('e5')
+        board.move('a5')
+
+        board.move('g5')
+        board.move('f5')
+
+        expect(board.move('gxf6')).to eq(true)
+      end
+
+      it 'does not throw error if bad input given' do
+        expect(board.move('xf6')).to eq(false)
       end
     end
 
