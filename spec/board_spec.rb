@@ -323,7 +323,50 @@ describe Board do
       end
     end
 
-    context 'Can handle a full game with lots of bad input along the way' do
+    context 'Checkmate' do
+      it 'recognizes checkmate' do
+        board = Board.new
+        board.move('f4')
+        board.move('e5')
+
+        board.move('g4')
+        expect(board.move('Qh4#')).to eq(true)
+      end
+
+      it 'adds # when not given' do
+        board = Board.new
+        board.move('d4')
+        board.move('Nf6')
+
+        board.move('c4')
+        board.move('c5')
+
+        board.move('d5')
+        board.move('b5')
+
+        board.move('cxb5')
+        board.move('a6')
+
+        board.move('cxb5')
+        board.move('a6')
+
+        board.move('Nc3')
+        board.move('axb5')
+
+        board.move('e4')
+        board.move('b4')
+
+        board.move('Nb5')
+        board.move('Nxe4')
+
+        board.move('Qe2')
+        board.move('Nf6')
+
+        expect(board.move('Nd6')).to eq(true)
+      end
+    end
+
+    context 'Full game with lots of bad input along the way' do
       board = Board.new
 
       it 'works with first set of Pawn moves' do
@@ -480,9 +523,10 @@ describe Board do
 
         board.move('Rxf5')
         board.move('Qxh3+')
-        # add test for checkmate
+        
+        board.move('gxh3')
+        expect(board.move('Rhxh3#')).to eq(true)
       end
-
     end
 
   end

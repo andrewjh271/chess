@@ -16,7 +16,7 @@ class Board
   include EscapeSequences
 
   attr_reader :squares, :white_to_move, :move_list, :move_number, :flip,
-              :remainder, :old_location, :captured_piece
+              :remainder, :old_locations, :captured_pieces
   
   MAX = 7
 
@@ -26,6 +26,8 @@ class Board
     @move_number = 1
     @white_to_move = true
     @flip = false
+    @old_locations = []
+    @captured_pieces = []
     8.times { |i| @squares[i] = [] }
     fill_board
     set_moves_and_captures
@@ -203,22 +205,24 @@ class Board
 
   def test_move(piece, target_square = nil)
     squares[piece.location[0]][piece.location[1]] = nil
-    @old_location = piece.location
+    old_locations << piece.location
     if target_square
-      @captured_piece = squares[target_square[0]][target_square[1]]
+      captured_pieces << squares[target_square[0]][target_square[1]]
       squares[target_square[0]][target_square[1]] = piece
       piece.location = [target_square[0], target_square[1]]
     else
       # must be en_passant
       squares[piece.en_passant[0]][piece.en_passant[1]] = piece
-      @captured_piece = squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]
+      captured_pieces << squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]
       squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
       piece.location = [piece.en_passant[0], piece.en_passant[1]]
     end
-    test_captures
+    set_moves_and_captures
   end
 
   def undo_test_move(piece, target_square = nil)
+    old_location = old_locations.pop
+    captured_piece = captured_pieces.pop
     squares[old_location[0]][old_location[1]] = piece
     if target_square
       squares[target_square[0]][target_square[1]] = captured_piece
@@ -228,21 +232,47 @@ class Board
       squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = captured_piece
     end
     piece.location = [old_location[0], old_location[1]]
-    test_captures
+    set_moves_and_captures
   end
 
   def safe_king?
     !in_check?
   end
 
+  def checkmate?
+    return false unless in_check?
+
+    each_piece do |piece|
+      next unless piece.white? == white_to_move
+
+      piece.valid_moves.each do |a_move|
+        test_move(piece, a_move)
+        if safe_king?
+          undo_test_move(piece, a_move)
+          return false
+        end
+        undo_test_move(piece, a_move)
+      end
+      piece.valid_captures.each do |capture|
+        test_move(piece, capture)
+        if safe_king?
+          undo_test_move(piece, capture)
+          return false
+        end
+        undo_test_move(piece, capture)
+      end
+    end
+    true
+  end
+
   def set_remainder
     # checks whether side not to move will be put in check or checkmate
     @white_to_move = white_to_move ? false : true
     # binding.pry
-    if in_check?
+    if checkmate?
+      @remainder = ['#', '']
+    elsif in_check?
       @remainder = ['+', ''] 
-    # elsif checkmate?
-    #   @remainder = ['#', '']
     else
       @remainder = ['']
     end
@@ -329,9 +359,9 @@ class Board
     end
   end
 
-  def test_captures
-    each_piece(&:set_valid_captures)
-  end
+  # def test_captures
+  #   each_piece(&:set_valid_captures)
+  # end
 
   def castle_kingside(notation)
     rank = white_to_move ? 0 : 7
@@ -374,7 +404,7 @@ class Board
 
     squares[new_king[0]][new_king[1]].location = [new_king[0], new_king[1]]
     squares[new_rook[0]][new_rook[1]].location = [new_rook[0], new_rook[1]]
-    test_captures
+    set_moves_and_captures
   end
 
   def undo_test_castle(king, rook, new_king, new_rook)
@@ -385,7 +415,7 @@ class Board
 
     squares[king[0]][king[1]].location = [king[0], king[1]]
     squares[rook[0]][rook[1]].location = [rook[0], rook[1]]
-    test_captures
+    set_moves_and_captures
   end
 
   def castle(king, rook, new_king, new_rook, input, notation)
