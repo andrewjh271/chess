@@ -361,8 +361,8 @@ class Board
       @move_number += 1
       @move_list << +"#{move_number}. #{' ' if move_number < 10}#{input}"
     else
-      justify_left = 11 - move_list.last.length
-      justify_right = 7 - input.length
+      justify_left = 12 - move_list.last.length
+      justify_right = 8 - input.length
       @move_list.last << "#{' ' * justify_left}#{input}#{' ' * justify_right}"
     end
   end
