@@ -564,8 +564,8 @@ class Board
     end
   end
 
+  # unique identifier for each position
   def snapshot
-    # unique identifier for each position
     string = white_to_move ? '0'.dup : '1'.dup
     each_square do |square|
       if square
