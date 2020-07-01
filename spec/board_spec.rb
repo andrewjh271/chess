@@ -364,6 +364,46 @@ describe Board do
 
         expect(board.move('Nd6')).to eq(true)
       end
+
+      it 'recognizes one more checkmate' do
+        #Andreikin, Dmitry vs. Karjakin, Sergey 11/16/2010 Wch Blitz Moscow
+        board = Board.new
+
+        board.move('c4')
+        board.move('e5')
+
+        board.move('Nc3')
+        board.move('Nc6')
+
+        board.move('Nf3')
+        board.move('g6')
+
+        board.move('d4')
+        board.move('exd4')
+
+        board.move('Nd5')
+        board.move('Bg7')
+
+        board.move('Bg5')
+        board.move('Nge7')
+
+        board.move('Nxd4')
+        board.move('Bxd4')
+
+        board.move('Qxd4')
+        board.move('0-0')
+
+        board.move('Nf6+')
+        board.move('Kh8')
+
+        expect(board.move('Ng4+')).to eq(true)
+        # Could have continued...
+        board.move('Nxd4')
+        expect(board.move('Bf6+')).to eq(true)
+        board.move('Kg8')
+
+        expect(board.move('Nh6#')).to eq(true)
+      end
     end
 
     context 'Full game with lots of bad input along the way' do
