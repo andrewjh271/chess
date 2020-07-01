@@ -18,25 +18,6 @@ class Rook < Piece
     @directions = [[0, 1], [1, 0], [0, -1], [-1, 0]]
   end
 
-  # not needed  (I think...)
-  def all_moves
-    file = location[0]
-    rank = location[1]
-    moves = []
-    (-7..7).each do |i|
-      next if i.zero?
-
-      moves << [file + i, rank]
-      moves << [file, rank + i]
-    end
-    moves
-  end
-
-  def in_bounds_moves
-    all_moves.select { |move| move[0].between?(0, Board::MAX) && move[1].between?(0, Board::MAX) }
-  end
-  # keeping for now ^
-
   def set_valid_moves
     # non-captures
     @valid_moves = find_valid_moves(directions)
