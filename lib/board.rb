@@ -77,11 +77,9 @@ class Board
         piece = promote(piece, notation.slice!(0, 2))
         unless piece
           puts "Invalid move: promotion input not valid"
-          # undo_test_move(piece, target_square)
           return false
         end
       end
-      
       test_move(piece, target_square)
       unless validate_move(piece, target_square, notation) && check_remainder(input, notation)
         undo_test_move(piece, target_square)
@@ -90,62 +88,15 @@ class Board
       undo_test_move(piece, target_square)
       enter_valid_move(piece, target_square, input)
       true
-      # if piece
-      #   test_move(piece, target_square)
-      #   unless safe_king?
-      #     puts 'Invalid move: king in check'
-      #     undo_test_move(piece, target_square)
-      #     return false
-      #   end
-      #   # pawn promotion
-      #   if piece.is_a?(Pawn) && [0,7].include?(target_square[1])
-      #     piece = promote(piece, notation.slice!(0, 2))
-      #     unless piece
-      #       puts "Invalid move: promotion input not valid"
-      #       undo_test_move(piece, target_square)
-      #       return false
-      #     end
-      #   end
-      #   # validates remaining user input
-      #   set_remainder
-      #   if remainder.include?(notation)
-      #     # adds + or # for check or checkmate if not already in input
-      #     input << remainder.first unless notation == remainder.first
-      #   else
-      #     puts "Invalid move: extra characters"
-      #     undo_test_move(piece, target_square)
-      #     return false
-      #   end
-      #   undo_test_move(piece, target_square)
-      #   enter_valid_move(piece, target_square, input)
-      #   return true
-      # else
-      #   puts "Not a valid move"
-      #   return false
-      # end
     end
   end
 
   def validate_move(piece, target_square, notation)
-    # return false unless piece
-
-    # test_move(piece, target_square)
     # can't move into check (or ignore being in check)
     unless safe_king?
       puts 'Invalid move: king in check'
-      # undo_test_move(piece, target_square)
       return false
     end
-    # pawn promotion
-    # if piece.is_a?(Pawn) && [0,7].include?(target_square[1])
-    #   piece = promote(piece, notation.slice!(0, 2))
-    #   unless piece
-    #     puts "Invalid move: promotion input not valid"
-    #     # undo_test_move(piece, target_square)
-    #     return false
-    #   end
-    # end
-    # undo_test_move(piece, target_square)
     true
   end
 
@@ -158,7 +109,6 @@ class Board
       true
     else
       puts "Invalid move: extra characters"
-      # undo_test_move(piece, target_square)
       false
     end
   end
@@ -327,7 +277,6 @@ class Board
   def set_remainder
     # checks whether side not to move will be put in check or checkmate
     @white_to_move = white_to_move ? false : true
-    # binding.pry
     if checkmate?
       @remainder = ['#', '']
     elsif in_check?
@@ -417,10 +366,6 @@ class Board
       piece.set_valid_captures
     end
   end
-
-  # def test_captures
-  #   each_piece(&:set_valid_captures)
-  # end
 
   def castle_kingside(notation)
     rank = white_to_move ? 0 : 7
