@@ -248,6 +248,18 @@ class Board
   def checkmate?
     return false unless in_check?
 
+    return no_moves?
+  end
+
+  public #temporary
+  def stalemate?
+    return false unless safe_king?
+
+    return no_moves?
+  end
+  private
+
+  def no_moves?
     each_piece do |piece|
       next unless piece.white? == white_to_move
 
@@ -267,9 +279,14 @@ class Board
         end
         undo_test_move(piece, capture)
       end
-      # need to add en passant
+      if piece.is_a?(Pawn) && piece.en_passant
+        test_move(piece)
+        if safe_king?
+          undo_test_move(piece)
+          return false
+        end
+      end
       # castling can't be only valid move
-      # move logic to new method to share with stalemate?
     end
     true
   end

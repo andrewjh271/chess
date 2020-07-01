@@ -436,6 +436,42 @@ describe Board do
       end
     end
 
+    context 'Stalemate' do
+      it 'recognizes stalemate' do
+        board = Board.new
+
+        board.move('e3')
+        board.move('a5')
+  
+        board.move('Qh5')
+        board.move('Ra6')
+  
+        board.move('Qxa5')
+        board.move('h5')
+  
+        board.move('h4')
+        board.move('Rah6')
+  
+        board.move('Qxc7')
+        board.move('f6')
+  
+        board.move('Qxd7+')
+        board.move('Kf7')
+  
+        board.move('Qxb7')
+        board.move('Qd3')
+  
+        board.move('Qxb8')
+        board.move('Qh7')
+  
+        board.move('Qxc8')
+        board.move('Kg6')
+  
+        board.move('Qe6')
+        expect(board.stalemate?).to eq(true)
+      end
+    end
+
     context 'Full game with lots of bad input along the way' do
       board = Board.new
 
