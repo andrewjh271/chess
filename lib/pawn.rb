@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 require_relative 'piece'
 require 'pry'
 
 class Pawn < Piece
   private
 
-  attr_reader :color
+  attr_reader :color, :moved
 
   public
 
-  attr_accessor :has_moved, :en_passant, :en_passant_capture
+  attr_accessor :en_passant, :en_passant_capture
 
   def initialize(board, location, color)
     super
-    @has_moved = false
+    @moved = false
   end
 
   def to_s
@@ -23,7 +25,7 @@ class Pawn < Piece
     moves = []
     file = location[0]
     rank = location[1] + 1 * dir
-    unless has_moved
+    unless has_moved?
       moves << [file, rank + 1 * dir] if board.squares[file][rank + 1 * dir].nil? &&
                                          board.squares[file][rank].nil?
     end
@@ -44,11 +46,21 @@ class Pawn < Piece
     end
     @valid_captures = captures
   end
+
+  def has_moved?
+    moved
+  end
+
+  def has_moved
+    @moved = true
+    @identifier.upcase!
+  end
 end
 
 class WhitePawn < Pawn
   def initialize(board, location)
     super(board, location, 'white')
+    @identifier = 'k'.dup
   end
 
   def set_valid_moves
@@ -62,16 +74,19 @@ class WhitePawn < Pawn
   def add_en_passant(file)
     @en_passant = [file, 5]
     @en_passant_capture = [file, 4]
+    @identifier << 'p'
   end
 
   def remove_en_passant
     @en_passant = nil
+    @identifier.slice!('p')
   end
 end
 
 class BlackPawn < Pawn
   def initialize(board, location)
     super(board, location, 'black')
+    @identifier = 'l'.dup
   end
 
   def set_valid_moves

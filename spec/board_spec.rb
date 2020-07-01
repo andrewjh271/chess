@@ -472,6 +472,67 @@ describe Board do
       end
     end
 
+    context 'threefold repetition' do
+      it 'recognizes threefold repetition in a row' do
+        board = Board.new
+        board.move('Nf3')
+        board.move('Nf6')
+        board.move('Ng1')
+        board.move('Ng8')
+        expect(board.threefold_repetition?).to eq(false)
+        board.move('Nf3')
+        board.move('Nf6')
+        board.move('Ng1')
+        board.move('Ng8')
+        expect(board.threefold_repetition?).to eq(true)
+      end
+
+      it 'recognizes threefold repetition not in a row' do
+        board = Board.new
+
+        board.move('d4')
+        board.move('Nc6')
+
+        board.move('Bf4')
+        board.move('Nf6')
+
+        board.move('Nc3')
+        board.move('Nb8')
+
+        board.move('Nb1')
+        board.move('Ng8')
+
+        board.move('Bc1')
+        board.move('Nh6')
+
+        board.move('Na3')
+        board.move('Ng8')
+
+        expect(board.threefold_repetition?).to eq(false)
+        board.move('Nb1')
+        expect(board.threefold_repetition?).to eq(true)
+      end
+    end
+
+    context 'Fifty move rule' do
+      it 'recognizes fifty move rule' do
+        board = Board.new
+
+        24.times do
+          board.move('Nf3')
+          board.move('Nc6')
+          board.move('Ng1')
+          board.move('Nb8')
+        end
+        expect(board.fifty_moves?).to eq(false)
+        board.move('Nf3')
+        board.move('Nc6')
+        board.move('Ng1')
+        board.move('Nb8')
+        expect(board.fifty_moves?).to eq(true)
+      end
+    end
+
     context 'Full game with lots of bad input along the way' do
       board = Board.new
 

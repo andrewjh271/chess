@@ -33,11 +33,13 @@ end
 class WhiteQueen < Queen
   def initialize(board, location)
     super(board, location, 'white')
+    @identifier = 'c'
   end
 end
 
 class BlackQueen < Queen
   def initialize(board, location)
     super(board, location, 'black')
+    @identifier = 'd'
   end
 end

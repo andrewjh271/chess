@@ -44,11 +44,13 @@ end
 class WhiteKnight < Knight
   def initialize(board, location)
     super(board, location, 'white')
+    @identifier = 'i'
   end
 end
 
 class BlackKnight < Knight
   def initialize(board, location)
     super(board, location, 'black')
+    @identifier = 'j'
   end
 end

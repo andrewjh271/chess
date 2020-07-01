@@ -9,6 +9,7 @@ require_relative 'queen'
 require_relative 'king'
 require_relative 'pawn'
 require 'pry'
+require 'yaml'
 
 # ♟ ♞ ♝ ♜ ♛ ♚ ♙ ♘ ♗ ♖ ♕ ♔
 class Board
@@ -16,7 +17,7 @@ class Board
   include EscapeSequences
 
   attr_reader :squares, :white_to_move, :move_list, :move_number, :flip,
-              :remainder, :old_locations, :captured_pieces
+              :remainder, :old_locations, :captured_pieces, :repetition_hash, :fifty_move_count
   
   MAX = 7
 
@@ -28,8 +29,11 @@ class Board
     @flip = false
     @old_locations = []
     @captured_pieces = []
+    @fifty_move_count = 0
+    @repetition_hash = Hash.new(0)
     8.times { |i| @squares[i] = [] }
     fill_board
+    add_position
     set_moves_and_captures
   end
 
@@ -257,7 +261,29 @@ class Board
 
     return no_moves?
   end
+
+  def fifty_moves?
+    fifty_move_count >= 50
+  end
+
+  def threefold_repetition?
+    repetition_hash.any? { |k, v| v > 2 }
+  end
   private
+
+  def update_repetitions(irreversible, altered_state)
+    @fifty_move_count = irreversible ? 0.5 : (fifty_move_count + 0.5)
+    clear_positions if altered_state
+    add_position
+  end
+
+  def add_position
+    repetition_hash[snapshot] += 1
+  end
+
+  def clear_positions
+    repetition_hash = Hash.new(0)
+  end
 
   def no_moves?
     each_piece do |piece|
@@ -310,13 +336,16 @@ class Board
     add_en_passant(piece, target_square)
     piece.location = [target_square[0], target_square[1]]
     update_move_list(input)
-    piece.has_moved = true if piece.respond_to?(:has_moved)
-    finalize_move
+    piece.has_moved if piece.respond_to?(:has_moved)
+    irreversible = piece.is_a?(Pawn) || input.include?('x')
+    finalize_move(irreversible, irreversible)
   end
 
-  def finalize_move
+  def finalize_move(irreversible = false, altered_state = true)
+    # parameters for 50 move rule and threefold repetition; #castle doesn't provide argument
     clear_en_passants
     @white_to_move = white_to_move ? false : true
+    update_repetitions(irreversible, altered_state)
     set_moves_and_captures
     display # remove eventually
     true
@@ -404,7 +433,7 @@ class Board
 
   def validate_castle(targets, empty_squares)
     return false if in_check?
-    targets.each { |t| return false if squares[t[0]][t[1]].has_moved }
+    targets.each { |t| return false if squares[t[0]][t[1]].has_moved? }
     # ensures squares between are empty
     empty_squares.each { |e| return false unless squares[e[0]][e[1]].nil? }
 
@@ -447,8 +476,8 @@ class Board
     end
     # leaves assignments from #test_castle b/c nothing else to check
     update_move_list(input)
-    squares[new_king[0]][new_king[1]].has_moved = true
-    squares[new_rook[0]][new_rook[1]].has_moved = true
+    squares[new_king[0]][new_king[1]].has_moved
+    squares[new_rook[0]][new_rook[1]].has_moved
     finalize_move
   end
 
@@ -526,5 +555,25 @@ class Board
   def to_alg(coordinates)
     (coordinates[0] + 97).chr + (coordinates[1] + 1).to_s
   end
-end
 
+  def each_square
+    squares.each do |rank|
+      rank.each do |square|
+        yield square
+      end
+    end
+  end
+
+  def snapshot
+    # unique identifier for each position
+    string = white_to_move ? '0'.dup : '1'.dup
+    each_square do |square|
+      if square
+        string << square.identifier
+      else
+        string << 'z'
+      end
+    end
+    string
+  end
+end

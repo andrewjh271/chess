@@ -3,11 +3,9 @@ require_relative 'piece'
 class King < Piece
   private
 
-  attr_reader :in_check, :directions
+  attr_reader :in_check, :directions, :moved
 
   public
-
-  attr_accessor :has_moved
 
   def initialize(board, location, color)
     super
@@ -55,18 +53,25 @@ class King < Piece
   end
 
   def has_moved?
-    has_moved
+    moved
+  end
+
+  def has_moved
+    @moved = true
+    @identifier.upcase!
   end
 end
 
 class WhiteKing < King
   def initialize(board, location)
     super(board, location, 'white')
+    @identifier = 'a'
   end
 end
 
 class BlackKing < King
   def initialize(board, location)
     super(board, location, 'black')
+    @identifier = 'b'
   end
 end

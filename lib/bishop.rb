@@ -33,11 +33,13 @@ end
 class WhiteBishop < Bishop
   def initialize(board, location)
     super(board, location, 'white')
+    @identifier = 'g'
   end
 end
 
 class BlackBishop < Bishop
   def initialize(board, location)
     super(board, location, 'black')
+    @identifier = 'h'
   end
 end

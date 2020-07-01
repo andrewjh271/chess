@@ -6,11 +6,9 @@ class Rook < Piece
 
   private
 
-  attr_reader :directions
+  attr_reader :directions, :moved
 
   public
-
-  attr_accessor :has_moved
 
   def initialize(board, location, color)
     super
@@ -33,18 +31,25 @@ class Rook < Piece
   end
 
   def has_moved?
-    has_moved
+    moved
+  end
+
+  def has_moved
+    @moved = true
+    @identifier.upcase!
   end
 end
 
 class WhiteRook < Rook
   def initialize(board, location)
     super(board, location, 'white')
+    @identifier = 'e'
   end
 end
 
 class BlackRook < Rook
   def initialize(board, location)
     super(board, location, 'black')
+    @identifier = 'f'
   end
 end
