@@ -269,6 +269,21 @@ class Board
   def threefold_repetition?
     repetition_hash.any? { |k, v| v > 2 }
   end
+
+  def no_mating_material?
+    pieces_left = []
+    each_piece do |piece|
+      return false if piece.is_a?(Pawn) || piece.is_a?(Rook) || piece.is_a?(Queen)
+      next if piece.is_a?(King)
+
+      pieces_left << piece
+    end
+    return true if pieces_left.length < 2 ||
+                   pieces_left == 2 && pieces_left[0].is_a?(Bishop) &&
+                   pieces_left[1].is_a?(Bishop) &&
+                   pieces_left[0].dark_squared? == pieces_left[1].dark_squared?
+    false
+  end
   private
 
   def update_repetitions(irreversible, altered_state)

@@ -533,6 +533,82 @@ describe Board do
       end
     end
 
+    context 'Insufficient mating material' do
+      it 'recognizes insufficient mating material' do
+        board = Board.new
+
+        board.move('e4')
+        board.move('d5')
+
+        board.move('exd5')
+        board.move('Qxd5')
+
+        board.move('Qf3')
+        board.move('Qxa2')
+
+        board.move('Qxb7')
+        board.move('Qxa1')
+
+        board.move('Qxa8')
+        board.move('Qxb2')
+
+        board.move('Qxa7')
+        board.move('Qxb1')
+
+        board.move('Qxb8')
+        board.move('Qxc2')
+
+        board.move('Qxc7')
+        board.move('Qxc1+')
+
+        board.move('Ke2')
+        board.move('Qxf1+')
+
+        board.move('Ke3')
+        board.move('Qxg2')
+
+        board.move('d4')
+        board.move('Qxh2')
+
+        board.move('d5')
+        board.move('Qxg1')
+
+        board.move('Rxh7')
+        board.move('e6')
+
+        board.move('dxe6')
+        board.move('Bc5+')
+
+        board.move('Qxc5')
+        board.move('g6')
+
+        board.move('exf7+')
+        board.move('Kd7')
+
+        board.move('fxg8=N+')
+        board.move('Rxh7')
+
+        board.move('Qg5')
+        board.move('Qxf2+')
+
+        board.move('Kxf2')
+        board.move('Rh6')
+
+        board.move('Nxh6')
+        board.move('Ba6')
+
+        board.move('Qxg6')
+        board.move('Bd3')
+
+        board.move('Qf5+')
+        board.move('Bxf5')
+
+        expect(board.no_mating_material?).to eq(false)
+        board.move('Nxf5')
+        expect(board.no_mating_material?).to eq(true)
+      end
+    end
+
     context 'Full game with lots of bad input along the way' do
       board = Board.new
 

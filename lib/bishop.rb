@@ -28,6 +28,10 @@ class Bishop < Piece
   def to_s
     white? ? "♝".gray : "♝".black
   end
+
+  def dark_squared?
+    (location[0] + location[1]).even?
+  end
 end
 
 class WhiteBishop < Bishop
