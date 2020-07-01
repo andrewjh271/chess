@@ -474,19 +474,11 @@ class Board
     test_move(piece)
     unless safe_king?
       puts 'Invalid move: king in check'
-      undo_test_move(piece)
-      return false
+      result = false
     end
-    # validates remaining user input
-    set_remainder
-    if remainder.include?(notation)
-      undo_test_move(piece)
-      true
-    else
-      puts "Invalid move: extra characters"
-      undo_test_move(piece)
-      false
-    end
+    result = false unless check_remainder(input, notation)
+    undo_test_move(piece)
+    return result == false ? false : true
   end
 
   def add_en_passant(piece, target_square)
