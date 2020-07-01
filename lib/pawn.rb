@@ -53,7 +53,6 @@ class Pawn < Piece
 
   def has_moved
     @moved = true
-    @identifier.upcase!
   end
 end
 
@@ -74,12 +73,12 @@ class WhitePawn < Pawn
   def add_en_passant(file)
     @en_passant = [file, 5]
     @en_passant_capture = [file, 4]
-    @identifier << 'p'
+    @identifier.upcase!
   end
 
   def remove_en_passant
     @en_passant = nil
-    @identifier.slice!('p')
+    @identifier.downcase!
   end
 end
 
