@@ -424,12 +424,7 @@ class Board
 
   def castle(king, rook, new_king, new_rook, input, notation)
     test_castle(king, rook, new_king, new_rook)
-    set_remainder
-    if remainder.include?(notation)
-      # adds + or # for check or checkmate if not already in input
-      input << remainder.first
-    else
-      puts "Invalid move: extra characters"
+    unless check_remainder(input, notation)
       undo_test_castle(king, rook, new_king, new_rook)
       return false
     end
