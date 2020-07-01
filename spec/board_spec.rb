@@ -169,7 +169,7 @@ describe Board do
     context 'promotion' do
       board = Board.new
       
-      it 'allows capture promotion to WhiteKnight' do
+      it 'ignores bad input' do
         board.move('d4')
         board.move('e5')
 
@@ -182,7 +182,14 @@ describe Board do
         board.move('fxg7')
         board.move('d4')
 
-        board.move('gxh8=N')
+        expect(board.move('gxh8')).to eq(false)
+        expect(board.move('gxh8=G')).to eq(false)
+        expect(board.move('gxh8N')).to eq(false)
+        expect(board.move('gxh8Knight')).to eq(false)
+      end
+
+      it 'allows capture promotion to WhiteKnight' do
+        expect(board.move('gxh8=N')).to eq(true)
         expect(board.squares[7][7]).to be_a(WhiteKnight)
       end
 
@@ -195,6 +202,29 @@ describe Board do
         board.move('Nf3')
         board.move('c1=Q')
         expect(board.squares[2][0]).to be_a(BlackQueen)
+      end
+
+      it 'allows promotion to come with check' do
+        board.move('e4')
+        board.move('c5')
+
+        board.move('e5')
+        board.move('c4')
+
+        board.move('e6')
+        board.move('c3')
+
+        board.move('e7')
+        board.move('c2')
+
+        expect(board.move('exf8=R')).to eq(true)
+      end
+
+      it 'allows promotion to come with checkmate' do
+        board.move('Kxf8')
+
+        board.move('Nbd2')
+        expect(board.move('cxd1=Q#')).to eq(true)
       end
     end
 
