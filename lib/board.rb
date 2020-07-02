@@ -16,7 +16,7 @@ class Board
   
   include EscapeSequences
 
-  attr_reader :squares, :white_to_move, :move_list, :move_number, :flip,
+  attr_reader :squares, :white_to_move, :move_list, :move_number, :flip, :score,
               :remainder, :old_locations, :captured_pieces, :repetition_hash, :fifty_move_count
   
   MAX = 7
@@ -31,6 +31,7 @@ class Board
     @captured_pieces = []
     @fifty_move_count = 0
     @repetition_hash = Hash.new(0)
+    @score
     8.times { |i| @squares[i] = [] }
     fill_board
     add_position
@@ -55,6 +56,22 @@ class Board
   def flip_board
     @flip = flip ? false : true
     display
+  end
+
+  def over?
+    @score =
+      if checkmate?
+        white_to_move ? '0-1 Black Wins' : '1-0 White Wins'
+      elsif stalemate?
+        '1/2 - 1/2 Stalemate'
+      elsif no_mating_material?
+        '1/2 - 1/2 Insufficient Mating Material'
+      elsif fifty_moves?
+        '1/2 - 1/2 Fifty Move Rule'
+      elsif threefold_repetition?
+        '1/2 - 1/2 Draw by Threefold Repetition'
+      end
+    return score ? true : false
   end
 
   def move(input)
@@ -255,7 +272,6 @@ class Board
     return no_moves?
   end
 
-  public #temporary
   def stalemate?
     return false unless safe_king?
 
@@ -284,7 +300,6 @@ class Board
                    pieces_left[0].dark_squared? == pieces_left[1].dark_squared?
     false
   end
-  private
 
   def update_repetitions(irreversible, altered_state)
     @fifty_move_count = irreversible ? 0.5 : (fifty_move_count + 0.5)

@@ -361,6 +361,8 @@ describe Board do
 
         board.move('g4')
         expect(board.move('Qh4#')).to eq(true)
+        expect(board).to be_over
+        expect(board.score).to eq('0-1 Black Wins')
       end
 
       it 'adds # when not given' do
@@ -393,6 +395,8 @@ describe Board do
         board.move('Nf6')
 
         expect(board.move('Nd6')).to eq(true)
+        expect(board).to be_over
+        expect(board.score).to eq('1-0 White Wins')
       end
 
       it 'recognizes one more checkmate' do
@@ -433,6 +437,8 @@ describe Board do
         board.move('Kg8')
 
         expect(board.move('Nh6#')).to eq(true)
+        expect(board).to be_over
+        expect(board.score).to eq('1-0 White Wins')
       end
     end
 
@@ -468,7 +474,8 @@ describe Board do
         board.move('Kg6')
   
         board.move('Qe6')
-        expect(board.stalemate?).to eq(true)
+        expect(board).to be_over
+        expect(board.score).to eq('1/2 - 1/2 Stalemate')
       end
     end
 
@@ -479,12 +486,13 @@ describe Board do
         board.move('Nf6')
         board.move('Ng1')
         board.move('Ng8')
-        expect(board.threefold_repetition?).to eq(false)
+        expect(board).not_to be_over
         board.move('Nf3')
         board.move('Nf6')
         board.move('Ng1')
         board.move('Ng8')
-        expect(board.threefold_repetition?).to eq(true)
+        expect(board).to be_over
+        expect(board.score).to eq('1/2 - 1/2 Draw by Threefold Repetition')
       end
 
       it 'recognizes threefold repetition not in a row' do
@@ -508,9 +516,10 @@ describe Board do
         board.move('Na3')
         board.move('Ng8')
 
-        expect(board.threefold_repetition?).to eq(false)
+        expect(board).not_to be_over
         board.move('Nb1')
-        expect(board.threefold_repetition?).to eq(true)
+        expect(board).to be_over
+        expect(board.score).to eq('1/2 - 1/2 Draw by Threefold Repetition')
       end
     end
 
@@ -524,12 +533,12 @@ describe Board do
           board.move('Ng1')
           board.move('Nb8')
         end
-        expect(board.fifty_moves?).to eq(false)
         board.move('Nf3')
         board.move('Nc6')
         board.move('Ng1')
         board.move('Nb8')
-        expect(board.fifty_moves?).to eq(true)
+        expect(board).to be_over
+        expect(board.score).to eq('1/2 - 1/2 Fifty Move Rule')
       end
     end
 
@@ -603,9 +612,10 @@ describe Board do
         board.move('Qf5+')
         board.move('Bxf5')
 
-        expect(board.no_mating_material?).to eq(false)
+        expect(board).not_to be_over
         board.move('Nxf5')
-        expect(board.no_mating_material?).to eq(true)
+        expect(board).to be_over
+        expect(board.score).to eq('1/2 - 1/2 Insufficient Mating Material')
       end
     end
 
