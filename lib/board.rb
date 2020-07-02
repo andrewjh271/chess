@@ -75,6 +75,8 @@ class Board
   end
 
   def move(input)
+    return false unless validate_input(input)
+
     if input.slice!('0-0-0')
       castle_queenside(input)
     elsif input.slice!('0-0')
@@ -145,6 +147,11 @@ class Board
   end
 
   private
+
+  def validate_input(input)
+    return false unless input.match(/[a-h][1-8]|0-0|0-0-0/)
+    input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBN0x\-=\+#]/)}
+  end
 
   def each_piece
     squares.each do |rank|
