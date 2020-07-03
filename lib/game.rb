@@ -7,7 +7,7 @@ class Game
   include EscapeSequences
   include SaveLoad
 
-  COMMANDS = ['flip', 'quit', 'help', 'save']
+  COMMANDS = ['flip', 'help', 'save', 'quit']
 
   attr_reader :board, :to_move
 
@@ -23,10 +23,10 @@ class Game
       input = gets.chomp
       if COMMANDS.include?(input)
         enter_command(input)
-        input == 'quit' ? break : next
+        COMMANDS.last(2).include?(input) ? break : next
       end
       unless board.move(input)
-        print_info("#{board.error_message} Enter help for help.".red)
+        print_info("#{board.error_message} Enter help for info.".red)
         next
       end
       @to_move = to_move == 'White' ? 'Black' : 'White'
@@ -39,7 +39,7 @@ class Game
     if input == 'flip'
       board.flip_board
     elsif input == 'help'
-      print_info('Input moves using Chess Algebraic Notation, or enter one of the following commands: flip | quit | save'.green)
+      print_info('Input moves using Standard Algebraic Notation, or enter one of the following commands: flip | quit | save'.green)
     elsif input == 'save'
       save_game(self)
     end

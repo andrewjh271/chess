@@ -1,0 +1,645 @@
+--- !ruby/object:Game
+board: &1 !ruby/object:Board
+  squares:
+  - - !ruby/object:WhiteRook
+      board: *1
+      location:
+      - 0
+      - 0
+      color: white
+      valid_moves:
+      - - 0
+        - 1
+      - - 1
+        - 0
+      - - 2
+        - 0
+      - - 3
+        - 0
+      valid_captures: []
+      has_moved: false
+      directions:
+      - - 0
+        - 1
+      - - 1
+        - 0
+      - - 0
+        - -1
+      - - -1
+        - 0
+      identifier: e
+    - 
+    - !ruby/object:WhitePawn
+      board: *1
+      location:
+      - 0
+      - 2
+      color: white
+      valid_moves:
+      - - 0
+        - 3
+      valid_captures: []
+      moved: true
+      identifier: k
+      en_passant: 
+    - 
+    - !ruby/object:BlackPawn
+      board: *1
+      location:
+      - 0
+      - 4
+      color: black
+      valid_moves:
+      - - 0
+        - 3
+      valid_captures: []
+      moved: true
+      identifier: l
+      en_passant: 
+    - 
+    - 
+    - !ruby/object:BlackRook
+      board: *1
+      location:
+      - 0
+      - 7
+      color: black
+      valid_moves:
+      - - 1
+        - 7
+      - - 2
+        - 7
+      - - 0
+        - 6
+      - - 0
+        - 5
+      valid_captures: []
+      has_moved: false
+      directions:
+      - - 0
+        - 1
+      - - 1
+        - 0
+      - - 0
+        - -1
+      - - -1
+        - 0
+      identifier: f
+  - - 
+    - !ruby/object:WhitePawn
+      board: *1
+      location:
+      - 1
+      - 1
+      color: white
+      valid_moves:
+      - - 1
+        - 3
+      - - 1
+        - 2
+      valid_captures: []
+      moved: false
+      identifier: k
+      en_passant: 
+    - 
+    - 
+    - 
+    - 
+    - !ruby/object:BlackPawn
+      board: *1
+      location:
+      - 1
+      - 6
+      color: black
+      valid_moves:
+      - - 1
+        - 4
+      - - 1
+        - 5
+      valid_captures: []
+      moved: false
+      identifier: l
+      en_passant: 
+    - 
+  - - 
+    - 
+    - !ruby/object:WhiteQueen
+      board: *1
+      location:
+      - 2
+      - 2
+      color: white
+      valid_moves:
+      - - 1
+        - 2
+      - - 1
+        - 3
+      - - 2
+        - 1
+      - - 2
+        - 0
+      - - 3
+        - 2
+      valid_captures:
+      - - 0
+        - 4
+      directions:
+      - - -1
+        - -1
+      - - -1
+        - 0
+      - - -1
+        - 1
+      - - 0
+        - -1
+      - - 0
+        - 1
+      - - 1
+        - -1
+      - - 1
+        - 0
+      - - 1
+        - 1
+      identifier: c
+    - !ruby/object:WhitePawn
+      board: *1
+      location:
+      - 2
+      - 3
+      color: white
+      valid_moves:
+      - - 2
+        - 4
+      valid_captures:
+      - - 3
+        - 4
+      moved: true
+      identifier: k
+      en_passant: 
+    - 
+    - !ruby/object:BlackKnight
+      board: *1
+      location:
+      - 2
+      - 5
+      color: black
+      valid_moves:
+      - - 0
+        - 6
+      - - 1
+        - 3
+      - - 1
+        - 7
+      - - 4
+        - 6
+      valid_captures:
+      - - 3
+        - 3
+      identifier: j
+    - !ruby/object:BlackPawn
+      board: *1
+      location:
+      - 2
+      - 6
+      color: black
+      valid_moves: []
+      valid_captures: []
+      moved: false
+      identifier: l
+      en_passant: 
+    - 
+  - - 
+    - !ruby/object:WhiteKnight
+      board: *1
+      location:
+      - 3
+      - 1
+      color: white
+      valid_moves:
+      - - 1
+        - 0
+      - - 1
+        - 2
+      - - 4
+        - 3
+      - - 5
+        - 0
+      - - 5
+        - 2
+      valid_captures: []
+      identifier: i
+    - 
+    - !ruby/object:WhitePawn
+      board: *1
+      location:
+      - 3
+      - 3
+      color: white
+      valid_moves: []
+      valid_captures:
+      - - 4
+        - 4
+      moved: true
+      identifier: k
+      en_passant: 
+    - !ruby/object:BlackPawn
+      board: *1
+      location:
+      - 3
+      - 4
+      color: black
+      valid_moves: []
+      valid_captures:
+      - - 2
+        - 3
+      moved: true
+      identifier: l
+      en_passant: 
+    - 
+    - 
+    - !ruby/object:BlackQueen
+      board: *1
+      location:
+      - 3
+      - 7
+      color: black
+      valid_moves:
+      - - 2
+        - 7
+      - - 1
+        - 7
+      - - 3
+        - 6
+      - - 3
+        - 5
+      - - 4
+        - 6
+      - - 4
+        - 7
+      valid_captures: []
+      directions:
+      - - -1
+        - -1
+      - - -1
+        - 0
+      - - -1
+        - 1
+      - - 0
+        - -1
+      - - 0
+        - 1
+      - - 1
+        - -1
+      - - 1
+        - 0
+      - - 1
+        - 1
+      identifier: d
+  - - !ruby/object:WhiteRook
+      board: *1
+      location:
+      - 4
+      - 0
+      color: white
+      valid_moves:
+      - - 4
+        - 1
+      - - 5
+        - 0
+      - - 6
+        - 0
+      - - 7
+        - 0
+      - - 3
+        - 0
+      - - 2
+        - 0
+      - - 1
+        - 0
+      valid_captures: []
+      has_moved: false
+      directions:
+      - - 0
+        - 1
+      - - 1
+        - 0
+      - - 0
+        - -1
+      - - -1
+        - 0
+      identifier: E
+      moved: true
+    - 
+    - !ruby/object:WhiteBishop
+      board: *1
+      location:
+      - 4
+      - 2
+      color: white
+      valid_moves:
+      - - 5
+        - 3
+      - - 6
+        - 4
+      - - 7
+        - 5
+      valid_captures: []
+      directions:
+      - - -1
+        - -1
+      - - -1
+        - 1
+      - - 1
+        - -1
+      - - 1
+        - 1
+      identifier: g
+    - 
+    - !ruby/object:BlackPawn
+      board: *1
+      location:
+      - 4
+      - 4
+      color: black
+      valid_moves:
+      - - 4
+        - 3
+      valid_captures:
+      - - 3
+        - 3
+      moved: true
+      identifier: l
+      en_passant: 
+    - 
+    - 
+    - 
+  - - 
+    - !ruby/object:WhitePawn
+      board: *1
+      location:
+      - 5
+      - 1
+      color: white
+      valid_moves:
+      - - 5
+        - 3
+      - - 5
+        - 2
+      valid_captures: []
+      moved: false
+      identifier: k
+      en_passant: 
+    - 
+    - 
+    - 
+    - !ruby/object:BlackBishop
+      board: *1
+      location:
+      - 5
+      - 5
+      color: black
+      valid_moves:
+      - - 4
+        - 6
+      - - 6
+        - 4
+      - - 7
+        - 3
+      valid_captures: []
+      directions:
+      - - -1
+        - -1
+      - - -1
+        - 1
+      - - 1
+        - -1
+      - - 1
+        - 1
+      identifier: h
+    - 
+    - !ruby/object:BlackRook
+      board: *1
+      location:
+      - 5
+      - 7
+      color: black
+      valid_moves:
+      - - 5
+        - 6
+      - - 4
+        - 7
+      valid_captures: []
+      has_moved: false
+      directions:
+      - - 0
+        - 1
+      - - 1
+        - 0
+      - - 0
+        - -1
+      - - -1
+        - 0
+      identifier: F
+      moved: true
+  - - 
+    - !ruby/object:WhiteKing
+      board: *1
+      location:
+      - 6
+      - 1
+      color: white
+      valid_moves:
+      - - 5
+        - 0
+      - - 5
+        - 2
+      - - 6
+        - 0
+      - - 7
+        - 0
+      - - 7
+        - 2
+      valid_captures: []
+      in_check: false
+      has_moved: false
+      directions:
+      - - -1
+        - -1
+      - - -1
+        - 0
+      - - -1
+        - 1
+      - - 0
+        - -1
+      - - 0
+        - 1
+      - - 1
+        - -1
+      - - 1
+        - 0
+      - - 1
+        - 1
+      identifier: A
+      moved: true
+    - !ruby/object:WhitePawn
+      board: *1
+      location:
+      - 6
+      - 2
+      color: white
+      valid_moves:
+      - - 6
+        - 3
+      valid_captures: []
+      moved: true
+      identifier: k
+      en_passant: 
+    - 
+    - 
+    - 
+    - !ruby/object:BlackPawn
+      board: *1
+      location:
+      - 6
+      - 6
+      color: black
+      valid_moves:
+      - - 6
+        - 4
+      - - 6
+        - 5
+      valid_captures: []
+      moved: false
+      identifier: l
+      en_passant: 
+    - !ruby/object:BlackKing
+      board: *1
+      location:
+      - 6
+      - 7
+      color: black
+      valid_moves:
+      - - 5
+        - 6
+      - - 7
+        - 7
+      valid_captures: []
+      in_check: false
+      has_moved: false
+      directions:
+      - - -1
+        - -1
+      - - -1
+        - 0
+      - - -1
+        - 1
+      - - 0
+        - -1
+      - - 0
+        - 1
+      - - 1
+        - -1
+      - - 1
+        - 0
+      - - 1
+        - 1
+      identifier: B
+      moved: true
+  - - 
+    - !ruby/object:WhitePawn
+      board: *1
+      location:
+      - 7
+      - 1
+      color: white
+      valid_moves:
+      - - 7
+        - 3
+      - - 7
+        - 2
+      valid_captures: []
+      moved: false
+      identifier: k
+      en_passant: 
+    - 
+    - 
+    - 
+    - 
+    - !ruby/object:BlackPawn
+      board: *1
+      location:
+      - 7
+      - 6
+      color: black
+      valid_moves:
+      - - 7
+        - 4
+      - - 7
+        - 5
+      valid_captures: []
+      moved: false
+      identifier: l
+      en_passant: 
+    - 
+  move_list:
+  - '1.  d4      f5      '
+  - '2.  Nf3     e6      '
+  - '3.  g3      Nf6     '
+  - '4.  Bg2     Be7     '
+  - '5.  0-0     0-0     '
+  - '6.  c4      d6      '
+  - '7.  Nc3     a5      '
+  - '8.  Re1     Ne4     '
+  - '9.  Qc2     Nxc3    '
+  - '10. Qxc3    Nc6     '
+  - '11. e4      e5      '
+  - '12. exf5    Bxf5    '
+  - '13. Be3     Be4     '
+  - '14. Nd2     Bxg2    '
+  - '15. Kxg2    d5      '
+  - '16. a3      Bf6     '
+  move_number: 16
+  white_to_move: true
+  flip: true
+  old_locations: []
+  captured_pieces: []
+  fifty_move_count: 1.0
+  repetition_hash:
+    0ekzzzzlfikzzzzljgkzzzzlhckzzzzldakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
+    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
+    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzzlbgkzzlzzhikzzzzljekzzzzlf: 1
+    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzzlbgkizlzzhzkzzzzljekzzzzlf: 1
+    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlzbgkizlzzhzkzzzzljekzzzzlf: 1
+    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlzbgkizlzzhzzkzzzljekzzzzlf: 1
+    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlzbgkizljzhzzkzzzlzekzzzzlf: 1
+    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlzbzkizljzhzgkzzzlzekzzzzlf: 1
+    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlhbzkizljzzzgkzzzlzekzzzzlf: 1
+    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldzkzzzlhbEkizljzzAgkzzzlzzkzzzzlf: 1
+    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
+    1ekzzzzlfikzzzzljgzzkzzlhczzkzzldzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
+    0ekzzzzlfikzzzzljgzzkzzlhczzkzlzdzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
+    1ekzzzzlfzkzzzzljgzikzzlhczzkzlzdzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
+    0ekzzlzzfzkzzzzljgzikzzlhczzkzlzdzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
+    1ekzzlzzfzkzzzzljgzikzzlhczzkzlzdEkzzzlhzzkizljzFAgkzzzlBzkzzzzlz: 1
+    0ekzzlzzfzkzzzzljgzikzzlhczzkzlzdEkzjzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
+    1ekzzlzzfzkzzzzljgcikzzlhzzzkzlzdEkzjzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
+    0ekzzlzzfzkzzzzljgcjkzzlhzzzkzlzdEkzzzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
+    1ekzzlzzfzkzzzzljgzckzzlhzzzkzlzdEkzzzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
+    0ekzzlzzfzkzzzzlzgzckzjlhzzzkzlzdEkzzzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
+    1ekzzlzzfzkzzzzlzgzckzjlhzzzkzlzdEzzkzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
+    0ekzzlzzfzkzzzzlzgzckzjlhzzzkzlzdEzzklzhzzkizlzzFAgkzzzlBzkzzzzlz: 1
+    1ekzzlzzfzkzzzzlzgzckzjlhzzzkzlzdEzzzlzhzzkizkzzFAgkzzzlBzkzzzzlz: 1
+    0ekzzlzzfzkzzzzlzgzckzjlzzzzkzlzdEzzzlzhzzkizhzzFAgkzzzlBzkzzzzlz: 1
+    1ekzzlzzfzkzzzzlzzzckzjlzzzzkzlzdEzgzlzhzzkizhzzFAgkzzzlBzkzzzzlz: 1
+    0ekzzlzzfzkzzzzlzzzckzjlzzzzkzlzdEzghlzhzzkizzzzFAgkzzzlBzkzzzzlz: 1
+    1ekzzlzzfzkzzzzlzzzckzjlzzizkzlzdEzghlzhzzkzzzzzFAgkzzzlBzkzzzzlz: 1
+    0ekzzlzzfzkzzzzlzzzckzjlzzizkzlzdEzgzlzhzzkzzzzzFAhkzzzlBzkzzzzlz: 1
+    1ekzzlzzfzkzzzzlzzzckzjlzzizkzlzdEzgzlzhzzkzzzzzFzAkzzzlBzkzzzzlz: 1
+    0ekzzlzzfzkzzzzlzzzckzjlzzizklzzdEzgzlzhzzkzzzzzFzAkzzzlBzkzzzzlz: 1
+    1ezkzlzzfzkzzzzlzzzckzjlzzizklzzdEzgzlzhzzkzzzzzFzAkzzzlBzkzzzzlz: 1
+    0ezkzlzzfzkzzzzlzzzckzjlzzizklzzdEzgzlzzzzkzzzhzFzAkzzzlBzkzzzzlz: 1
+  score: 
+  error_message: 'Invalid input: Bf6'
+  remainder:
+  - ''
+to_move: White
