@@ -22,11 +22,12 @@ class Game
         next
       elsif move == 'quit'
         break
+      elsif move == 'help'
+        print_info('Input moves using Chess Algebraic Notation, or enter one of the following commands: flip | quit'.green)
+        next
       end
       unless board.move(move)
-        move_up(2)
-        print_clear
-        puts board.error_message.red
+        print_info("#{board.error_message} Enter help for help.".red)
         next
       end
 
@@ -35,8 +36,10 @@ class Game
     end
     puts board.score
   end
-end
 
-2.times { puts }
-game = Game.new
-game.play
+  def print_info(message)
+    move_up(2)
+    print_clear
+    puts message
+  end
+end
