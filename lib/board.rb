@@ -16,7 +16,7 @@ class Board
   
   include EscapeSequences
 
-  attr_reader :squares, :white_to_move, :move_list, :move_number, :flip, :score,
+  attr_reader :squares, :white_to_move, :move_list, :move_number, :flip, :score, :error_message,
               :remainder, :old_locations, :captured_pieces, :repetition_hash, :fifty_move_count
   
   MAX = 7
@@ -39,6 +39,7 @@ class Board
   end
 
   def display
+    puts
     8.times do |i|
       m = flip ? i : 7 - i
       print_line(i, 0)
@@ -99,12 +100,12 @@ class Board
       if piece.is_a?(Pawn) && [0,7].include?(target_square[1])
         piece = promote(piece, notation.slice!(0, 2))
         unless piece
-          puts "Invalid move: promotion input not valid"
+          @error_message = "Invalid move: promotion input not valid"
           return false
         end
       end
       test_move(piece, target_square)
-      unless validate_move(piece, target_square, notation) && check_remainder(input, notation)
+      unless validate_move && check_remainder(input, notation)
         undo_test_move(piece, target_square)
         return false
       end
@@ -114,10 +115,10 @@ class Board
     end
   end
 
-  def validate_move(piece, target_square, notation)
+  def validate_move
     # can't move into check (or ignore being in check)
     unless safe_king?
-      puts 'Invalid move: king in check'
+      @error_message = 'Invalid move: cannot ignore or move into check.'
       return false
     end
     true
@@ -131,7 +132,7 @@ class Board
       input << remainder.first unless notation == remainder.first
       true
     else
-      puts "Invalid move: extra characters"
+      @error_message = "Invalid move: extra characters."
       false
     end
   end
@@ -149,6 +150,7 @@ class Board
   private
 
   def validate_input(input)
+    @error_message = "Invalid input: #{input}"
     return false unless input.match(/[a-h][1-8]|0-0|0-0-0/)
     input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBN0x\-=\+#]/)}
   end
@@ -175,7 +177,10 @@ class Board
   def find_pawn(target_piece, target_square, action, input, notation)
     if action == 'capture'
       file = find_pawn_file(notation.slice!(0)) 
-      return false unless file
+      unless file
+        @error_message = 'Invalid move: file must be specified for pawn capture.'
+        return false 
+      end
     end
     each_piece do |piece|
       next unless piece.is_a? target_piece
@@ -190,6 +195,7 @@ class Board
         end
       end
     end
+    @error_message = 'Invalid move: no pawn found to make requested move.'
     false
   end
 
@@ -200,6 +206,7 @@ class Board
   def find_piece(target_piece, target_square, action, notation)
     candidates = find_candidates(target_piece, target_square, action)
     if candidates.length == 0
+      @error_message = 'Invalid move: no piece found to make requested move.'
       false
     elsif candidates.length == 1
       candidates.first
@@ -225,7 +232,10 @@ class Board
   end
 
   def disambiguation(candidates, selection)
-    return false unless selection
+    unless selection
+      @error_message = 'Invalid move: disambiguation required.'
+      return false 
+    end
     
     # only accepts the rank or file that narrows down candidates 
     finalists = []
@@ -469,7 +479,10 @@ class Board
   end
 
   def validate_castle(targets, empty_squares)
+    # Error message only used if #move returns false
+    @error_message = 'Invalid move: castling not possible.'
     return false if in_check?
+
     targets.each { |t| return false if squares[t[0]][t[1]].has_moved? }
     # ensures squares between are empty
     empty_squares.each { |e| return false unless squares[e[0]][e[1]].nil? }
@@ -550,13 +563,12 @@ class Board
 
   def validate_en_passant(piece, input, notation)
     test_move(piece)
-    unless safe_king?
-      puts 'Invalid move: king in check'
-      result = false
+    unless validate_move && check_remainder(input, notation)
+      undo_test_move(piece)
+      return false
     end
-    result = false unless check_remainder(input, notation)
     undo_test_move(piece)
-    return result == false ? false : true
+    true
   end
 
   def add_en_passant(piece, target_square)
