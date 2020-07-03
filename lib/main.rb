@@ -1,17 +1,24 @@
 require_relative 'game'
 require_relative 'save_load'
+require_relative 'escape_sequences'
 
 class Main
   extend SaveLoad
+  extend EscapeSequences
 
   prompt = <<~HEREDOC
-    Chess. Would you like to: 1) Start a new game
-                              2) Load a game
+
+    #{'Chess!'.green}
+    Would you like to: 1) Start a new game
+                       2) Load a game
     HEREDOC
+
   puts prompt
 
   user_choice = gets.chomp
-  puts
+  move_up(5)
+  puts_clear
+
   until ['1', '2'].include?(user_choice)
     puts "Invalid input. Please enter 1 or 2"
     user_choice = gets.chomp

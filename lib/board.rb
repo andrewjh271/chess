@@ -8,8 +8,6 @@ require_relative 'bishop'
 require_relative 'queen'
 require_relative 'king'
 require_relative 'pawn'
-require 'pry'
-require 'yaml'
 
 # ♟ ♞ ♝ ♜ ♛ ♚ ♙ ♘ ♗ ♖ ♕ ♔
 class Board
@@ -31,7 +29,6 @@ class Board
     @captured_pieces = []
     @fifty_move_count = 0
     @repetition_hash = Hash.new(0)
-    @score
     8.times { |i| @squares[i] = [] }
     fill_board
     add_position
