@@ -388,61 +388,6 @@ board: &1 !ruby/object:Board
   captured_pieces: []
   fifty_move_count: 0.5
   repetition_hash:
-    0ekzzzzlfikzzzzljgkzzzzlhckzzzzldakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfikzzzzljgkzzzzlhckzzzzldazzkzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfikzzzzljgkzzzzlhckzzzzldazzkzlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldazzkzlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfikzzzzljgkzzzzlhczzklzzdazzkzlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfzkzzzzljgkizzzlhczzklzzdazzkzlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfzkzhzzljgkizzzlhczzklzzdazzkzlzbgkzzzzlzikzzzzljekzzzzlf: 1
-    1ekzzzzlfzkzhzzljgkizzzlhczzklzzdazzzklzbgkzzzzlzikzzzzljekzzzzlf: 1
-    0ekzzzzlfzkzhzzljgkizzzlhczzklzzdazzzkljbgkzzzzlzikzzzzlzekzzzzlf: 1
-    1ezkzzzlfzkzhzzljgkizzzlhczzklzzdazzzkljbgkzzzzlzikzzzzlzekzzzzlf: 1
-    0ezkzzzlfzkzzzzljgkhzzzlhczzklzzdazzzkljbgkzzzzlzikzzzzlzekzzzzlf: 1
-    1ezkzzzlfzzzzzzljgkkzzzlhczzklzzdazzzkljbgkzzzzlzikzzzzlzekzzzzlf: 1
-    0ezkzzzlfzzzzzzljgkkzlzzhczzklzzdazzzkljbgkzzzzlzikzzzzlzekzzzzlf: 1
-    1ezkzzzlfzzzzzzljgkkzlzzhzzzklzzdazzzkljbgkzzzzlzikzczzlzekzzzzlf: 1
-    0ezkzzzlfzzzzzzljgkkzlzdhzzzklzzzazzzkljbgkzzzzlzikzczzlzekzzzzlf: 1
-    1ezkzzzlfzzzzzzljgkkzlzdhzzzklzzzazzzkljbgkzzzzlzikzzzzczekzzzzlf: 1
-    0ezkzzzlfzzzzzzljgkkzlzdhzzzklzzzazzzkljbgkzzzzlzikzzzzcFekzzzzlz: 1
-    1ezkzzzlfzzzzzzljgkkzlzdhzzzklzzzazzzkljbgkzzzzlzikzzzzzFekzzzzcz: 1
-    0ezkzzzlfzzzzzzljgkkzzzdhzzzllzzzazzzkljbgkzzzzlzikzzzzzFekzzzzcz: 1
-    1ezkzzzlfzzzzzzljgkkzzzdhzzzllzzzaizzkljbgkzzzzlzzkzzzzzFekzzzzcz: 1
-    0ezkzzzlfzzzzzzlzgkkzzjdhzzzllzzzaizzkljbgkzzzzlzzkzzzzzFekzzzzcz: 1
-    1ezkzzzlfzzzzzzlzgkkzzjdhzzzllzzzaizzkljbgzzkzzlzzkzzzzzFekzzzzcz: 1
-    0ezkzzzlfzzzzzzlzgklzzjdhzzzzlzzzaizzkljbgzzkzzlzzkzzzzzFekzzzzcz: 1
-    1ezkzzzlfzzzzzzlzgklzzjdhzzczlzzzaizzkljbgzzkzzlzzkzzzzzFekzzzzzz: 1
-    0ezkzzzlfzzzzzzlzgklzzjdhzzclzzzzaizzkljbgzzkzzlzzkzzzzzFekzzzzzz: 1
-    1ezkzzzlfzzzzzzlzgklzzjdhzzclzzzzazzzkljbgzzkzzlzzkizzzzFekzzzzzz: 1
-    0ezkzzzlfzzzzzzlzgklzzjdzzzclzzhzazzzkljbgzzkzzlzzkizzzzFekzzzzzz: 1
-    1ezkzzzlfzzzzzzlzgklzzjdzzzclzzhzazzikljbgzzkzzlzzkzzzzzFekzzzzzz: 1
-    0ezkzzzlzzzzzzzlzgklzzjdBzzclzzhFazzikljzgzzkzzlzzkzzzzzFekzzzzzz: 1
-    1zzkzzzlzEzzzzzlzgklzzjdBzzclzzhFazzikljzgzzkzzlzzkzzzzzFekzzzzzz: 1
-    0zzkzzzlzEzzzzzlzgklzzzdBzzclzzhFazzijljzgzzkzzlzzkzzzzzFekzzzzzz: 1
-    1zzkzzzlzEzzzzzlzgklzzzdBzzclzzhFazzikljzgzzzzzlzzkzzzzzFekzzzzzz: 1
-    0zzkzzzlzEzzzzzlzgklzzzzBzzclzzhFazzidljzgzzzzzlzzkzzzzzFekzzzzzz: 1
-    1zzkzzzlzEzzzzzlzgklzzzzBzzzlzzhFaczidljzgzzzzzlzzkzzzzzFekzzzzzz: 1
-    0zzkzzzlzEzzzzzlzgklzzhzBzzzlzzzFaczidljzgzzzzzlzzkzzzzzFekzzzzzz: 1
-    1zzkzzzlzEzzzzzlzgklzzhzBzzzlzzzFaczzdljzgzzzzzlzzkizzzzFekzzzzzz: 1
-    0zzkzzzlzEzzzzzlzgklzzhzBzzzldzzFaczzzljzgzzzzzlzzkizzzzFekzzzzzz: 1
-    1zzkzzzlzEzzzzzlzgklzzhzBzzzldzzFazzzzljzgczzzzlzzkizzzzFekzzzzzz: 1
-    0zzkzzzlzEzzzzzlzgklzzhzBzzzldzzFazzzzljzgczzlzzzzkizzzzFekzzzzzz: 1
-    1zzkzzzlzzzzEzzlzgklzzhzBzzzldzzFazzzzljzgczzlzzzzkizzzzFekzzzzzz: 1
-    0zzkzlzzzzzzEzzlzgklzzhzBzzzldzzFazzzzljzgczzlzzzzkizzzzFekzzzzzz: 1
-    1zzkzlzzzzzzzzzlzgklEzhzBzzzldzzFazzzzljzgczzlzzzzkizzzzFekzzzzzz: 1
-    0zzkzlzzzzzzzzzlzgklEzhzBzzzldzzFazzzlzjzgczzlzzzzkizzzzFekzzzzzz: 1
-    1zzkzlzzzzzzzzzlzgklEzhzBzzzldzzFagzzlzjzzczzlzzzzkizzzzFekzzzzzz: 1
-    0zzkzlzzzzzzzzzlzgklEzhzBzzzldzzFagzzlzjzzczlzzzzzkizzzzFekzzzzzz: 1
-    1zzkzlzzzzzzzzzlzzklEzhzBzzzldzzFagzzlzjzzczgzzzzzkizzzzFekzzzzzz: 1
-    0zzkzlzzzzzzzzzlzzklEzhzBzzzldzzzagzzlzjzzczgzzzFzkizzzzFekzzzzzz: 1
-    1zzkzlzzzzzzzzzlzzklzzEzBzzzldzzzagzzlzjzzczgzzzFzkizzzzFekzzzzzz: 1
-    0zzkzlzzzzzzzzzlzzklzzdzBzzzlzzzzagzzlzjzzczgzzzFzkizzzzFekzzzzzz: 1
-    1zzkzlzzzzzzzzzlzzklzzdzBzzzlzzzzazzzlzjzzcggzzzFzkizzzzFekzzzzzz: 1
-    0zzkzlzzzzzzzzzlzzklzzdzBzzzlzzzzazzzlzjzzcgFzzzzzkizzzzFekzzzzzz: 1
-    1zzkzlzzzzzzzzzlzzklzzgzBzzzlzzzzazzzlzjzzczFzzzzzkizzzzFekzzzzzz: 1
-    0zzkzlzzzzzzzzzlzzklzzgzBzzzlzzzzazzzlzjzzFzzzzzzzkizzzzFekzzzzzz: 1
-    1zzkzlzzzzzzzzzgzzklzzzzBzzzlzzzzazzzlzjzzFzzzzzzzkizzzzFekzzzzzz: 1
-    0zzkzlzzzzzzzzzBzzklzzzzzzzzlzzzzazzzlzjzzFzzzzzzzkizzzzFekzzzzzz: 1
     1zzkzlzzzzzzzzzBzzklzzzzzzzzlzzzzzzzzlzjzzAzzzzzzzkizzzzFekzzzzzz: 1
   score: 
   error_message: 'Invalid input: Kxf2'

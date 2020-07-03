@@ -162,13 +162,9 @@ board: &1 !ruby/object:Board
         - 1
       - - 4
         - 0
+      valid_captures:
       - - 3
         - 3
-      - - 4
-        - 4
-      valid_captures:
-      - - 5
-        - 5
       directions:
       - - -1
         - -1
@@ -207,12 +203,6 @@ board: &1 !ruby/object:Board
         - 1
       - - 3
         - 2
-      - - 3
-        - 3
-      - - 3
-        - 4
-      - - 3
-        - 5
       - - 4
         - 0
       - - 5
@@ -221,7 +211,9 @@ board: &1 !ruby/object:Board
         - 0
       - - 7
         - 0
-      valid_captures: []
+      valid_captures:
+      - - 3
+        - 3
       has_moved: false
       directions:
       - - 0
@@ -236,7 +228,66 @@ board: &1 !ruby/object:Board
       moved: true
     - 
     - 
-    - 
+    - !ruby/object:BlackQueen
+      board: *1
+      location:
+      - 3
+      - 3
+      color: black
+      valid_moves:
+      - - 2
+        - 3
+      - - 1
+        - 3
+      - - 0
+        - 3
+      - - 2
+        - 4
+      - - 3
+        - 2
+      - - 3
+        - 1
+      - - 3
+        - 4
+      - - 3
+        - 5
+      - - 4
+        - 3
+      - - 5
+        - 3
+      - - 6
+        - 3
+      - - 7
+        - 3
+      - - 4
+        - 4
+      valid_captures:
+      - - 2
+        - 2
+      - - 3
+        - 0
+      - - 3
+        - 6
+      - - 4
+        - 2
+      directions:
+      - - -1
+        - -1
+      - - -1
+        - 0
+      - - -1
+        - 1
+      - - 0
+        - -1
+      - - 0
+        - 1
+      - - 1
+        - -1
+      - - 1
+        - 0
+      - - 1
+        - 1
+      identifier: d
     - 
     - 
     - !ruby/object:WhiteQueen
@@ -257,18 +308,14 @@ board: &1 !ruby/object:Board
       - - 3
         - 4
       - - 3
-        - 3
-      - - 3
-        - 2
-      - - 3
-        - 1
-      - - 3
         - 7
       valid_captures:
       - - 2
         - 5
       - - 0
         - 6
+      - - 3
+        - 3
       - - 4
         - 5
       - - 4
@@ -415,8 +462,6 @@ board: &1 !ruby/object:Board
       valid_moves:
       - - 3
         - 1
-      - - 3
-        - 3
       - - 4
         - 0
       - - 4
@@ -429,7 +474,9 @@ board: &1 !ruby/object:Board
         - 1
       - - 7
         - 3
-      valid_captures: []
+      valid_captures:
+      - - 3
+        - 3
       identifier: i
     - 
     - 
@@ -491,68 +538,15 @@ board: &1 !ruby/object:Board
       color: white
       valid_moves:
       - - 6
+        - 3
+      - - 6
         - 2
       valid_captures: []
       moved: false
       identifier: k
       en_passant: 
     - 
-    - !ruby/object:BlackQueen
-      board: *1
-      location:
-      - 6
-      - 3
-      color: black
-      valid_moves:
-      - - 5
-        - 3
-      - - 4
-        - 3
-      - - 3
-        - 3
-      - - 2
-        - 3
-      - - 1
-        - 3
-      - - 0
-        - 3
-      - - 5
-        - 4
-      - - 6
-        - 2
-      - - 6
-        - 4
-      - - 6
-        - 5
-      - - 7
-        - 3
-      - - 7
-        - 4
-      valid_captures:
-      - - 5
-        - 2
-      - - 6
-        - 1
-      - - 7
-        - 2
-      directions:
-      - - -1
-        - -1
-      - - -1
-        - 0
-      - - -1
-        - 1
-      - - 0
-        - -1
-      - - 0
-        - 1
-      - - 1
-        - -1
-      - - 1
-        - 0
-      - - 1
-        - 1
-      identifier: d
+    - 
     - 
     - 
     - !ruby/object:BlackPawn
@@ -582,9 +576,7 @@ board: &1 !ruby/object:Board
       valid_moves:
       - - 7
         - 3
-      valid_captures:
-      - - 6
-        - 3
+      valid_captures: []
       moved: true
       identifier: k
       en_passant: 
@@ -624,7 +616,7 @@ board: &1 !ruby/object:Board
   - '14. Qxd7+   Kf7     '
   - '15. Rhe1    Qxc4    '
   - '16. Re3     Rhe8    '
-  - '17. b3      Qg4     '
+  - '17. b3      Qd4     '
   - 18. h3
   move_number: 18
   white_to_move: false
@@ -633,42 +625,7 @@ board: &1 !ruby/object:Board
   captured_pieces: []
   fifty_move_count: 0.5
   repetition_hash:
-    0ekzzzzlfikzzzzljgkzzzzlhckzzzzldakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfikzzzzljgkzzzzlhczzklzzdakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfikzzzzljgzzkzzlhczzklzzdakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfikzzzzljgzzkzlzhczzklzzdakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfzkzzzzljgzikzlzhczzklzzdakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfzkzzzzljgzikzlzhczzklzzdakzzzlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfzkzzzzljgzikzlzhczzklzzdazzkzlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfzkzzzzljgzikzlzhczzkzzzdazzlzlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfzkzzzzljgzzkzlzhczzkzzzdazzizlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfzkzhzzljgzzkzlzhczzkzzzdazzizlzbgkzzzzlzikzzzzljekzzzzlf: 1
-    1ekzzzzlfzkzhzzljzzzkzlzhcgzkzzzdazzizlzbgkzzzzlzikzzzzljekzzzzlf: 1
-    0ekzzzzlfzkzhzzljzzzkzlzhcgzdzzzzazzizlzbgkzzzzlzikzzzzljekzzzzlf: 1
-    1ekzzzzlfzkzgzzljzzzkzlzhczzdzzzzazzizlzbgkzzzzlzikzzzzljekzzzzlf: 1
-    0ekzzzzlfzkzgzzljzzzkzlzhczzzzzzzazzdzlzbgkzzzzlzikzzzzljekzzzzlf: 1
-    1ekzzzzlfzkzgzzljzzzkzlzhczzzzzzzagzdzlzbzkzzzzlzikzzzzljekzzzzlf: 1
-    0ekzzzjlfzkzgzzlzzzzkzlzhczzzzzzzagzdzlzbzkzzzzlzikzzzzljekzzzzlf: 1
-    1ekzzgjlfzkzzzzlzzzzkzlzhczzzzzzzagzdzlzbzkzzzzlzikzzzzljekzzzzlf: 1
-    0ekzzgjlfzkzzzlzzzzzkzlzhczzzzzzzagzdzlzbzkzzzzlzikzzzzljekzzzzlf: 1
-    1ekzzgjlfzkzzzlzzzzzkzlzhzzzzzczzagzdzlzbzkzzzzlzikzzzzljekzzzzlf: 1
-    0ekzzgjlfzkzzzlzzzzzkzlzzzzzzzchzagzdzlzbzkzzzzlzikzzzzljekzzzzlf: 1
-    1ekzzzjlfzkzzzlzzzzgkzlzzzzzzzchzagzdzlzbzkzzzzlzikzzzzljekzzzzlf: 1
-    0ekzzzjlfzkzzzlzzzzgkzlzzzzzzzchzagzdzlzbzkzzzlzzikzzzzljekzzzzlf: 1
-    1ekzzzjlfzkzzzlzzzzgkzlzzzzzzzchzagzdzlzbzkizzlzzzkzzzzljekzzzzlf: 1
-    0ekzzzjlfzkzzzlzzzzgkzlzzzzzzzchzagzdzljbzkizzlzzzkzzzzlzekzzzzlf: 1
-    1zkzzzjlfzkzzzlzzAzgkzlzzEzzzzchzzgzdzljbzkizzlzzzkzzzzlzekzzzzlf: 1
-    0zkzzzjlfzkzzzlzzAzgkzlzzEzzzzchzzdzzzljbzkizzlzzzkzzzzlzekzzzzlf: 1
-    1zkzzzjlfzkzzzlzzAzgkzlzzEzzzzzczzdzzzljbzkizzlzzzkzzzzlzekzzzzlf: 1
-    0zkzzzjlfzkzzzlzzAzgkzlzzEzzzzzczzdzzzljzzkizzlBzzkzzzzlzekzzzzlf: 1
-    1zkzzzjlfzkzzzlzzAzgkzlzzEzzzzzczEdzzzljzzkizzlBzzkzzzzlzzkzzzzlf: 1
-    0zkzzzjlfzkzzzlzzAzgdzlzzEzzzzzczEzzzzljzzkizzlBzzkzzzzlzzkzzzzlf: 1
-    1zkzzzjlfzkzzzlzzAzgdzlzzEzzzzzczzzEzzljzzkizzlBzzkzzzzlzzkzzzzlf: 1
-    0zkzzzjlfzkzzzlzzAzgdzlzzEzzzzzczzzEzzljFzkizzlBzzkzzzzlzzkzzzzlz: 1
-    1zkzzzjlfzzkzzlzzAzgdzlzzEzzzzzczzzEzzljFzkizzlBzzkzzzzlzzkzzzzlz: 1
-    0zkzzzjlfzzkzzlzzAzgzzlzzEzzzzzczzzEzzljFzkizzlBzzkzdzzlzzkzzzzlz: 1
-    1zkzzzjlfzzkzzlzzAzgzzlzzEzzzzzczzzEzzljFzkizzlBzzkzdzzlzzzkzzzlz: 1
+    1zkzzzjlfzzkzzlzzAzgzzlzzEzzdzzczzzEzzljFzkizzlBzzkzzzzlzzzkzzzlz: 1
   score: 
   error_message: 'Invalid input: h3'
   remainder:

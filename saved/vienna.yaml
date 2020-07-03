@@ -649,24 +649,6 @@ board: &1 !ruby/object:Board
   captured_pieces: []
   fifty_move_count: 6.5
   repetition_hash:
-    0ekzzzzlfikzzzzljgkzzzzlhckzzzzldakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfikzzzzljgkzzzzlhczzklzzdakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfikzzzzljgzzkzzlhczzklzzdakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfikzzzzljgzzkzzlhczzklzzdakzzzlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfzkzzzzljgzikzzlhczzklzzdakzzzlzbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfzkzzzzljgzikzzlhczzklzzdakzzzlzbgkzzzjlhikzzzzlzekzzzzlf: 1
-    1ekzzzzlfzkzzzzljgzikzzlhczzklzzdakzzzlzbgkizzjlhzkzzzzlzekzzzzlf: 1
-    0ekzzzzlfzkzzzzljgzilzzlhczzkzzzdakzzzlzbgkizzjlhzkzzzzlzekzzzzlf: 1
-    1ekzzzzlfzkzzzzljgzilzzlhczzkzzzdazzkzlzbgkizzjlhzkzzzzlzekzzzzlf: 1
-    0ekzzzzlfzkzhzzljgzilzzlhczzkzzzdazzkzlzbgkizzjlzzkzzzzlzekzzzzlf: 1
-    1ekzzzzlfzkzhzzljgzigzzlhczzkzzzdazzkzlzbzkizzjlzzkzzzzlzekzzzzlf: 1
-    0ekzzzzlfzkzhzzljgzigzzlhczzkzzzdazzjzlzbzkizzzlzzkzzzzlzekzzzzlf: 1
-    1ekzzzzlfzkzhzzljgzigzzlhczzkzzzdzzzjzlzbEkizzzlzAkzzzzlzzkzzzzlf: 1
-    0ekzzzzlfzkzhzzljgzjgzzlhczzkzzzdzzzzzlzbEkizzzlzAkzzzzlzzkzzzzlf: 1
-    1ekzzzzlfzzzhzzljgzkgzzlhczzkzzzdzzzzzlzbEkizzzlzAkzzzzlzzkzzzzlf: 1
-    0ekzzzzlfzzzzzzljgzkgzzlhczzkzhzdzzzzzlzbEkizzzlzAkzzzzlzzkzzzzlf: 1
-    1ekzzzzlfzzzzzzljgzkgzzlhzzzkzhzdzczzzlzbEkizzzlzAkzzzzlzzkzzzzlf: 1
     0ekzzzzlfzzzzzzljgzkgzzlhzzzkzhzdzczzzlzzEkizzzlFAkzzzzlBzkzzzzlz: 1
     1ekzzzzlfzzzzzzljgzkgzzlhEzzkzhzdzczzzlzzzkizzzlFAkzzzzlBzkzzzzlz: 1
     0ekzzzzlfzzzzzzlzgzkgzzlhEzzkzhjdzczzzlzzzkizzzlFAkzzzzlBzkzzzzlz: 1

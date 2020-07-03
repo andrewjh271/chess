@@ -605,37 +605,6 @@ board: &1 !ruby/object:Board
   captured_pieces: []
   fifty_move_count: 1.0
   repetition_hash:
-    0ekzzzzlfikzzzzljgkzzzzlhckzzzzldakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzzlbgkzzzzlhikzzzzljekzzzzlf: 1
-    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzzlbgkzzlzzhikzzzzljekzzzzlf: 1
-    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzzlbgkizlzzhzkzzzzljekzzzzlf: 1
-    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlzbgkizlzzhzkzzzzljekzzzzlf: 1
-    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlzbgkizlzzhzzkzzzljekzzzzlf: 1
-    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlzbgkizljzhzzkzzzlzekzzzzlf: 1
-    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlzbzkizljzhzgkzzzlzekzzzzlf: 1
-    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldakzzzlhbzkizljzzzgkzzzlzekzzzzlf: 1
-    1ekzzzzlfikzzzzljgkzzzzlhczzkzzldzkzzzlhbEkizljzzAgkzzzlzzkzzzzlf: 1
-    0ekzzzzlfikzzzzljgkzzzzlhczzkzzldzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
-    1ekzzzzlfikzzzzljgzzkzzlhczzkzzldzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
-    0ekzzzzlfikzzzzljgzzkzzlhczzkzlzdzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
-    1ekzzzzlfzkzzzzljgzikzzlhczzkzlzdzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
-    0ekzzlzzfzkzzzzljgzikzzlhczzkzlzdzkzzzlhzEkizljzFAgkzzzlBzkzzzzlz: 1
-    1ekzzlzzfzkzzzzljgzikzzlhczzkzlzdEkzzzlhzzkizljzFAgkzzzlBzkzzzzlz: 1
-    0ekzzlzzfzkzzzzljgzikzzlhczzkzlzdEkzjzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
-    1ekzzlzzfzkzzzzljgcikzzlhzzzkzlzdEkzjzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
-    0ekzzlzzfzkzzzzljgcjkzzlhzzzkzlzdEkzzzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
-    1ekzzlzzfzkzzzzljgzckzzlhzzzkzlzdEkzzzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
-    0ekzzlzzfzkzzzzlzgzckzjlhzzzkzlzdEkzzzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
-    1ekzzlzzfzkzzzzlzgzckzjlhzzzkzlzdEzzkzlhzzkizlzzFAgkzzzlBzkzzzzlz: 1
-    0ekzzlzzfzkzzzzlzgzckzjlhzzzkzlzdEzzklzhzzkizlzzFAgkzzzlBzkzzzzlz: 1
-    1ekzzlzzfzkzzzzlzgzckzjlhzzzkzlzdEzzzlzhzzkizkzzFAgkzzzlBzkzzzzlz: 1
-    0ekzzlzzfzkzzzzlzgzckzjlzzzzkzlzdEzzzlzhzzkizhzzFAgkzzzlBzkzzzzlz: 1
-    1ekzzlzzfzkzzzzlzzzckzjlzzzzkzlzdEzgzlzhzzkizhzzFAgkzzzlBzkzzzzlz: 1
-    0ekzzlzzfzkzzzzlzzzckzjlzzzzkzlzdEzghlzhzzkizzzzFAgkzzzlBzkzzzzlz: 1
-    1ekzzlzzfzkzzzzlzzzckzjlzzizkzlzdEzghlzhzzkzzzzzFAgkzzzlBzkzzzzlz: 1
-    0ekzzlzzfzkzzzzlzzzckzjlzzizkzlzdEzgzlzhzzkzzzzzFAhkzzzlBzkzzzzlz: 1
-    1ekzzlzzfzkzzzzlzzzckzjlzzizkzlzdEzgzlzhzzkzzzzzFzAkzzzlBzkzzzzlz: 1
-    0ekzzlzzfzkzzzzlzzzckzjlzzizklzzdEzgzlzhzzkzzzzzFzAkzzzlBzkzzzzlz: 1
     1ezkzlzzfzkzzzzlzzzckzjlzzizklzzdEzgzlzhzzkzzzzzFzAkzzzlBzkzzzzlz: 1
     0ezkzlzzfzkzzzzlzzzckzjlzzizklzzdEzgzlzzzzkzzzhzFzAkzzzlBzkzzzzlz: 1
   score: 

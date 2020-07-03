@@ -333,11 +333,10 @@ class Board
     else
       repetition_hash[snapshot] = 0
     end
-    # repetition_hash[snapshot] += 1
   end
 
   def clear_positions
-    repetition_hash = Hash.new(0)
+    @repetition_hash = Hash.new(0)
   end
 
   def no_moves?
