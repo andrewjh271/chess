@@ -38,8 +38,8 @@ class Board
     set_moves_and_captures
   end
 
-  def display
-    puts
+  def display(n = 28)
+    move_up(n)
     8.times do |i|
       m = flip ? i : 7 - i
       print_line(i, 0)
@@ -51,7 +51,9 @@ class Board
       m = flip ? 7 - i : i
       print "     #{(m + 97).chr} "
     end
-    2.times { puts }
+    puts
+    puts_clear
+    puts
   end
 
   def flip_board
@@ -394,7 +396,6 @@ class Board
     @white_to_move = white_to_move ? false : true
     update_repetitions(irreversible, altered_state)
     set_moves_and_captures
-    display # remove eventually
     true
   end
 
