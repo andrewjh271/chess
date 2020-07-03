@@ -327,7 +327,13 @@ class Board
   end
 
   def add_position
-    repetition_hash[snapshot] += 1
+    # yaml does not save default value for Hash
+    if repetition_hash[snapshot]
+      repetition_hash[snapshot] += 1
+    else
+      repetition_hash[snapshot] = 0
+    end
+    # repetition_hash[snapshot] += 1
   end
 
   def clear_positions
