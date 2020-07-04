@@ -8,30 +8,29 @@ require_relative 'bishop'
 require_relative 'queen'
 require_relative 'king'
 require_relative 'pawn'
+require 'pry'
 
-# ♟ ♞ ♝ ♜ ♛ ♚ ♙ ♘ ♗ ♖ ♕ ♔
+# Board class handles all board logic
 class Board
-  
   include EscapeSequences
 
   attr_reader :squares, :white_to_move, :move_list, :move_number, :flip, :score, :error_message,
               :remainder, :old_locations, :captured_pieces, :repetition_hash, :fifty_move_count
-  
   MAX = 7
   ERRORS = {
-    invalid: 'Invalid input: ',
-    promotion: 'Invalid move (promotion input not valid): ',
-    check: 'Invalid move (cannot ignore or move into check): ',
-    extra_chars: 'Invalid move (extra characters): ',
-    no_file: 'Invalid move (file must be specified for pawn capture): ',
-    no_pawn_move: 'Invalid move (no pawn found to make requested move): ',
-    no_pawn_capture: 'Invalid move (no pawn found to make requested capture): ',
-    no_move: 'Invalid move (no piece found to make requested move): ',
-    no_capture: 'Invalid capture (no piece found to make requested capture): ',
-    disambiguation: 'Invalid move (disambiguation required): ',
+    invalid: 'Invalid input',
+    promotion: 'Invalid move (promotion input not valid)',
+    check: 'Invalid move (cannot ignore or move into check)',
+    extra_chars: 'Invalid move (extra characters)',
+    no_file: 'Invalid move (file must be specified for pawn capture)',
+    no_pawn_move: 'Invalid move (no pawn found to make requested move)',
+    no_pawn_capture: 'Invalid move (no pawn found to make requested capture)',
+    no_move: 'Invalid move (no piece found to make requested move)',
+    no_capture: 'Invalid capture (no piece found to make requested capture)',
+    disambiguation: 'Invalid move (disambiguation required)',
     kingside: 'Invalid move (kingside castling not possible)',
     queenside: 'Invalid move (queenside castling not possible)'
-  }
+  }.freeze
 
   def initialize
     @squares = []
@@ -49,8 +48,8 @@ class Board
     set_moves_and_captures
   end
 
-  def display(n = 28)
-    move_up(n)
+  def display(num = 28)
+    move_up(num)
     8.times do |i|
       m = flip ? i : 7 - i
       print_line(i, 0)
@@ -105,33 +104,27 @@ class Board
         piece = find_pawn(target_piece, target_square, action, input, notation)
         # en_passant returns true instead of piece location
         return piece if [true, false].include? piece
+
+        piece = promote(piece, notation.slice!(0, 2)) if [0, 7].include?(target_square[1])
       else
-        piece = find_piece(target_piece, target_square, action, input, notation)
+        piece = find_piece(target_piece, target_square, action, notation)
       end
       return false unless piece
 
-      if piece.is_a?(Pawn) && [0,7].include?(target_square[1])
-        piece = promote(piece, notation.slice!(0, 2))
-        unless piece
-          @error_message = ERRORS[:promotion] + input
-          return false
-        end
-      end
       test_move(piece, target_square)
-      unless validate_move(input) && check_remainder(input, notation)
+      unless validate_move && check_remainder(input, notation)
         undo_test_move(piece, target_square)
         return false
       end
       undo_test_move(piece, target_square)
       enter_valid_move(piece, target_square, input)
-      true
     end
   end
 
-  def validate_move(input)
+  def validate_move
     # can't move into check (or ignore being in check)
     unless safe_king?
-      @error_message = ERRORS[:check] + input
+      @error_message = ERRORS[:check]
       return false
     end
     true
@@ -145,7 +138,7 @@ class Board
       input << remainder.first unless notation == remainder.first
       true
     else
-      @error_message = ERRORS[:extra_chars] + input
+      @error_message = ERRORS[:extra_chars]
       false
     end
   end
@@ -163,9 +156,10 @@ class Board
   private
 
   def validate_input(input)
-    @error_message = ERRORS[:invalid] + input
+    @error_message = ERRORS[:invalid]
     return false unless input.match(/[a-h][1-8]|O-O|O-O-O/)
-    input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBNOx\-=\+#]/)}
+
+    input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBNOx\-=\+#]/) }
   end
 
   def each_piece
@@ -189,47 +183,48 @@ class Board
 
   def find_pawn(target_piece, target_square, action, input, notation)
     if action == 'capture'
-      file = find_pawn_file(notation.slice!(0)) 
-      unless file
-        @error_message = ERRORS[:no_file] + input
-        return false 
-      end
+      file = find_pawn_file(notation.slice!(0))
+      return false unless file
     end
     each_piece do |piece|
       next unless piece.is_a? target_piece
 
-      if action == 'move' && piece.valid_moves.include?(target_square)
-        return piece
-      elsif action == 'capture' && piece.valid_captures.include?(target_square)
-        return piece if piece.location[0] == file.ord - 97
-      elsif action == 'capture'
-        if piece.location[0] == file.ord - 97 && piece.en_passant == target_square
-          return en_passant(piece, input, notation) 
-        end
+      return piece if action == 'move' && piece.valid_moves.include?(target_square)
+
+      if action == 'capture' && piece.location[0] == file
+        return piece if piece.valid_captures.include?(target_square)
+        return en_passant(piece, input, notation) if piece.en_passant == target_square
       end
     end
-    @error_message = action == 'move' ?
-                       (ERRORS[:no_pawn_move] + input) :
-                       (ERRORS[:no_pawn_capture] + input)
+    @error_message = case action
+                     when 'move' then ERRORS[:no_pawn_move]
+                     when 'capture' then ERRORS[:no_pawn_capture]
+                     end
     false
   end
 
   def find_pawn_file(char)
-    char if char && char.match(/[a-h]/)
+    if char&.match(/[a-h]/)
+      char.ord - 97
+    else
+      @error_message = ERRORS[:no_file]
+      false
+    end
   end
 
-  def find_piece(target_piece, target_square, action, input, notation)
+  def find_piece(target_piece, target_square, action, notation)
     candidates = find_candidates(target_piece, target_square, action)
-    if candidates.length == 0
-      @error_message = action == 'move' ?
-                         (ERRORS[:no_move] + input) :
-                         (ERRORS[:no_capture] + input)
+    if candidates.length.zero?
+      @error_message = case action
+                       when 'move' then ERRORS[:no_move]
+                       when 'capture' then ERRORS[:no_capture]
+                       end
       false
     elsif candidates.length == 1
       candidates.first
     else
       # finds which target piece is intended
-      disambiguation(candidates, notation.slice!(0), input)
+      disambiguation(candidates, notation.slice!(0))
     end
   end
 
@@ -238,7 +233,7 @@ class Board
     candidates = []
     each_piece do |piece|
       next unless piece.is_a? target_piece
-      
+
       if action == 'move' && piece.valid_moves.include?(target_square)
         candidates << piece
       elsif action == 'capture' && piece.valid_captures.include?(target_square)
@@ -248,17 +243,14 @@ class Board
     candidates
   end
 
-  def disambiguation(candidates, selection, input)
-    unless selection
-      @error_message = ERRORS[:disambiguation] + input
-      return false 
-    end
-    
-    # only accepts the rank or file that narrows down candidates 
+  def disambiguation(candidates, selection)
+    # error message only used if #disambiguation returns false
+    @error_message = ERRORS[:disambiguation]
+    # only accepts the rank or file that narrows down candidates
     finalists = []
-    if selection.match(/[a-h]/)
+    if selection&.match(/[a-h]/)
       candidates.each { |c| finalists << c if c.location[0] == selection.ord - 97 }
-    elsif selection.match(/[1-8]/)
+    elsif selection&.match(/[1-8]/)
       candidates.each { |c| finalists << c if c.location[1] == selection.to_i - 1 }
     end
     return finalists.first if finalists.length == 1
@@ -303,13 +295,13 @@ class Board
   def checkmate?
     return false unless in_check?
 
-    return no_moves?
+    no_moves?
   end
 
   def stalemate?
     return false unless safe_king?
 
-    return no_moves?
+    no_moves?
   end
 
   def fifty_moves?
@@ -317,7 +309,7 @@ class Board
   end
 
   def threefold_repetition?
-    repetition_hash.any? { |k, v| v > 2 }
+    repetition_hash.any? { |_k, v| v > 2 }
   end
 
   def no_mating_material?
@@ -332,6 +324,7 @@ class Board
                    pieces_left == 2 && pieces_left[0].is_a?(Bishop) &&
                    pieces_left[1].is_a?(Bishop) &&
                    pieces_left[0].dark_squared? == pieces_left[1].dark_squared?
+                   
     false
   end
 
@@ -389,13 +382,13 @@ class Board
   def set_remainder
     # checks whether side not to move will be put in check or checkmate
     @white_to_move = white_to_move ? false : true
-    if checkmate?
-      @remainder = ['#', '']
-    elsif in_check?
-      @remainder = ['+', ''] 
-    else
-      @remainder = ['']
-    end
+    @remainder = if checkmate?
+                   ['#', '']
+                 elsif in_check?
+                   ['+', '']
+                 else
+                   ['']
+                 end
     @white_to_move = white_to_move ? false : true
   end
 
@@ -486,7 +479,7 @@ class Board
     targets = [[4, rank], [7, rank]]
     empty_squares = [[5, rank], [6, rank]]
     return false unless validate_castle(targets, empty_squares, 'kingside')
-    
+
     castle(targets[0], targets[1], empty_squares[1], empty_squares[0], +'O-O', notation)
   end
 
@@ -500,10 +493,11 @@ class Board
   end
 
   def validate_castle(targets, empty_squares, kingside = false)
-    # Error message only used if #move returns false
-    @error_message = kingside ? 
-                      ERRORS[:kingside] :
-                      ERRORS[:queenside]
+    # error message only used if #move returns false
+    @error_message = case kingside
+                     when 'kingside' then ERRORS[:kingside]
+                     else ERRORS[:queenside]
+                     end
     return false if in_check?
 
     targets.each { |t| return false if squares[t[0]][t[1]].has_moved? }
@@ -555,7 +549,7 @@ class Board
   end
 
   def en_passant(piece, input, notation)
-    @error_message = ERRORS[:no_pawn_capture] + input
+    @error_message = ERRORS[:no_pawn_capture]
     return false unless validate_en_passant(piece, input, notation)
 
     # adds + or # for check or checkmate if not already in input
@@ -568,8 +562,19 @@ class Board
     finalize_move
   end
 
+  def validate_en_passant(piece, input, notation)
+    test_move(piece)
+    unless validate_move && check_remainder(input, notation)
+      undo_test_move(piece)
+      return false
+    end
+    undo_test_move(piece)
+    true
+  end
+
   def promote(piece, notation)
-    return false unless notation[0] == '='
+    @error_message = ERRORS[:promotion]
+    return false unless piece && notation[0] == '='
 
     sq = [piece.location[0], piece.location[1]]
     case notation[1]
@@ -585,30 +590,20 @@ class Board
     end
   end
 
-  def validate_en_passant(piece, input, notation)
-    test_move(piece)
-    unless validate_move(input) && check_remainder(input, notation)
-      undo_test_move(piece)
-      return false
-    end
-    undo_test_move(piece)
-    true
-  end
-
   def add_en_passant(piece, target_square)
-    if piece.is_a?(Pawn) && (target_square[1] - piece.location[1]).abs == 2
-      # check for adjacent enemy pawns
-      target = white_to_move ? BlackPawn : WhitePawn
-      file = target_square[0]
-      rank = target_square[1]
-      if file > 0
-        adj = squares[file - 1][rank]
-        adj.add_en_passant(file) if adj && adj.is_a?(target)
-      end
-      if file < 7
-        adj = squares[file + 1][rank]
-        adj.add_en_passant(file) if adj && adj.is_a?(target)
-      end
+    return unless piece.is_a?(Pawn) && (target_square[1] - piece.location[1]).abs == 2
+
+    # check for adjacent enemy pawns
+    target = white_to_move ? BlackPawn : WhitePawn
+    file = target_square[0]
+    rank = target_square[1]
+    if file.positive?
+      adj = squares[file - 1][rank]
+      adj.add_en_passant(file) if adj&.is_a?(target)
+    end
+    if file < 7
+      adj = squares[file + 1][rank]
+      adj.add_en_passant(file) if adj&.is_a?(target)
     end
   end
 
@@ -641,11 +636,11 @@ class Board
   def snapshot
     string = white_to_move ? '0'.dup : '1'.dup
     each_square do |square|
-      if square
-        string << square.identifier
-      else
-        string << 'z'
-      end
+      string << if square
+                  square.identifier
+                else
+                  'z'
+                end
     end
     string
   end
