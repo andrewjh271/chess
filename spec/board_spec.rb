@@ -321,7 +321,7 @@ describe Board do
         board.move('Ng5')
         board.move('Kf8')
 
-        expect(board.move('0-0')).to eq(true)
+        expect(board.move('O-O')).to eq(true)
       end
 
       it 'works with queenside castling when + is given for check' do
@@ -349,7 +349,7 @@ describe Board do
         board.move('Bxg2')
 
         board.move('Kd1')
-        expect(board.move('0-0-0+')).to eq(true)
+        expect(board.move('O-O-O+')).to eq(true)
       end
     end
 
@@ -425,7 +425,7 @@ describe Board do
         board.move('Bxd4')
 
         board.move('Qxd4')
-        board.move('0-0')
+        board.move('O-O')
 
         board.move('Nf6+')
         board.move('Kh8')
@@ -709,7 +709,7 @@ describe Board do
         board.move('Be2')
         board.move('Bxg2')
 
-        board.move('0-0')
+        board.move('O-O')
         expect(board.error_message).to eq('Invalid move (kingside castling not possible)')
       end
 
@@ -723,11 +723,11 @@ describe Board do
         board.move('Qd2')
         board.move('Qxf8')
 
-        board.move('0-0-0')
+        board.move('O-O-O')
         board.move('Ke8')
 
         board.move('Nb5')
-        board.move('0-0-0')
+        board.move('O-O-O')
         expect(board.error_message).to eq('Invalid move (queenside castling not possible)')
       end
     end
@@ -770,12 +770,12 @@ describe Board do
       end
 
       it 'works with castling and does not accept invalid castling' do
-        expect(board.move('0-0-0')).to eq(false)
-        expect(board.move('0-0+')).to eq(false)
-        expect(board.move('0-0')).to eq(true)
-        expect(board.move('0-0')).to eq(false)
-        expect(board.move('0-0-0+')).to eq(false)
-        expect(board.move('0-0-0')).to eq(true)
+        expect(board.move('O-O-O')).to eq(false)
+        expect(board.move('O-O+')).to eq(false)
+        expect(board.move('O-O')).to eq(true)
+        expect(board.move('O-O')).to eq(false)
+        expect(board.move('O-O-O+')).to eq(false)
+        expect(board.move('O-O-O')).to eq(true)
         expect(board.squares[6][0]).to be_a(WhiteKing)
         expect(board.squares[3][7]).to be_a(BlackRook)
       end

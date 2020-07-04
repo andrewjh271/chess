@@ -91,9 +91,9 @@ class Board
   def move(input)
     return false unless validate_input(input)
 
-    if input.slice!('0-0-0')
+    if input.slice!('O-O-O')
       castle_queenside(input)
-    elsif input.slice!('0-0')
+    elsif input.slice!('O-O')
       castle_kingside(input)
     else
       notation = input.clone
@@ -164,8 +164,8 @@ class Board
 
   def validate_input(input)
     @error_message = ERRORS[:invalid] + input
-    return false unless input.match(/[a-h][1-8]|0-0|0-0-0/)
-    input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBN0x\-=\+#]/)}
+    return false unless input.match(/[a-h][1-8]|O-O|O-O-O/)
+    input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBNOx\-=\+#]/)}
   end
 
   def each_piece
@@ -487,7 +487,7 @@ class Board
     empty_squares = [[5, rank], [6, rank]]
     return false unless validate_castle(targets, empty_squares, 'kingside')
     
-    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], +'0-0', notation)
+    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], +'O-O', notation)
   end
 
   def castle_queenside(notation)
@@ -496,7 +496,7 @@ class Board
     empty_squares = [[3, rank], [2, rank], [1, rank]]
     return false unless validate_castle(targets, empty_squares)
 
-    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], +'0-0-0', notation)
+    castle(targets[0], targets[1], empty_squares[1], empty_squares[0], +'O-O-O', notation)
   end
 
   def validate_castle(targets, empty_squares, kingside = false)
