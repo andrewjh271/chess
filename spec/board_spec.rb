@@ -619,6 +619,118 @@ describe Board do
       end
     end
 
+    context 'Error messages' do
+      board = Board.new
+
+      it 'recognizes invalid input' do
+        board.move('Nx5^')
+        expect(board.error_message).to eq('Invalid input: Nx5^')
+      end
+
+      it 'recognizes invalid promotion' do
+        board.move('e4')
+        board.move('f5')
+
+        board.move('exf5')
+        board.move('g6')
+
+        board.move('fxg6')
+        board.move('d5')
+
+        board.move('g7')
+        board.move('d4')
+
+        board.move('gxh8')
+        expect(board.error_message).to eq('Invalid move (promotion input not valid): gxh8')
+      end
+
+      it 'recognizes move that ignore check' do
+        board.move('gxf8=Q')
+        board.move('Bg4')
+        expect(board.error_message).to eq('Invalid move (cannot ignore or move into check): Bg4')
+      end
+
+      it 'recognizes move that result in check' do
+        board.move('Kd7')
+
+        board.move('Nf3')
+        board.move('Kd6')
+
+        board.move('d3')
+        board.move('e5')
+        expect(board.error_message).to eq('Invalid move (cannot ignore or move into check): e5')
+      end
+
+      it 'recognizes input with extra characters' do
+        board.move('Qxf8+')
+        expect(board.error_message).to eq('Invalid move (extra characters): Qxf8+')
+      end
+
+      it 'recognizes when no file given for pawn' do
+        board.move('xc3')
+        expect(board.error_message).to eq(
+          'Invalid move (file must be specified for pawn capture): xc3'
+        )
+      end
+
+      it 'recognizes when pawn move is not possible' do
+        board.move('d5')
+        expect(board.error_message).to eq('Invalid move (no pawn found to make requested move): d5')
+      end
+
+      it 'recognizes when pawn capture is not possible' do
+        board.move('dxf3')
+        expect(board.error_message).to eq(
+          'Invalid move (no pawn found to make requested capture): dxf3'
+        )
+      end
+
+      it 'recognizes when piece move is not possible' do
+        board.move('Ba6')
+        expect(board.error_message).to eq(
+          'Invalid move (no piece found to make requested move): Ba6'
+        )
+      end
+
+      it 'recognizes when piece capture is not possible' do
+        board.move('Qxe7')
+        expect(board.error_message).to eq(
+          'Invalid capture (no piece found to make requested capture): Qxe7'
+        )
+      end
+
+      it 'recognizes when disambiguation is necessary' do
+        board.move('Bh3')
+        board.move('Nd2')
+        expect(board.error_message).to eq('Invalid move (disambiguation required): Nd2')
+      end
+
+      it 'recognizes when kingside castling not possible' do
+        board.move('Be2')
+        board.move('Bxg2')
+
+        board.move('0-0')
+        expect(board.error_message).to eq('Invalid move (kingside castling not possible)')
+      end
+
+      it 'recognizes when queenside castling not possible' do
+        board.move('Bf4+')
+        board.move('Kd7')
+
+        board.move('Nc3')
+        board.move('Nc6')
+
+        board.move('Qd2')
+        board.move('Qxf8')
+
+        board.move('0-0-0')
+        board.move('Ke8')
+
+        board.move('Nb5')
+        board.move('0-0-0')
+        expect(board.error_message).to eq('Invalid move (queenside castling not possible)')
+      end
+    end
     context 'Full game with lots of bad input along the way' do
       board = Board.new
 

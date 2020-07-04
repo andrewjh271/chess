@@ -18,6 +18,20 @@ class Board
               :remainder, :old_locations, :captured_pieces, :repetition_hash, :fifty_move_count
   
   MAX = 7
+  ERRORS = {
+    invalid: 'Invalid input: ',
+    promotion: 'Invalid move (promotion input not valid): ',
+    check: 'Invalid move (cannot ignore or move into check): ',
+    extra_chars: 'Invalid move (extra characters): ',
+    no_file: 'Invalid move (file must be specified for pawn capture): ',
+    no_pawn_move: 'Invalid move (no pawn found to make requested move): ',
+    no_pawn_capture: 'Invalid move (no pawn found to make requested capture): ',
+    no_move: 'Invalid move (no piece found to make requested move): ',
+    no_capture: 'Invalid capture (no piece found to make requested capture): ',
+    disambiguation: 'Invalid move (disambiguation required): ',
+    kingside: 'Invalid move (kingside castling not possible)',
+    queenside: 'Invalid move (queenside castling not possible)'
+  }
 
   def initialize
     @squares = []
@@ -92,19 +106,19 @@ class Board
         # en_passant returns true instead of piece location
         return piece if [true, false].include? piece
       else
-        piece = find_piece(target_piece, target_square, action, notation)
+        piece = find_piece(target_piece, target_square, action, input, notation)
       end
       return false unless piece
 
       if piece.is_a?(Pawn) && [0,7].include?(target_square[1])
         piece = promote(piece, notation.slice!(0, 2))
         unless piece
-          @error_message = "Invalid move: promotion input not valid"
+          @error_message = ERRORS[:promotion] + input
           return false
         end
       end
       test_move(piece, target_square)
-      unless validate_move && check_remainder(input, notation)
+      unless validate_move(input) && check_remainder(input, notation)
         undo_test_move(piece, target_square)
         return false
       end
@@ -114,10 +128,10 @@ class Board
     end
   end
 
-  def validate_move
+  def validate_move(input)
     # can't move into check (or ignore being in check)
     unless safe_king?
-      @error_message = 'Invalid move: cannot ignore or move into check.'
+      @error_message = ERRORS[:check] + input
       return false
     end
     true
@@ -131,7 +145,7 @@ class Board
       input << remainder.first unless notation == remainder.first
       true
     else
-      @error_message = "Invalid move: extra characters."
+      @error_message = ERRORS[:extra_chars] + input
       false
     end
   end
@@ -149,7 +163,7 @@ class Board
   private
 
   def validate_input(input)
-    @error_message = "Invalid input: #{input}"
+    @error_message = ERRORS[:invalid] + input
     return false unless input.match(/[a-h][1-8]|0-0|0-0-0/)
     input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBN0x\-=\+#]/)}
   end
@@ -177,7 +191,7 @@ class Board
     if action == 'capture'
       file = find_pawn_file(notation.slice!(0)) 
       unless file
-        @error_message = 'Invalid move: file must be specified for pawn capture.'
+        @error_message = ERRORS[:no_file] + input
         return false 
       end
     end
@@ -194,7 +208,9 @@ class Board
         end
       end
     end
-    @error_message = 'Invalid move: no pawn found to make requested move.'
+    @error_message = action == 'move' ?
+                       (ERRORS[:no_pawn_move] + input) :
+                       (ERRORS[:no_pawn_capture] + input)
     false
   end
 
@@ -202,16 +218,18 @@ class Board
     char if char && char.match(/[a-h]/)
   end
 
-  def find_piece(target_piece, target_square, action, notation)
+  def find_piece(target_piece, target_square, action, input, notation)
     candidates = find_candidates(target_piece, target_square, action)
     if candidates.length == 0
-      @error_message = 'Invalid move: no piece found to make requested move.'
+      @error_message = action == 'move' ?
+                         (ERRORS[:no_move] + input) :
+                         (ERRORS[:no_capture] + input)
       false
     elsif candidates.length == 1
       candidates.first
     else
       # finds which target piece is intended
-      disambiguation(candidates, notation.slice!(0))
+      disambiguation(candidates, notation.slice!(0), input)
     end
   end
 
@@ -230,9 +248,9 @@ class Board
     candidates
   end
 
-  def disambiguation(candidates, selection)
+  def disambiguation(candidates, selection, input)
     unless selection
-      @error_message = 'Invalid move: disambiguation required.'
+      @error_message = ERRORS[:disambiguation] + input
       return false 
     end
     
@@ -467,7 +485,7 @@ class Board
     rank = white_to_move ? 0 : 7
     targets = [[4, rank], [7, rank]]
     empty_squares = [[5, rank], [6, rank]]
-    return false unless validate_castle(targets, empty_squares)
+    return false unless validate_castle(targets, empty_squares, 'kingside')
     
     castle(targets[0], targets[1], empty_squares[1], empty_squares[0], +'0-0', notation)
   end
@@ -481,9 +499,11 @@ class Board
     castle(targets[0], targets[1], empty_squares[1], empty_squares[0], +'0-0-0', notation)
   end
 
-  def validate_castle(targets, empty_squares)
+  def validate_castle(targets, empty_squares, kingside = false)
     # Error message only used if #move returns false
-    @error_message = 'Invalid move: castling not possible.'
+    @error_message = kingside ? 
+                      ERRORS[:kingside] :
+                      ERRORS[:queenside]
     return false if in_check?
 
     targets.each { |t| return false if squares[t[0]][t[1]].has_moved? }
@@ -535,6 +555,7 @@ class Board
   end
 
   def en_passant(piece, input, notation)
+    @error_message = ERRORS[:no_pawn_capture] + input
     return false unless validate_en_passant(piece, input, notation)
 
     # adds + or # for check or checkmate if not already in input
@@ -566,7 +587,7 @@ class Board
 
   def validate_en_passant(piece, input, notation)
     test_move(piece)
-    unless validate_move && check_remainder(input, notation)
+    unless validate_move(input) && check_remainder(input, notation)
       undo_test_move(piece)
       return false
     end

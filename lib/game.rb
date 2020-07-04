@@ -35,7 +35,7 @@ class Game
         end
       end
       unless board.move(input)
-        print_info("#{board.error_message} Enter help for info.".red)
+        print_info("#{board.error_message}. Enter help for info.".red)
         next
       end
       @to_move = to_move == 'White' ? 'Black' : 'White'
