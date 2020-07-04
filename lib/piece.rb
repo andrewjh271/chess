@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
+# parent class for all pieces
 class Piece
-  
-  private 
-  
+  private
+
   attr_reader :board, :color
 
   public
@@ -20,5 +22,4 @@ class Piece
   def white?
     color == 'white'
   end
-  
 end

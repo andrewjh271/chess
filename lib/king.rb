@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require_relative 'piece'
 
+# Parent class for White and Black Kings
 class King < Piece
   private
 
@@ -34,12 +37,12 @@ class King < Piece
     directions.each do |direction|
       file = location[0] + direction[0]
       rank = location[1] + direction[1]
-      if file.between?(0, Board::MAX) &&
-         rank.between?(0, Board::MAX) &&
-         board.squares[file][rank] &&
-         board.squares[file][rank].white? != white?
-        captures << [file, rank]
-      end
+      next unless file.between?(0, Board::MAX) &&
+                  rank.between?(0, Board::MAX) &&
+                  board.squares[file][rank] &&
+                  board.squares[file][rank].white? != white?
+
+      captures << [file, rank]
     end
     @valid_captures = captures
   end
@@ -62,16 +65,18 @@ class King < Piece
   end
 end
 
+# White King
 class WhiteKing < King
   def initialize(board, location)
     super(board, location, 'white')
-    @identifier = 'a'
+    @identifier = 'a'.dup
   end
 end
 
+# Black King
 class BlackKing < King
   def initialize(board, location)
     super(board, location, 'black')
-    @identifier = 'b'
+    @identifier = 'b'.dup
   end
 end

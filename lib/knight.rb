@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require_relative 'piece'
 
+# Parent class for White and Black Knights
 class Knight < Piece
-
   def all_moves
     # including those that go off board
     file = location[0]
@@ -32,15 +34,16 @@ class Knight < Piece
     # does not safeguard against capturing opponents king b/c it cannot be in check
     @valid_captures = in_bounds_moves.reject do |move|
       board.squares[move[0]][move[1]].nil? ||
-      board.squares[move[0]][move[1]].white? == white?
+        board.squares[move[0]][move[1]].white? == white?
     end
   end
 
   def to_s
-    white? ? "♞".gray : "♞".black
+    white? ? '♞'.gray : '♞'.black
   end
 end
 
+# White Knight
 class WhiteKnight < Knight
   def initialize(board, location)
     super(board, location, 'white')
@@ -48,6 +51,7 @@ class WhiteKnight < Knight
   end
 end
 
+# Black Knight
 class BlackKnight < Knight
   def initialize(board, location)
     super(board, location, 'black')

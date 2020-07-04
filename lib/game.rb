@@ -1,13 +1,16 @@
+# frozen_string_literal: true
+
 require_relative 'board'
 require_relative 'escape_sequences'
 require_relative 'color'
 require_relative 'save_load'
 
+# gameplay
 class Game
   include EscapeSequences
   include SaveLoad
 
-  COMMANDS = ['flip', 'help', 'resign', 'save', 'quit']
+  COMMANDS = %w[flip help resign save quit].freeze
 
   attr_reader :board, :to_move
 
@@ -56,7 +59,8 @@ class Game
         puts '1-0 White wins by resignation.'.green
       end
     elsif input == 'help'
-      print_info('Input moves using Standard Algebraic Notation or enter one of the following: flip | draw | resign | quit | save'.green)
+      print_info('Input moves using Standard Algebraic Notation or enter one of the following:
+                  flip | draw | resign | quit | save'.green)
     elsif input == 'save'
       save_game(self)
     end
@@ -69,13 +73,13 @@ class Game
     opponent = to_move == 'White' ? 'Black' : 'White'
     puts "#{opponent}: Your opponent has offered a draw. Do you accept? (Yes/No)".green
     answer = gets[0].downcase
-    until answer == 'y' || answer == 'n'
+    until %w[y n].include? answer
       move_up(3)
       puts_clear
       puts "Invalid input. #{answer} Do you accept your opponent's draw offer? (Yes/No)".red
       answer = gets[0].downcase
     end
-    answer == 'y' ? true : false
+    answer == 'y'
   end
 
   def print_info(message)

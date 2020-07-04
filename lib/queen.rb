@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require_relative 'piece'
 require_relative 'direction_set'
 
+# Parent class for White and Black Queens
 class Queen < Piece
   include DirectionSet
 
@@ -30,6 +33,7 @@ class Queen < Piece
   end
 end
 
+# White Queen
 class WhiteQueen < Queen
   def initialize(board, location)
     super(board, location, 'white')
@@ -37,6 +41,7 @@ class WhiteQueen < Queen
   end
 end
 
+# Black Queen
 class BlackQueen < Queen
   def initialize(board, location)
     super(board, location, 'black')

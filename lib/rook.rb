@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require_relative 'piece'
 require_relative 'direction_set'
 
+# Parent class for White and Black Rooks
 class Rook < Piece
   include DirectionSet
 
@@ -27,7 +30,7 @@ class Rook < Piece
   end
 
   def to_s
-    white? ? "♜".gray : "♜".black
+    white? ? '♜'.gray : '♜'.black
   end
 
   def has_moved?
@@ -40,16 +43,18 @@ class Rook < Piece
   end
 end
 
+# White Rook
 class WhiteRook < Rook
   def initialize(board, location)
     super(board, location, 'white')
-    @identifier = 'e'
+    @identifier = 'e'.dup
   end
 end
 
+# Black Rook
 class BlackRook < Rook
   def initialize(board, location)
     super(board, location, 'black')
-    @identifier = 'f'
+    @identifier = 'f'.dup
   end
 end

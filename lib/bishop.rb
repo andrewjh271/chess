@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require_relative 'piece'
 require_relative 'direction_set'
 
+# Parent class for Bishops
 class Bishop < Piece
   include DirectionSet
 
@@ -26,7 +29,7 @@ class Bishop < Piece
   end
 
   def to_s
-    white? ? "♝".gray : "♝".black
+    white? ? '♝'.gray : '♝'.black
   end
 
   def dark_squared?
@@ -34,6 +37,7 @@ class Bishop < Piece
   end
 end
 
+# White Bishop
 class WhiteBishop < Bishop
   def initialize(board, location)
     super(board, location, 'white')
@@ -41,6 +45,7 @@ class WhiteBishop < Bishop
   end
 end
 
+# Black Bishop
 class BlackBishop < Bishop
   def initialize(board, location)
     super(board, location, 'black')

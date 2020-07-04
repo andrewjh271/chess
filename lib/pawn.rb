@@ -3,6 +3,7 @@
 require_relative 'piece'
 require 'pry'
 
+# parent class for White and Black Pawns
 class Pawn < Piece
   private
 
@@ -56,6 +57,7 @@ class Pawn < Piece
   end
 end
 
+# White Pawn
 class WhitePawn < Pawn
   def initialize(board, location)
     super(board, location, 'white')
@@ -82,6 +84,7 @@ class WhitePawn < Pawn
   end
 end
 
+# Black Pawn
 class BlackPawn < Pawn
   def initialize(board, location)
     super(board, location, 'black')
