@@ -6,7 +6,7 @@ module EscapeSequences
 
   def move_up(n); print "\e[#{n}A" end # up - moves n lines up
   def move_down(n); print "\e[#{n}B" end # down - moves n lines down
-  def move_foward(n);  print "\e[#{n}C" end # forward - moves n characters forward
+  def move_forward(n);  print "\e[#{n}C" end # forward - moves n characters forward
   def move_backward(n); print "\e[#{n}D" end # backward - moves n character backward
 
   def move_to_start_down(n); print "\e[#{n}E" end # move to the beginning of n lines down 

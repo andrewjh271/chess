@@ -45,7 +45,6 @@ class Game
       board.display
     end
     puts board.score.green if board.score
-    puts
   end
 
   def enter_command(input)

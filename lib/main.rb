@@ -30,4 +30,6 @@ class Main
   game = user_choice == '1' ? Game.new : load_game
   2.times { puts }
   game.play
+
+  puts
 end
