@@ -4,13 +4,16 @@ require_relative 'board'
 require_relative 'escape_sequences'
 require_relative 'color'
 require_relative 'save_load'
+require_relative 'instructions'
+require 'io/console'
 
 # gameplay
 class Game
   include EscapeSequences
   include SaveLoad
+  include Instructions
 
-  COMMANDS = %w[flip help resign save quit].freeze
+  COMMANDS = %w[flip help resign save quit exit format].freeze
 
   attr_reader :board, :to_move
 
@@ -26,7 +29,7 @@ class Game
       input = gets.chomp
       if COMMANDS.include?(input)
         enter_command(input)
-        COMMANDS.last(3).include?(input) ? break : next
+        %w[quit exit save resign].include?(input) ? break : next
       elsif input == 'draw'
         if draw_accepted?
           board.display
@@ -58,9 +61,12 @@ class Game
         puts '1-0 White wins by resignation.'.green
       end
     elsif input == 'help'
-      print_info('Input moves using Standard Algebraic Notation or enter one of the following: flip | draw | resign | quit | save'.green)
+      print_info('Input move or enter a command: flip | draw | resign | quit | save | format'.green)
     elsif input == 'save'
       save_game(self)
+    elsif input == 'format'
+      show_instructions
+      board.display
     end
   end
 
