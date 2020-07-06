@@ -58,8 +58,7 @@ class Game
         puts '1-0 White wins by resignation.'.green
       end
     elsif input == 'help'
-      print_info('Input moves using Standard Algebraic Notation or enter one of the following:
-                  flip | draw | resign | quit | save'.green)
+      print_info('Input moves using Standard Algebraic Notation or enter one of the following: flip | draw | resign | quit | save'.green)
     elsif input == 'save'
       save_game(self)
     end
