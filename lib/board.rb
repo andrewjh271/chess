@@ -224,7 +224,7 @@ class Board
       candidates.first
     else
       # finds which target piece is intended
-      disambiguation(candidates, notation.slice!(0))
+      disambiguation(candidates, target_square, notation)
     end
   end
 
@@ -243,17 +243,33 @@ class Board
     candidates
   end
 
-  def disambiguation(candidates, selection)
+  def disambiguation(candidates, target_square, notation)
     # error message only used if #disambiguation returns false
     @error_message = ERRORS[:disambiguation]
-    # only accepts the rank or file that narrows down candidates
+    # first check if any of the moves is illegal
+    finalists = candidates.reject do |piece|
+      test_move(piece, target_square)
+      illegal = in_check?
+      undo_test_move(piece, target_square)
+      illegal
+    end
+    if finalists.length == 1
+      return finalists.first
+    else
+      finalists = filter(candidates, notation.slice!(0))
+    end
+    finalists.first if finalists.length == 1
+  end
+
+  def filter(candidates, selection)
     finalists = []
+    # only accepts the rank or file that narrows down candidates
     if selection&.match(/[a-h]/)
       candidates.each { |c| finalists << c if c.location[0] == selection.ord - 97 }
     elsif selection&.match(/[1-8]/)
       candidates.each { |c| finalists << c if c.location[1] == selection.to_i - 1 }
     end
-    return finalists.first if finalists.length == 1
+    finalists
   end
 
   def test_move(piece, target_square = nil)

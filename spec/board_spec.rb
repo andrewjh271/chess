@@ -731,6 +731,37 @@ describe Board do
         expect(board.error_message).to eq('Invalid move (queenside castling not possible)')
       end
     end
+
+    context 'disambiguation' do
+      board = Board.new
+
+      it 'requires disambiguation when needed' do
+        board.move('Nc3')
+        board.move('e5')
+
+        board.move('e4')
+        board.move('Bb4')
+
+        expect(board.move('Ne2')).to eq(false)
+      end
+
+      it 'works when disambiguation given' do
+        expect(board.move('Nge2')).to eq(true)
+      end
+
+      it 'does not expect disambiguation if only one legal move' do
+        board.move('h5')
+
+        board.move('Ng1')
+        board.move('h4')
+
+        board.move('d3')
+        board.move('h3')
+
+        expect(board.move('Ne2')).to eq(true)
+      end
+    end
+
     context 'Full game with lots of bad input along the way' do
       board = Board.new
 
