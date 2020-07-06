@@ -10,14 +10,14 @@ require 'io/console'
 module GameViewer
   include EscapeSequences
 
-  CONTROLS = "#{'m'.yellow}ove | #{'p'.green}lay | #{'q'.red}uit"
+  CONTROLS = "#{'p'.green}lay | #{'m'.yellow}ove | #{'q'.red}uit"
 
   def view_game
     game = select_game
     return unless game
 
-    puts "    Controls: #{CONTROLS}"
     moves = game[1]
+    puts "    Controls: #{CONTROLS}"
     2.times { puts }
     board = Board.new
     board.display(0)
@@ -28,17 +28,27 @@ module GameViewer
       else
         char = STDIN.getch
         char = STDIN.getch until %w[m p q].include? char
+
+        return if char == 'q'
       end
       move = moves.shift
       unless board.move(move)
         puts "#{board.error_message}: #{move}. Ending game...".red
         return
       end
-      board.display(27)
+      board.display(27) # move up 1 fewer line than in game mode
       break if board.over? || %w[1/2-1/2 1-0 0-1].include?(moves.first) || moves.empty?
-      return if char == 'q'
     end
-    puts board.score || moves.first
+    if board.score
+      puts board.score
+    else
+      puts case moves.first
+           when '1-0' then '1 - 0 White wins by resignation'.green
+           when '0-1' then '0 - 1 Black wins by resignation'.green
+           when '1/2-1/2' then '1/2 - 1/2 Drawn by agreement'.green
+           else 'Result not found'.red
+           end
+    end
   end
 
   def select_game
@@ -70,19 +80,18 @@ module GameViewer
     return unless filename
 
     file = File.open(File.join(Dir.pwd, filename), &:read)
-    # binding.pry
     games = file.split('[Event "')
-    games.shift
+    games.shift # get rid of empty value at beginning
     regexp = /
-      Date\s"                    # scratch
+      Date\s"                    # comes before date
       (?<date>[\d\.\?]+).+       # date
-      White\s"                   # scratch
+      White\s"                   # comes before first player
       (?<white>[^,"]+).+         # first player
-      Black\s"                   # scratch
+      Black\s"                   # comes before second player
       (?<black>[^,"]+)           # second player
-      (.+EventDate\s["\w\.\]]+)? # sometimes this is the last line, or sometimes...
-      (.+ECO\s["\w\]]+)?         # this
-      ([\r\n]+)?                 # different files have different combinations of return chars
+      (.+EventDate\s["\w\.\]]+)? # game info ends with either this line...
+      (.+ECO\s["\w\]]+)?         # or this line
+      ([\r\n]+)?                 # different files have different combinations of line break chars
       (?<moves>.+)               # moves
     /mx
     games.each_with_object({}).with_index do |(game, hash), index|
@@ -123,6 +132,7 @@ module GameViewer
     end
   end
 
+  # added complication in order to make 3 descending columns
   def show_games(hash)
     hash.each_key.with_index do |k, i|
       if i < (hash.length / 3.0).ceil
@@ -139,5 +149,4 @@ module GameViewer
     puts unless (hash.length % 3).zero?
     puts
   end
-
 end

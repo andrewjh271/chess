@@ -56,9 +56,9 @@ class Game
     elsif input == 'resign'
       board.display
       if to_move == 'White'
-        puts '0-1 Black wins by resignation.'.green
+        puts '0-1 Black wins by resignation'.green
       else
-        puts '1-0 White wins by resignation.'.green
+        puts '1-0 White wins by resignation'.green
       end
     elsif input == 'help'
       print_info('Input move or enter a command: flip | draw | resign | quit | save | format'.green)
@@ -66,6 +66,7 @@ class Game
       save_game(self)
     elsif input == 'format'
       show_instructions
+      clear_board
       board.display
     end
   end
