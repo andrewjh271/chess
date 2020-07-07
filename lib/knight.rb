@@ -48,6 +48,7 @@ class WhiteKnight < Knight
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'i'
+    @points = 3
   end
 end
 
@@ -56,5 +57,6 @@ class BlackKnight < Knight
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'j'
+    @points = -3
   end
 end

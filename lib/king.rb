@@ -70,6 +70,7 @@ class WhiteKing < King
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'a'.dup
+    @points = 9999
   end
 end
 
@@ -78,5 +79,6 @@ class BlackKing < King
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'b'.dup
+    @points = -9999
   end
 end

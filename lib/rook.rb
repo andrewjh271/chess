@@ -48,6 +48,7 @@ class WhiteRook < Rook
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'e'.dup
+    @points = 5
   end
 end
 
@@ -56,5 +57,6 @@ class BlackRook < Rook
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'f'.dup
+    @points = -5
   end
 end

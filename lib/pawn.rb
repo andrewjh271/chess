@@ -62,6 +62,7 @@ class WhitePawn < Pawn
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'k'.dup
+    @points = 1
   end
 
   def set_valid_moves
@@ -89,6 +90,7 @@ class BlackPawn < Pawn
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'l'.dup
+    @points = -1
   end
 
   def set_valid_moves

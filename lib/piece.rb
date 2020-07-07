@@ -4,7 +4,7 @@
 class Piece
   private
 
-  attr_reader :board, :color
+  attr_reader :board, :color, :points
 
   public
 
