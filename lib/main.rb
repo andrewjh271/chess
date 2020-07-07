@@ -30,13 +30,27 @@ class Main
     user_choice = gets.chomp
   end
 
-  if user_choice == '3'
-    view_game
-  else
-    game = user_choice == '1' ? Game.new : load_game
+  # if user_choice == '3'
+  #   view_game
+  # else
+  #   game = user_choice == '1' ? Game.new : load_game
+  #   2.times { puts }
+  #   game.play
+  # end
+
+  if user_choice == '1'
+    game = Game.new(Human.new('White'), Computer.new('Black'))
     2.times { puts }
     game.play
+  elsif user_choice == '2'
+    game = load_game
+    2.times { puts }
+    game.play
+  else
+    view_game
   end
+
+
   puts
 end
 

@@ -8,11 +8,13 @@ require_relative 'bishop'
 require_relative 'queen'
 require_relative 'king'
 require_relative 'pawn'
+require_relative 'engine'
 require 'pry'
 
 # Board class handles all board logic
 class Board
   include EscapeSequences
+  include Engine
 
   attr_reader :squares, :white_to_move, :move_list, :move_number, :flip, :score, :error_message,
               :remainder, :old_locations, :captured_pieces, :repetition_hash, :fifty_move_count
@@ -247,21 +249,25 @@ class Board
     # error message only used if #disambiguation returns false
     @error_message = ERRORS[:disambiguation]
     # first check if any of the moves is illegal
-    finalists = candidates.reject do |piece|
+    finalists = filter_by_legality(candidates, target_square)
+    if finalists.length == 1
+      return finalists.first
+    else
+      finalists = filter_by_location(candidates, notation.slice!(0))
+    end
+    finalists.first if finalists.length == 1
+  end
+
+  def filter_by_legality(candidates, target_square)
+    candidates.reject do |piece|
       test_move(piece, target_square)
       illegal = in_check?
       undo_test_move(piece, target_square)
       illegal
     end
-    if finalists.length == 1
-      return finalists.first
-    else
-      finalists = filter(candidates, notation.slice!(0))
-    end
-    finalists.first if finalists.length == 1
   end
 
-  def filter(candidates, selection)
+  def filter_by_location(candidates, selection)
     finalists = []
     # only accepts the rank or file that narrows down candidates
     if selection&.match(/[a-h]/)

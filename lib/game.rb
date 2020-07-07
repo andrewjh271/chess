@@ -5,6 +5,8 @@ require_relative 'escape_sequences'
 require_relative 'color'
 require_relative 'save_load'
 require_relative 'instructions'
+require_relative 'human'
+require_relative 'computer'
 require 'io/console'
 
 # gameplay
@@ -15,36 +17,43 @@ class Game
 
   COMMANDS = %w[flip help resign save quit exit format].freeze
 
-  attr_reader :board, :to_move
+  attr_reader :board, :to_move, :white, :black
 
-  def initialize
+  def initialize(white, black)
     @board = Board.new
-    @to_move = 'White'
+    @white = white
+    @black = black
+    @black.set_board(board)
+    @to_move = white
   end
 
   def play
     board.display(0)
     until board.over?
-      print "Enter #{to_move}'s move: "
-      input = gets.chomp
-      if COMMANDS.include?(input)
-        enter_command(input)
-        %w[quit exit save resign].include?(input) ? break : next
-      elsif input == 'draw'
-        if draw_accepted?
-          board.display
-          puts '1/2 - 1/2 Drawn by agreement'.green
-          break
-        else
-          print_info("#{to_move}: Your draw offer was not accepted.".red)
+      if to_move.is_a?(Human)
+        print "Enter #{to_move}'s move: "
+        input = gets.chomp
+        if COMMANDS.include?(input)
+          enter_command(input)
+          %w[quit exit save resign].include?(input) ? break : next
+        elsif input == 'draw'
+          if draw_accepted?
+            board.display
+            puts '1/2 - 1/2 Drawn by agreement'.green
+            break
+          else
+            print_info("#{to_move}: Your draw offer was not accepted.".red)
+            next
+          end
+        end
+        unless board.move(input)
+          print_info("#{board.error_message}: #{input}. Enter help for info.".red)
           next
         end
+      else
+        to_move.move
       end
-      unless board.move(input)
-        print_info("#{board.error_message}: #{input}. Enter help for info.".red)
-        next
-      end
-      @to_move = to_move == 'White' ? 'Black' : 'White'
+      @to_move = to_move == white ? black : white
       board.display
     end
     puts board.score.green if board.score
@@ -73,9 +82,11 @@ class Game
 
   def draw_accepted?
     # need to eventually handle if opponent is computer
+    opponent = to_move == white ? black : white
+    return false if opponent.is_a?(Computer)
+
     move_up(2)
     print_clear
-    opponent = to_move == 'White' ? 'Black' : 'White'
     puts "#{opponent}: Your opponent has offered a draw. Do you accept? (Yes/No)".green
     answer = gets[0].downcase
     until %w[y n].include? answer
