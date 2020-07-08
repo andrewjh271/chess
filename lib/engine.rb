@@ -15,30 +15,34 @@ module Engine
         all << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
       end
     end
-    all
+    all.shuffle
   end
 
-  def choose_move
+  def choose_move(current = self, pry = 2)
     move_hash = {}
-    best = white_to_move ? MIN : MAX
-    find_valid_moves.each do |move|
-      copy = Marshal.load(Marshal.dump(self))
+    # set best to worst possible score
+    best = current.white_to_move ? MIN : MAX
+    current.find_valid_moves.each do |move|
+      # necessary in order to make deep copy
+      copy = Marshal.load(Marshal.dump(current))
       next unless copy.move(move)
-      
-      score = copy.find_score
-      if white_to_move
-        best = score if score > best
-      else
+
+      score = pry.zero? ? copy.find_score : choose_move(copy, pry - 1)[1]
+      # if trying out moves for black (just moved, now white to move)
+      if copy.white_to_move
         best = score if score < best
+      else
+        best = score if score > best
       end
       move_hash[move] = score
-      # binding.pry
     end
 
-    # move = move_hash.find { |k, _v| k.match?(/^#{input}/) }
+    # game = collection.find { |k, _v| k.match?(/^#{input}/) }
+
+    # candidates = move_hash.select { |_k, v| v == best }
+    # candidates.sample
     # binding.pry
-    candidates = move_hash.select { |_k, v| v == best }.keys
-    candidates.sample
+    move_pair = move_hash.find { |_k, v| v == best }
 
   end
 

@@ -30,7 +30,7 @@ class Computer
 
     # moves = board.find_valid_moves
     # board.move(moves.first)
-    move = board.choose_move
+    move = board.choose_move[0]
     puts "Computer move: #{move}"
     sleep(1)
     board.move(move)

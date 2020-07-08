@@ -525,7 +525,10 @@ class Board
                      end
     return false if in_check?
 
-    targets.each { |t| return false if squares[t[0]][t[1]]&.has_moved? }
+    targets.each do |t|
+      return false unless (squares[t[0]][t[1]].is_a?(King) || squares[t[0]][t[1]].is_a?(Rook)) &&
+                          !squares[t[0]][t[1]].has_moved?
+    end
     # ensures squares between are empty
     empty_squares.each { |e| return false unless squares[e[0]][e[1]].nil? }
 
