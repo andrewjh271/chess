@@ -90,6 +90,7 @@ class Board
   end
 
   def move(input)
+    input = input.dup
     return false unless validate_input(input)
 
     if input.slice!('O-O-O')
@@ -524,7 +525,7 @@ class Board
                      end
     return false if in_check?
 
-    targets.each { |t| return false if squares[t[0]][t[1]].has_moved? }
+    targets.each { |t| return false if squares[t[0]][t[1]]&.has_moved? }
     # ensures squares between are empty
     empty_squares.each { |e| return false unless squares[e[0]][e[1]].nil? }
 

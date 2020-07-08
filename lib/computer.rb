@@ -28,8 +28,12 @@ class Computer
     # sleep(1)
     # board.move(input)
 
-    moves = board.find_valid_moves
-    board.move(moves.first)
+    # moves = board.find_valid_moves
+    # board.move(moves.first)
+    move = board.choose_move
+    puts "Computer move: #{move}"
+    sleep(1)
+    board.move(move)
   end
 
 end

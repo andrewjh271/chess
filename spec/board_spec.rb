@@ -324,6 +324,16 @@ describe Board do
         expect(board.move('O-O')).to eq(true)
       end
 
+      it 'does not throw error if king or rook does not exist on expected square' do
+        board = Board.new
+
+        board.move('e4')
+        board.move('e5')
+
+        board.move('Ke2')
+        expect(board.move('O-O')).to eq(false)
+      end
+
       it 'works with queenside castling when + is given for check' do
         board = Board.new
 
@@ -927,9 +937,10 @@ describe Board do
 
   end
 
+  # module Engine
   describe '#get_input' do
     board = Board.new
-    
+
     it 'translates pawn move into algebraic notation' do
       expect(board.get_input([board.squares[3][1], [3, 3]])).to eq('d4')
     end
@@ -1031,6 +1042,28 @@ describe Board do
         'dxc3', 'd3', 'Kd7', 'e6', 'e5', 'Bc8', 'Bd7', 'Be6', 'Bf5', 'Bh5', 'Bh3', 'Bxf3',
         'f6', 'f5', 'g6', 'g5', 'h6', 'h5', 'Nf6', 'Nh6', 'O-O', 'O-O-O'
       )
+    end
+  end
+
+  describe '#find_score' do
+    board = Board.new
+
+    it 'finds score for opening position' do
+      expect(board.find_score).to eq(0)
+    end
+
+    it 'finds score after 3 captures' do
+      board.move('e4')
+      board.move('e5')
+
+      board.move('Ba6')
+      board.move('bxa6')
+
+      board.move('d4')
+      board.move('exd4')
+
+      board.move('Qxd4')
+      expect(board.find_score).to eq(-3)
     end
   end
 end

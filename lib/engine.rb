@@ -1,5 +1,8 @@
 # methods for Board class to allow engine logic
 module Engine
+  MIN = -9999
+  MAX = 9999
+
   def find_valid_moves
     # Board#move will reject castling laster if not valid
     all = %w[O-O O-O-O]
@@ -12,8 +15,39 @@ module Engine
         all << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
       end
     end
-    # binding.pry
     all
+  end
+
+  def choose_move
+    move_hash = {}
+    best = white_to_move ? MIN : MAX
+    find_valid_moves.each do |move|
+      copy = Marshal.load(Marshal.dump(self))
+      next unless copy.move(move)
+      
+      score = copy.find_score
+      if white_to_move
+        best = score if score > best
+      else
+        best = score if score < best
+      end
+      move_hash[move] = score
+      # binding.pry
+    end
+
+    # move = move_hash.find { |k, _v| k.match?(/^#{input}/) }
+    # binding.pry
+    candidates = move_hash.select { |_k, v| v == best }.keys
+    candidates.sample
+
+  end
+
+  def find_score
+    score = 0
+    each_piece do |piece|
+      score += piece.points
+    end
+    score
   end
 
   def get_input(info)
