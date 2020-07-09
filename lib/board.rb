@@ -467,8 +467,8 @@ class Board
     print "| #{move_list[line + 48]}" if move_number > line + 48
     print "| #{move_list[line + 72]}" if move_number > line + 72
     print "| #{move_list[line + 96]}" if move_number > line + 96
-    print "| #{move_list[line + 96]}" if move_number > line + 120
-    print "| #{move_list[line + 96]}" if move_number > line + 144
+    print "| #{move_list[line + 120]}" if move_number > line + 120
+    print "| #{move_list[line + 144]}" if move_number > line + 144
   end
 
   def fill_board

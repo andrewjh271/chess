@@ -39,7 +39,7 @@ class Main
   # end
 
   if user_choice == '1'
-    game = Game.new(Human.new('White'), Computer.new('Black'))
+    game = Game.new(Computer.new('White'), Computer.new('Black'))
     2.times { puts }
     game.play
   elsif user_choice == '2'

@@ -36,7 +36,14 @@ module Engine
       end
       move_hash[move] = score
     end
-
+    if move_hash.empty?
+      if in_check?
+        score = current.white_to_move ? MIN : MAX
+      else
+        score = current.find_score
+      end
+      return [nil, score]
+    end
     # game = collection.find { |k, _v| k.match?(/^#{input}/) }
 
     # candidates = move_hash.select { |_k, v| v == best }

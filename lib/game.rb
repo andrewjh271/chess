@@ -22,6 +22,8 @@ class Game
   def initialize(white, black)
     @board = Board.new
     @white = white
+    # need to fix this implementation
+    @white.set_board(board)
     @black = black
     @black.set_board(board)
     @to_move = white

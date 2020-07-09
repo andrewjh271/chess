@@ -1,4 +1,5 @@
 require_relative 'board'
+require_relative 'color'
 require 'pry'
 
 class Computer
@@ -30,8 +31,9 @@ class Computer
 
     # moves = board.find_valid_moves
     # board.move(moves.first)
+    print "Calculating computer's move... ".yellow
     move = board.choose_move[0]
-    puts "Computer move: #{move}"
+    puts move
     sleep(1)
     board.move(move)
   end
