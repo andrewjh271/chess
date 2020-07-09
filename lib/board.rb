@@ -287,13 +287,13 @@ class Board
     if target_square
       captured_pieces << squares[target_square[0]][target_square[1]]
       squares[target_square[0]][target_square[1]] = piece
-      piece.location = [target_square[0], target_square[1]]
+      piece.location = target_square
     else
       # must be en_passant
       squares[piece.en_passant[0]][piece.en_passant[1]] = piece
       captured_pieces << squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]]
       squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = nil
-      piece.location = [piece.en_passant[0], piece.en_passant[1]]
+      piece.location = piece.en_passant
     end
     set_moves_and_captures
   end
@@ -309,7 +309,7 @@ class Board
       squares[piece.en_passant[0]][piece.en_passant[1]] = nil
       squares[piece.en_passant_capture[0]][piece.en_passant_capture[1]] = captured_piece
     end
-    piece.location = [old_location[0], old_location[1]]
+    piece.location = old_location
     set_moves_and_captures
   end
 
@@ -421,7 +421,7 @@ class Board
     squares[piece.location[0]][piece.location[1]] = nil
     squares[target_square[0]][target_square[1]] = piece
     add_en_passant(piece, target_square)
-    piece.location = [target_square[0], target_square[1]]
+    piece.location = target_square
     update_move_list(input)
     piece.has_moved if piece.respond_to?(:has_moved)
     irreversible = piece.is_a?(Pawn) || input.include?('x')
@@ -544,13 +544,14 @@ class Board
   end
 
   def test_castle(king, rook, new_king, new_rook)
+    # arguments will be locations of king and rook
     squares[new_king[0]][new_king[1]] = squares[king[0]][king[1]]
     squares[king[0]][king[1]] = nil
     squares[new_rook[0]][new_rook[1]] = squares[rook[0]][rook[1]]
     squares[rook[0]][rook[1]] = nil
 
-    squares[new_king[0]][new_king[1]].location = [new_king[0], new_king[1]]
-    squares[new_rook[0]][new_rook[1]].location = [new_rook[0], new_rook[1]]
+    squares[new_king[0]][new_king[1]].location = new_king
+    squares[new_rook[0]][new_rook[1]].location = new_rook
     set_moves_and_captures
   end
 
@@ -560,8 +561,8 @@ class Board
     squares[rook[0]][rook[1]] = squares[new_rook[0]][new_rook[1]]
     squares[new_rook[0]][new_rook[1]] = nil
 
-    squares[king[0]][king[1]].location = [king[0], king[1]]
-    squares[rook[0]][rook[1]].location = [rook[0], rook[1]]
+    squares[king[0]][king[1]].location = king
+    squares[rook[0]][rook[1]].location = rook
     set_moves_and_captures
   end
 
@@ -606,16 +607,15 @@ class Board
     @error_message = ERRORS[:promotion]
     return false unless piece && notation[0] == '='
 
-    sq = [piece.location[0], piece.location[1]]
     case notation[1]
-    when 'Q' then white_to_move ? WhiteQueen.new(self, [sq[0], sq[1]]) :
-                                  BlackQueen.new(self, [sq[0], sq[1]])
-    when 'R' then white_to_move ? WhiteRook.new(self, [sq[0], sq[1]]) :
-                                  BlackRook.new(self, [sq[0], sq[1]])
-    when 'B' then white_to_move ? WhiteBishop.new(self, [sq[0], sq[1]]) :
-                                  BlackBishop.new(self, [sq[0], sq[1]])
-    when 'N' then white_to_move ? WhiteKnight.new(self, [sq[0], sq[1]]) :
-                                  BlackKnight.new(self, [sq[0], sq[1]])
+    when 'Q' then white_to_move ? WhiteQueen.new(self, piece.location) :
+                                  BlackQueen.new(self, piece.location)
+    when 'R' then white_to_move ? WhiteRook.new(self, piece.location) :
+                                  BlackRook.new(self, piece.location)
+    when 'B' then white_to_move ? WhiteBishop.new(self, piece.location) :
+                                  BlackBishop.new(self, piece.location)
+    when 'N' then white_to_move ? WhiteKnight.new(self, piece.location) :
+                                  BlackKnight.new(self, piece.location)
     else false
     end
   end
