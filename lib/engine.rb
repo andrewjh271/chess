@@ -57,20 +57,20 @@ module Engine
     move_pair = move_hash.find { |_k, v| v == best }
   end
 
-  def find_valid_moves2
-    # Board#move will reject castling laster if not valid
-    all = %w[O-O O-O-O]
-    each_piece do |piece|
-      next unless piece.white? == white_to_move
+  # def find_valid_moves2
+  #   # Board#move will reject castling laster if not valid
+  #   all = %w[O-O O-O-O]
+  #   each_piece do |piece|
+  #     next unless piece.white? == white_to_move
 
-      piece.valid_captures.each { |capture| all << [piece, capture] }
-      piece.valid_moves.each { |a_move| all << [piece, a_move] }
-      if piece.is_a?(Pawn) && piece.en_passant
-        all << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
-      end
-    end
-    all.shuffle
-  end
+  #     piece.valid_captures.each { |capture| all << [piece, capture] }
+  #     piece.valid_moves.each { |a_move| all << [piece, a_move] }
+  #     if piece.is_a?(Pawn) && piece.en_passant
+  #       all << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
+  #     end
+  #   end
+  #   all.shuffle
+  # end
 
   # streamlined version of making full move
   # ignores update_repetitions and update_move_list
@@ -152,12 +152,6 @@ module Engine
     elapsed = ending - starting
     puts "Deep copy using Marshal for every move: #{elapsed}"
 
-    starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    choose_move
-    ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    elapsed = ending - starting
-    puts "Deep copy using Marshal for every move: #{elapsed}"
-
   end
 
 
@@ -196,12 +190,7 @@ module Engine
         input << 'x'
       end
       input << to_alg(target)
-      if [0, 7].include?(target[1])
-      # I shouldn't be changing piece here; this method is only returning input
-        piece = piece.white? ? WhiteQueen.new(self, piece.location) : 
-                               BlackQueen.new(self, piece.location)
-        input << '=Q'
-      end
+      input << '=Q' if [0, 7].include?(target[1])
     else
       candidates = find_candidates(piece.class, target, action)
       candidates = filter_by_legality(candidates, target)
