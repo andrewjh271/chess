@@ -16,8 +16,9 @@ class Board
   include EscapeSequences
   include Engine
 
-  attr_reader :squares, :white_to_move, :move_list, :move_number, :flip, :score, :error_message,
-              :remainder, :old_locations, :captured_pieces, :repetition_hash, :fifty_move_count
+  attr_reader :squares, :white_to_move, :move_list, :move_number, :flip, :score,
+              :error_message, :remainder, :old_locations, :captured_pieces,
+              :repetition_hash, :fifty_move_count
   MAX = 7
   ERRORS = {
     invalid: 'Invalid input',
@@ -42,6 +43,7 @@ class Board
     @flip = false
     @old_locations = []
     @captured_pieces = []
+    @moved_stack = []
     @fifty_move_count = 0
     @repetition_hash = Hash.new(0)
     8.times { |i| @squares[i] = [] }

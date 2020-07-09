@@ -59,6 +59,7 @@ class Game
       board.display
     end
     puts board.score.green if board.score
+    puts board.move_list
   end
 
   def enter_command(input)
