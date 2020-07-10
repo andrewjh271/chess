@@ -1045,11 +1045,11 @@ describe Board do
     end
   end
 
-  describe '#find_score' do
+  describe '#evaluate' do
     board = Board.new
 
     it 'finds score for opening position' do
-      expect(board.find_score).to eq(0)
+      expect(board.evaluate).to eq(0)
     end
 
     it 'finds score after 3 captures' do
@@ -1063,7 +1063,7 @@ describe Board do
       board.move('exd4')
 
       board.move('Qxd4')
-      expect(board.find_score).to eq(-3)
+      expect(board.evaluate).to eq(-3)
     end
   end
 end

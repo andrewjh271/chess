@@ -3,6 +3,7 @@ module Engine
 
   MIN = -9999
   MAX = 9999
+  @@positions_searched = 0
 
   def find_valid_moves
     # Board#move will reject castling laster if not valid
@@ -16,46 +17,124 @@ module Engine
         all << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
       end
     end
-    all.shuffle
+    all
   end
 
-  def choose_move(current = self, pry = 2)
-    if current.over?
-      if current.white_to_move
-        score = current.in_check? ? MIN : 0
-      else
-        score = current.in_check? ? MAX : 0
-      end
-      return [nil, score]
-    end
+  def choose_move(depth = 3)
+
+    move = white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
+    puts @@positions_searched
+    move
+
+    # return end_score(current) if current.over?
+
+    # move_hash = {}
+    # # set best to worst possible score
+    # best = current.white_to_move ? MIN : MAX
+    # current.find_valid_moves.each do |move|
+    #   # necessary in order to make deep copy
+    #   copy = Marshal.load(Marshal.dump(current))
+    #   next unless copy.move(move)
+
+    #   score = pry.zero? ? copy.find_score : choose_move(copy, pry - 1)[1]
+    #   # if trying out moves for black (just moved, now white to move)
+    #   if copy.white_to_move
+    #     best = score if score < best
+    #   else
+    #     best = score if score > best
+    #   end
+    #   move_hash[move] = score
+    # end
+    # # game = collection.find { |k, _v| k.match?(/^#{input}/) }
+
+    # # candidates = move_hash.select { |_k, v| v == best }
+    # # candidates.sample
+    # # binding.pry
+    # move_pair = move_hash.find { |_k, v| v == best }
+  end
+
+  def alpha_beta_max(current, depth, alpha = MIN - 1, beta = MAX + 1)
+    return end_score(current, MIN) if current.over?
 
     move_hash = {}
-    # set best to worst possible score
-    best = current.white_to_move ? MIN : MAX
     current.find_valid_moves.each do |move|
       # necessary in order to make deep copy
       copy = Marshal.load(Marshal.dump(current))
+      @@positions_searched += 1
       next unless copy.move(move)
 
-      score = pry.zero? ? copy.find_score : choose_move(copy, pry - 1)[1]
-      # if trying out moves for black (just moved, now white to move)
-      if copy.white_to_move
-        best = score if score < best
-      else
-        best = score if score > best
+      # binding.pry
+      score = depth.zero? ? copy.evaluate : alpha_beta_min(copy, depth - 1, alpha, beta)[1]
+      if score >= beta
+        return [nil, beta]
+      end
+      if score > alpha
+        alpha = score
       end
       move_hash[move] = score
     end
-
-
-
     # game = collection.find { |k, _v| k.match?(/^#{input}/) }
 
     # candidates = move_hash.select { |_k, v| v == best }
     # candidates.sample
     # binding.pry
-    move_pair = move_hash.find { |_k, v| v == best }
+    move_pair = move_hash.find { |_k, v| v == alpha }
+    # binding.pry
+    # puts @@positions_searched
+    move_pair || [nil, alpha]
   end
+
+  def alpha_beta_min(current, depth, alpha = MIN - 1, beta = MAX + 1)
+    return end_score(current, MAX) if current.over?
+
+    move_hash = {}
+    current.find_valid_moves.each do |move|
+      # necessary in order to make deep copy
+      copy = Marshal.load(Marshal.dump(current))
+      @@positions_searched += 1
+      next unless copy.move(move)
+      # binding.pry
+      score = depth.zero? ? copy.evaluate : alpha_beta_max(copy, depth - 1, alpha, beta)[1]
+      # binding.pry
+      # if trying out moves for black (just moved, now white to move)
+      if score <= alpha
+        return [nil, alpha]
+      end
+      if score < beta
+        beta = score
+      end
+      move_hash[move] = score
+    end
+    # if (move_hash.find { |_k, v| v == beta }).nil?
+    #   binding.pry
+    # end
+    move_pair = move_hash.find { |_k, v| v == beta }
+    # binding.pry
+    move_pair || [nil, beta]
+  end
+
+  def end_score(current, bound)
+    # if current.in_check?
+    #   # checkmate
+    #   score = current.white_to_move ? MIN : MAX
+    #   [nil, score]
+    # else
+    #   # draw
+    #   [nil, 0]
+    # end
+    # binding.pry
+    current.in_check? ? [nil, bound] : [nil, 0]
+  end
+
+  def evaluate
+    score = 0
+    each_piece do |piece|
+      score += piece.points
+    end
+    score
+  end
+
+
 
   # def find_valid_moves2
   #   # Board#move will reject castling laster if not valid
@@ -133,18 +212,6 @@ module Engine
   #   end
   # end
 
-  # def alpha_beta_max(alpha = MIN, beta = MAX, depth = 2)
-  #   move_hash = {}
-  #   find_valid_moves.each do |move|
-  #     if move.is_a?(Array)
-  #       engine_test_move(move[0], move[1])
-  #       score = alpha_beta_min(alpha, beta, depth - 1)
-
-  #     end
-  #   end
-  #   # if depth == 0 
-  # end
-
   def benchmark
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     choose_move
@@ -152,17 +219,6 @@ module Engine
     elapsed = ending - starting
     puts "Deep copy using Marshal for every move: #{elapsed}"
 
-  end
-
-
-
-
-  def find_score
-    score = 0
-    each_piece do |piece|
-      score += piece.points
-    end
-    score
   end
 
   def get_input(info)
