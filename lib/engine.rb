@@ -53,25 +53,28 @@ module Engine
     # move_pair = move_hash.find { |_k, v| v == best }
   end
 
-  def alpha_beta_max(current, depth, alpha = MIN - 1, beta = MAX + 1)
-    return end_score(current, MIN) if current.over?
-
+  def alpha_beta_max(current, depth, alpha = -Float::INFINITY, beta = Float::INFINITY)
+    return evaluate(current, MIN) if current.over?
+    return evaluate(current) if depth.zero?
+    
     move_hash = {}
     current.find_valid_moves.each do |move|
+      @@positions_searched += 1
       # necessary in order to make deep copy
       copy = Marshal.load(Marshal.dump(current))
-      @@positions_searched += 1
+      
       next unless copy.move(move)
 
       # binding.pry
-      score = depth.zero? ? copy.evaluate : alpha_beta_min(copy, depth - 1, alpha, beta)[1]
+      score = alpha_beta_min(copy, depth - 1, alpha, beta)[1]
       if score >= beta
         return [nil, beta]
       end
       if score > alpha
         alpha = score
+        # add move/score pair to hash only if it is a candidate
+        move_hash[move] = score
       end
-      move_hash[move] = score
     end
     # game = collection.find { |k, _v| k.match?(/^#{input}/) }
 
@@ -84,17 +87,19 @@ module Engine
     move_pair || [nil, alpha]
   end
 
-  def alpha_beta_min(current, depth, alpha = MIN - 1, beta = MAX + 1)
+  def alpha_beta_min(current, depth, alpha = -Float::INFINITY, beta = Float::INFINITY)
     return end_score(current, MAX) if current.over?
-
+    return evaluate(current) if depth.zero?
+    
     move_hash = {}
     current.find_valid_moves.each do |move|
+      @@positions_searched += 1
       # necessary in order to make deep copy
       copy = Marshal.load(Marshal.dump(current))
-      @@positions_searched += 1
+    
       next unless copy.move(move)
       # binding.pry
-      score = depth.zero? ? copy.evaluate : alpha_beta_max(copy, depth - 1, alpha, beta)[1]
+      score = alpha_beta_max(copy, depth - 1, alpha, beta)[1]
       # binding.pry
       # if trying out moves for black (just moved, now white to move)
       if score <= alpha
@@ -102,8 +107,8 @@ module Engine
       end
       if score < beta
         beta = score
+        move_hash[move] = score
       end
-      move_hash[move] = score
     end
     # if (move_hash.find { |_k, v| v == beta }).nil?
     #   binding.pry
@@ -126,12 +131,18 @@ module Engine
     current.in_check? ? [nil, bound] : [nil, 0]
   end
 
-  def evaluate
+  def evaluate(current, bound = nil)
+    if bound
+      # game is over
+      return current.in_check? ? [nil, bound] : [nil, 0]
+    end
+
     score = 0
-    each_piece do |piece|
+    current.each_piece do |piece|
       score += piece.points
     end
-    score
+    # evaluating leaf position — no associated move
+    [nil, score]
   end
 
 
@@ -213,12 +224,24 @@ module Engine
   # end
 
   def benchmark
+    puts 'With pruning...'
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    choose_move
+    choose_move(2)
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     elapsed = ending - starting
-    puts "Deep copy using Marshal for every move: #{elapsed}"
+    puts "Semi-slav move 13, depth of 2: #{elapsed} seconds"
 
+    starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    choose_move(3)
+    ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    elapsed = ending - starting
+    puts "Semi-slav move 13, depth of 3: #{elapsed} seconds"
+
+    starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    choose_move(4)
+    ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    elapsed = ending - starting
+    puts "Semi-slav move 13, depth of 4: #{elapsed} seconds"
   end
 
   def get_input(info)

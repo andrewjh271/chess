@@ -158,13 +158,15 @@ class Board
     false
   end
 
-  private
+  def endgame?
+    queens = 0
+    each_piece do |piece|
+      next unless piece.is_a?(Queen)
 
-  def validate_input(input)
-    @error_message = ERRORS[:invalid]
-    return false unless input.match(/[a-h][1-8]|O-O|O-O-O/)
-
-    input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBNOx\-=\+#]/) }
+      queens += 1
+      return false if queens > 1
+    end
+    true
   end
 
   def each_piece
@@ -173,6 +175,15 @@ class Board
         square ? (yield square) : next
       end
     end
+  end
+
+  private
+
+  def validate_input(input)
+    @error_message = ERRORS[:invalid]
+    return false unless input.match(/[a-h][1-8]|O-O|O-O-O/)
+
+    input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBNOx\-=\+#]/) }
   end
 
   def find_target_piece(string)
