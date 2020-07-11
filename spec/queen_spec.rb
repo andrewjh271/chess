@@ -30,4 +30,26 @@ describe Queen do
       expect(queen.valid_captures).to contain_exactly([3, 1], [5, 1], [7, 1])
     end
   end
+
+  describe '#move' do
+    it 'returns correct value' do
+      queen = WhiteQueen.new(board, [5, 3])
+      expect(queen.points).to eq(905)
+    end
+
+    it 'returns correct value for another location' do
+      queen = WhiteQueen.new(board, [7, 6])
+      expect(queen.points).to eq(890)
+    end
+
+    it 'works for black queen' do
+      queen = BlackQueen.new(board, [2, 6])
+      expect(queen.points).to eq(-905)
+    end
+
+    it 'works for another black queen' do
+      queen = BlackQueen.new(board, [6, 5])
+      expect(queen.points).to eq(-900)
+    end
+  end
 end

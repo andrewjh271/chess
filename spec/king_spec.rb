@@ -36,4 +36,54 @@ describe King do
     end
   end
 
+  describe '#points' do
+    context 'opening/middlegame' do
+      it 'returns the correct numbers of points' do
+        king = WhiteKing.new(board, [0, 5])
+        expect(king.points).to eq(19970)
+      end
+  
+      it 'works for another location' do
+        king = WhiteKing.new(board, [6, 0])
+        expect(king.points).to eq(20030)
+      end
+
+      it 'works for black king' do
+        king = BlackKing.new(board, [1, 6])
+        expect(king.points).to eq(-20020)
+      end
+    end
+
+    context 'endgame' do
+      board2 = Board.new
+      it 'returns the correct number of points' do
+        board2.move('c4')
+        board2.move('d6')
+
+        board2.move('d4')
+        board2.move('e5')
+
+        board2.move('dxe5')
+        board2.move('dxe5')
+
+        board2.move('Qxd8+')
+        board2.move('Kxd8')
+
+        expect(board2.squares[3][7].points).to eq(-19970)
+      end
+
+      it 'works as kings move up the board' do
+        board2.move('Kd2')
+        board2.move('Kd7')
+
+        board2.move('Kc3')
+        board2.move('Ke6')
+
+        expect(board2.squares[2][2].points).to eq(20020)
+        expect(board2.squares[4][5].points).to eq(-20030)
+      end
+    end
+    
+  end
+
 end

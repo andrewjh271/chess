@@ -48,7 +48,10 @@ class WhiteKnight < Knight
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'i'
-    @points = 3
+  end
+
+  def points
+    320 + WHITE_KNIGHT_TABLE[location]
   end
 end
 
@@ -57,6 +60,10 @@ class BlackKnight < Knight
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'j'
-    @points = -3
+  end
+
+  def points
+    # I kept the postive/negative values the same b/c white/black tables were so similar
+    -320 - BLACK_KNIGHT_TABLE[location]
   end
 end

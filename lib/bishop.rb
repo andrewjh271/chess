@@ -42,7 +42,10 @@ class WhiteBishop < Bishop
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'g'
-    @points = 3
+  end
+
+  def points
+    330 + WHITE_BISHOP_TABLE[location]
   end
 end
 
@@ -51,6 +54,9 @@ class BlackBishop < Bishop
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'h'
-    @points = -3
+  end
+
+  def points
+    -330 + BLACK_BISHOP_TABLE[location]
   end
 end

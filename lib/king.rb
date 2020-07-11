@@ -51,7 +51,7 @@ class King < Piece
     white? ? '♚'.gray : '♚'.black
   end
 
-  def in_check?
+  def in_check? # remove this!
     in_check
   end
 
@@ -70,7 +70,14 @@ class WhiteKing < King
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'a'.dup
-    @points = 9999
+  end
+
+  def points
+    if board.endgame?
+      20000 + WHITE_KING_END[location]
+    else
+      20000 + WHITE_KING_MIDDLE[location]
+    end
   end
 end
 
@@ -79,6 +86,13 @@ class BlackKing < King
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'b'.dup
-    @points = -9999
+  end
+
+  def points
+    if board.endgame?
+      -20000 - BLACK_KING_END[location]
+    else
+      -20000 - BLACK_KING_MIDDLE[location]
+    end
   end
 end

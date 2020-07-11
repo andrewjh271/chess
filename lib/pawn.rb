@@ -59,10 +59,14 @@ end
 
 # White Pawn
 class WhitePawn < Pawn
+
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'k'.dup
-    @points = 1
+  end
+
+  def points
+    100 + WHITE_PAWN_TABLE[location]
   end
 
   def set_valid_moves
@@ -87,10 +91,14 @@ end
 
 # Black Pawn
 class BlackPawn < Pawn
+
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'l'.dup
-    @points = -1
+  end
+
+  def points
+    -100 + BLACK_PAWN_TABLE[location]
   end
 
   def set_valid_moves

@@ -36,4 +36,26 @@ describe Rook do
       expect(rook.valid_captures).to eq([[0, 6]])
     end
   end
+
+  describe '#points' do
+    it 'returns the correct number of points' do
+      rook = WhiteRook.new(board, [7, 3])
+      expect(rook.points).to eq(495)
+    end
+
+    it 'works for another location' do
+      rook = WhiteRook.new(board, [2, 6])
+      expect(rook.points).to eq(510)
+    end
+
+    it 'works for black rook' do
+      rook = BlackRook.new(board, [3, 6])
+      expect(rook.points).to eq(-500)
+    end
+
+    it 'works for another black rook' do
+      rook = BlackRook.new(board, [0, 1])
+      expect(rook.points).to eq(-505)
+    end
+  end
 end

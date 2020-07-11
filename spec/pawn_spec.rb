@@ -27,6 +27,28 @@ describe WhitePawn do
       expect(pawn.valid_captures).to eq([])
     end
   end
+
+  describe '#points' do
+    it 'returns correct number of points for location' do
+      pawn = WhitePawn.new(board, [5, 5])
+      expect(pawn.points).to eq(120)
+    end
+
+    it 'returns correct number of points for location' do
+      pawn = WhitePawn.new(board, [7, 2])
+      expect(pawn.points).to eq(105)
+    end
+
+    it 'works for black pawn' do
+      pawn = BlackPawn.new(board, [2, 6])
+      expect(pawn.points).to eq(-110)
+    end
+
+    it 'works for black pawn' do
+      pawn = BlackPawn.new(board, [6, 1])
+      expect(pawn.points).to eq(-150)
+    end
+  end
 end
 
 describe BlackPawn do

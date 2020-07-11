@@ -58,4 +58,26 @@ describe Knight do
       expect(knight.valid_captures).to contain_exactly([0, 1], [1, 0], [3, 0], [4, 1])
     end
   end
+
+  describe '#points' do
+    it 'returns the correct number of points' do
+      knight = WhiteKnight.new(board, [2, 2])
+      expect(knight.points).to eq(330)
+    end
+
+    it 'works for a different square' do
+      knight = WhiteKnight.new(board, [4, 4])
+      expect(knight.points).to eq(340)
+    end
+
+    it 'works for a black knight' do
+      knight = BlackKnight.new(board, [4, 6])
+      expect(knight.points).to eq(-325)
+    end
+
+    it 'works for another black knight' do
+      knight = BlackKnight.new(board, [1, 2])
+      expect(knight.points).to eq(-320)
+    end
+  end
 end

@@ -48,7 +48,10 @@ class WhiteRook < Rook
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'e'.dup
-    @points = 5
+  end
+
+  def points
+    500 + WHITE_ROOK_TABLE[location]
   end
 end
 
@@ -57,6 +60,10 @@ class BlackRook < Rook
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'f'.dup
-    @points = -5
+  end
+
+  def points
+     # I kept the postive/negative values the same b/c white/black tables were so similar
+    -500 - BLACK_ROOK_TABLE[location]
   end
 end

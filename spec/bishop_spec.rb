@@ -35,4 +35,31 @@ describe Bishop do
       expect(bishop.valid_captures).to contain_exactly([3, 6])
     end
   end
+
+  describe '#points' do
+    it 'returns point value based on location' do
+      bishop = WhiteBishop.new(board, [0, 3])
+      expect(bishop.points).to eq(320)
+    end
+
+    it 'works for another location' do
+      bishop = WhiteBishop.new(board, [6, 6])
+      expect(bishop.points).to eq(330)
+    end
+
+    it 'works for another location' do
+      bishop = WhiteBishop.new(board, [1, 2])
+      expect(bishop.points).to eq(340)
+    end
+
+    it 'works for a black bishop' do
+      bishop = BlackBishop.new(board, [6, 6])
+      expect(bishop.points).to eq(-335)
+    end
+
+    it 'works for a black bishop at another location' do
+      bishop = BlackBishop.new(board, [1, 1])
+      expect(bishop.points).to eq(-330)
+    end
+  end
 end

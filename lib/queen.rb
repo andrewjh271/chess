@@ -38,7 +38,10 @@ class WhiteQueen < Queen
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'c'
-    @points = 9
+  end
+
+  def points
+    900 + WHITE_QUEEN_TABLE[location]
   end
 end
 
@@ -47,6 +50,9 @@ class BlackQueen < Queen
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'd'
-    @points = -9
+  end
+
+  def points
+    -900 - BLACK_QUEEN_TABLE[location]
   end
 end
