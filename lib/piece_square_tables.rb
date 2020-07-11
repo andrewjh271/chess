@@ -49,7 +49,7 @@ module Piece_Square_Tables
     [5, 6] => 50,
     [6, 6] => 50,
     [7, 6] => 50
-  }
+  }.freeze
 
   BLACK_PAWN_TABLE = {
     # not bothering with 1st and 8th rank values
@@ -101,7 +101,7 @@ module Piece_Square_Tables
     [5, 6] => -10,
     [6, 6] => -10,
     [7, 6] => -5
-  }
+  }.freeze
 
   WHITE_BISHOP_TABLE = {
     [0, 0] => -20,
@@ -168,7 +168,7 @@ module Piece_Square_Tables
     [5, 7] => -10,
     [6, 7] => -10,
     [7, 7] => -20,
-  }
+  }.freeze
 
   BLACK_BISHOP_TABLE = {
     [0, 0] => 20,
@@ -235,7 +235,7 @@ module Piece_Square_Tables
     [5, 7] => 10,
     [6, 7] => 10,
     [7, 7] => 20,
-  }
+  }.freeze
 
   WHITE_KNIGHT_TABLE = {
     [0, 0] => -50,
@@ -302,7 +302,7 @@ module Piece_Square_Tables
     [5, 7] => -30,
     [6, 7] => -40,
     [7, 7] => -50,
-  }
+  }.freeze
 
   # subtract!
   BLACK_KNIGHT_TABLE = {
@@ -370,7 +370,7 @@ module Piece_Square_Tables
     [5, 7] => -30,
     [6, 7] => -40,
     [7, 7] => -50,
-  }
+  }.freeze
 
   WHITE_ROOK_TABLE = {
     [0, 0] => 0,
@@ -437,7 +437,7 @@ module Piece_Square_Tables
     [5, 7] => 0,
     [6, 7] => 0,
     [7, 7] => 0
-  }
+  }.freeze
 
   BLACK_ROOK_TABLE = {
     [0, 0] => 0,
@@ -504,7 +504,7 @@ module Piece_Square_Tables
     [5, 7] => 0,
     [6, 7] => 0,
     [7, 7] => 0
-  }
+  }.freeze
 
   WHITE_QUEEN_TABLE = {
     [0, 0] => -20,
@@ -571,7 +571,7 @@ module Piece_Square_Tables
     [5, 7] => -10,
     [6, 7] => -10,
     [7, 7] => -20
-  }
+  }.freeze
 
   # subtract
   BLACK_QUEEN_TABLE = {
@@ -639,7 +639,7 @@ module Piece_Square_Tables
     [5, 0] => -10,
     [6, 0] => -10,
     [7, 0] => -20
-  }
+  }.freeze
 
   WHITE_KING_MIDDLE = {
     [0, 0] => 20,
@@ -706,7 +706,7 @@ module Piece_Square_Tables
     [5, 7] => -40,
     [6, 7] => -40,
     [7, 7] => -30
-  }
+  }.freeze
 
   # subtract
   BLACK_KING_MIDDLE = {
@@ -774,7 +774,7 @@ module Piece_Square_Tables
     [5, 0] => -40,
     [6, 0] => -40,
     [7, 0] => -30
-  }
+  }.freeze
 
   WHITE_KING_END = {
     [0, 0] => -50,
@@ -841,7 +841,7 @@ module Piece_Square_Tables
     [5, 7] => -30,
     [6, 7] => -40,
     [7, 7] => -50
-  }
+  }.freeze
 
   # subtract
   BLACK_KING_END = {
@@ -909,5 +909,5 @@ module Piece_Square_Tables
     [5, 0] => -30,
     [6, 0] => -40,
     [7, 0] => -50
-  }
+  }.freeze
 end
