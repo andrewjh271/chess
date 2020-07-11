@@ -65,8 +65,8 @@ class WhitePawn < Pawn
     @identifier = 'k'.dup
   end
 
-  def points
-    100 + WHITE_PAWN_TABLE[location]
+  def points(square = location)
+    100 + WHITE_PAWN_TABLE[square]
   end
 
   def set_valid_moves
@@ -97,8 +97,8 @@ class BlackPawn < Pawn
     @identifier = 'l'.dup
   end
 
-  def points
-    -100 + BLACK_PAWN_TABLE[location]
+  def points(square = location)
+    -100 + BLACK_PAWN_TABLE[square]
   end
 
   def set_valid_moves

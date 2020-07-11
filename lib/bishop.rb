@@ -44,8 +44,8 @@ class WhiteBishop < Bishop
     @identifier = 'g'
   end
 
-  def points
-    330 + WHITE_BISHOP_TABLE[location]
+  def points(square = location)
+    330 + WHITE_BISHOP_TABLE[square]
   end
 end
 
@@ -56,7 +56,7 @@ class BlackBishop < Bishop
     @identifier = 'h'
   end
 
-  def points
-    -330 + BLACK_BISHOP_TABLE[location]
+  def points(square = location)
+    -330 + BLACK_BISHOP_TABLE[square]
   end
 end

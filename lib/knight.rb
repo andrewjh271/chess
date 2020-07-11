@@ -50,8 +50,8 @@ class WhiteKnight < Knight
     @identifier = 'i'
   end
 
-  def points
-    320 + WHITE_KNIGHT_TABLE[location]
+  def points(square = location)
+    320 + WHITE_KNIGHT_TABLE[square]
   end
 end
 
@@ -62,8 +62,8 @@ class BlackKnight < Knight
     @identifier = 'j'
   end
 
-  def points
+  def points(square = location)
     # I kept the postive/negative values the same b/c white/black tables were so similar
-    -320 - BLACK_KNIGHT_TABLE[location]
+    -320 - BLACK_KNIGHT_TABLE[square]
   end
 end

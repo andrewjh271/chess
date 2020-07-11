@@ -50,8 +50,8 @@ class WhiteRook < Rook
     @identifier = 'e'.dup
   end
 
-  def points
-    500 + WHITE_ROOK_TABLE[location]
+  def points(square = location)
+    500 + WHITE_ROOK_TABLE[square]
   end
 end
 
@@ -62,8 +62,8 @@ class BlackRook < Rook
     @identifier = 'f'.dup
   end
 
-  def points
+  def points(square = location)
      # I kept the postive/negative values the same b/c white/black tables were so similar
-    -500 - BLACK_ROOK_TABLE[location]
+    -500 - BLACK_ROOK_TABLE[square]
   end
 end

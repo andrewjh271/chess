@@ -40,8 +40,8 @@ class WhiteQueen < Queen
     @identifier = 'c'
   end
 
-  def points
-    900 + WHITE_QUEEN_TABLE[location]
+  def points(square = location)
+    900 + WHITE_QUEEN_TABLE[square]
   end
 end
 
@@ -52,7 +52,7 @@ class BlackQueen < Queen
     @identifier = 'd'
   end
 
-  def points
-    -900 - BLACK_QUEEN_TABLE[location]
+  def points(square = location)
+    -900 - BLACK_QUEEN_TABLE[square]
   end
 end

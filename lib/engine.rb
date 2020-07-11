@@ -7,17 +7,33 @@ module Engine
 
   def find_valid_moves
     # Board#move will reject castling laster if not valid
-    all = %w[O-O O-O-O]
+    positive_captures = []
+    negative_captures = []
+    positive_moves = []
+    negative_moves = []
+    other = %w[O-O O-O-O]
     each_piece do |piece|
       next unless piece.white? == white_to_move
 
-      piece.valid_captures.each { |capture| all << get_input([piece, capture]) }
-      piece.valid_moves.each { |a_move| all << get_input([piece, a_move]) }
+      piece.valid_captures.each do |capture|
+        if piece.points < squares[capture[0]][capture[1]].points
+          positive_captures << get_input([piece, capture])
+        else
+          negative_captures << get_input([piece, capture])
+        end
+      end
+      piece.valid_moves.each do |the_move|
+        if piece.points < piece.points(the_move)
+          positive_moves << get_input([piece, the_move])
+        else
+          negative_moves << get_input([piece, the_move])
+        end
+      end
       if piece.is_a?(Pawn) && piece.en_passant
-        all << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
+        other << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
       end
     end
-    all
+    other + positive_captures + positive_moves + negative_moves + negative_captures
   end
 
   def choose_move(depth = 3)

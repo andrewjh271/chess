@@ -72,11 +72,11 @@ class WhiteKing < King
     @identifier = 'a'.dup
   end
 
-  def points
+  def points(square = location)
     if board.endgame?
-      20000 + WHITE_KING_END[location]
+      20000 + WHITE_KING_END[square]
     else
-      20000 + WHITE_KING_MIDDLE[location]
+      20000 + WHITE_KING_MIDDLE[square]
     end
   end
 end
@@ -88,11 +88,11 @@ class BlackKing < King
     @identifier = 'b'.dup
   end
 
-  def points
+  def points(square = location)
     if board.endgame?
-      -20000 - BLACK_KING_END[location]
+      -20000 - BLACK_KING_END[square]
     else
-      -20000 - BLACK_KING_MIDDLE[location]
+      -20000 - BLACK_KING_MIDDLE[square]
     end
   end
 end

@@ -157,7 +157,7 @@ describe Engine do
     end
 
     context 'depth of 3' do
-      xit 'finds mate in 2' do
+      it 'finds mate in 2' do
         board = Board.new
 
         board.move('f3')
@@ -173,7 +173,7 @@ describe Engine do
         expect(board.choose_move(3)).to eq('Qxg3').or eq('Bxg3')
       end
 
-      xit 'finds 3 move tactic' do
+      it 'finds 3 move tactic' do
         board = Board.new
 
         board.move('e4')
@@ -191,7 +191,7 @@ describe Engine do
         expect(board.choose_move(3)).to eq('Nc6')
       end
 
-      xit 'finds another 3 move tactic' do
+      it 'finds another 3 move tactic' do
         board = Board.new
 
         board.move('d4')
@@ -218,6 +218,7 @@ describe Engine do
     end
 
     context 'depth of 5' do
+      # about 20 minutes to run
       xit 'finds mate in 3' do
         board = Board.new
 
@@ -232,7 +233,6 @@ describe Engine do
 
         board.move('Nc3')
         expect(board.choose_move(5)).to eq('Qh4')
-
       end
     end
   end
