@@ -1,6 +1,8 @@
 module Piece_Square_Tables
   WHITE_PAWN_TABLE = {
-    # 1st and 8th rank values unncessary
+    # 1st rank values unncessary
+    # 8th are b/c of #find_valid_moves
+    # subtract value of pawn, add value of queen (plus location adjustment)
     [0, 1] => 5,
     [1, 1] => 10,
     [2, 1] => 10,
@@ -48,11 +50,28 @@ module Piece_Square_Tables
     [4, 6] => 50,
     [5, 6] => 50,
     [6, 6] => 50,
-    [7, 6] => 50
+    [7, 6] => 50,
+    [0, 7] => 780,
+    [1, 7] => 790,
+    [2, 7] => 790,
+    [3, 7] => 795,
+    [4, 7] => 795,
+    [5, 7] => 790,
+    [6, 7] => 790,
+    [7, 7] => 780
   }.freeze
 
   BLACK_PAWN_TABLE = {
-    # not bothering with 1st and 8th rank values
+    # 8th rank values unncessary
+    # 7th are b/c of #find_valid_moves
+    [0, 0] => -780,
+    [1, 0] => -790,
+    [2, 0] => -790,
+    [3, 0] => -795,
+    [4, 0] => -795,
+    [5, 0] => -790,
+    [6, 0] => -790,
+    [7, 0] => -780,
     [0, 1] => -50,
     [1, 1] => -50,
     [2, 1] => -50,
