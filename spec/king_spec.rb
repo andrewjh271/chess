@@ -54,7 +54,7 @@ describe King do
       end
     end
 
-    context 'endgame' do
+    context 'middle transistions to endgame' do
       board2 = Board.new
       it 'returns the correct number of points' do
         board2.move('c4')
@@ -69,7 +69,7 @@ describe King do
         board2.move('Qxd8+')
         board2.move('Kxd8')
 
-        expect(board2.squares[3][7].points).to eq(-19970)
+        expect(board2.squares[3][7].points).to eq(-20000)
       end
 
       it 'works as kings move up the board' do
@@ -78,6 +78,26 @@ describe King do
 
         board2.move('Kc3')
         board2.move('Ke6')
+
+        expect(board2.squares[2][2].points).to eq(19980)
+        expect(board2.squares[4][5].points).to eq(-19980)
+      end
+
+      it 'works when transitions to endgame' do
+        board2.move('Bh6')
+        board2.move('Nxh6')
+
+        board2.move('Na3')
+        board2.move('Bxa3')
+
+        board2.move('Rd1')
+        board2.move('Rd8')
+
+        board2.move('Rxd8')
+        board2.move('Nc6')
+
+        board2.move('bxa3')
+        board2.move('Nxd8')
 
         expect(board2.squares[2][2].points).to eq(20020)
         expect(board2.squares[4][5].points).to eq(-20030)
