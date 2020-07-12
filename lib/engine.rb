@@ -3,7 +3,6 @@ module Engine
 
   MIN = -99999
   MAX = 99999
-  # @positions_searched = 0
 
   def find_valid_moves
     all = []
@@ -13,7 +12,7 @@ module Engine
       
       piece.valid_captures.each do |capture|
         value = squares[capture[0]][capture[1]].points.abs +
-        piece.points(capture).abs - piece.points.abs 
+                piece.points(capture).abs / 1.5 - piece.points.abs 
         all << [get_input([piece, capture]), value]
       end
       piece.valid_moves.each do |the_move|
@@ -24,13 +23,13 @@ module Engine
         en_passants << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
       end
     end
-    # will reject castling laster if not valid
-    # insert toward end to avoid deep copy if pruned
-    all.sort! { |a, b| b[1] <=> a[1] }.map!(&:first).insert(all.length / 1.5, 'O-O', 'O-O-O')
+    # will reject castling laster if not valid; insert in middle
+    all.sort! { |a, b| b[1] <=> a[1] }.map!(&:first).insert(all.length / 2, 'O-O', 'O-O-O')
     en_passants + all
   end
 
-  def choose_move(depth = 5)
+  def choose_move(depth = 4)
+    @@positions_searched = 0
     move = white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
     # puts @positions_searched
     move
@@ -43,7 +42,7 @@ module Engine
     
     move_hash = {}
     current.find_valid_moves.each do |move|
-      @positions_searched += 1
+      @@positions_searched += 1
       # necessary in order to make deep copy
       copy = Marshal.load(Marshal.dump(current))
       next unless copy.move(move)
@@ -59,6 +58,7 @@ module Engine
       end
     end
 
+    # binding.pry
     move_pair = move_hash.find { |_k, v| v == alpha }
     move_pair || [nil, alpha]
   end
@@ -69,7 +69,7 @@ module Engine
     
     move_hash = {}
     current.find_valid_moves.each do |move|
-      @positions_searched += 1
+      @@positions_searched += 1
       # necessary in order to make deep copy
       copy = Marshal.load(Marshal.dump(current))
       next unless copy.move(move)
@@ -101,25 +101,38 @@ module Engine
     [nil, score]
   end
 
+  def endgame?
+    material = 0
+    queens = 0
+    each_piece do |piece|
+      next if piece.is_a?(King)
+
+      material += piece.points.abs
+      queens += 1 if piece.is_a?(Queen)
+      return false if material > 4500 || queens > 1
+    end
+    true
+  end
+
   def benchmark
-    puts 'With pruning...'
+    puts 'Benchmarking..........'
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     choose_move(2)
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     elapsed = ending - starting
-    puts "Depth of 2: #{elapsed} seconds"
+    puts "Depth of 2: #{elapsed} seconds, #{@@positions_searched} positions."
 
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     choose_move(3)
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     elapsed = ending - starting
-    puts "Depth of 3: #{elapsed} seconds"
+    puts "Depth of 3: #{elapsed} seconds, #{@@positions_searched} positions."
 
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     choose_move(4)
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     elapsed = ending - starting
-    puts "Depth of 4: #{elapsed} seconds"
+    puts "Depth of 4: #{elapsed} seconds, #{@@positions_searched} positions."
   end
 
   def get_input(info)
