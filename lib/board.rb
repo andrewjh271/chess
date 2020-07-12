@@ -18,7 +18,7 @@ class Board
 
   attr_reader :squares, :white_to_move, :move_list, :move_number, :flip, :score,
               :error_message, :remainder, :old_locations, :captured_pieces,
-              :repetition_hash, :fifty_move_count, :positions_searched
+              :repetition_hash, :fifty_move_count
   MAX = 7
   ERRORS = {
     invalid: 'Invalid input',
@@ -45,7 +45,6 @@ class Board
     @captured_pieces = []
     @moved_stack = []
     @fifty_move_count = 0
-    @positions_searched = 0
     @repetition_hash = Hash.new(0)
     8.times { |i| @squares[i] = [] }
     fill_board
@@ -157,17 +156,6 @@ class Board
       piece.valid_captures.each { |c| return true if squares[c[0]][c[1]].is_a? target }
     end
     false
-  end
-
-  def endgame?
-    queens = 0
-    each_piece do |piece|
-      next unless piece.is_a?(Queen)
-
-      queens += 1
-      return false if queens > 1
-    end
-    true
   end
 
   def each_piece
