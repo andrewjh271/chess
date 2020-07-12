@@ -60,6 +60,60 @@ describe Engine do
       expect(board.get_input([board.squares[1][1], [2, 0]])).to eq('bxc1=Q')
     end
 
+    board2 = Board.new
+    it 'translates another promoting pawn into queen' do
+
+      board2.move('c4')
+      board2.move('c5')
+
+      board2.move('d4')
+      board2.move('cxd4')
+
+      board2.move('e3')
+      board2.move('d5')
+
+      board2.move('c5')
+      board2.move('Be6')
+
+      board2.move('c6')
+      board2.move('dxe3')
+
+      board2.move('c7')
+      board2.move('e2')
+
+      board2.move('c7')
+      board2.move('e2')
+
+      expect(board2.get_input([board2.squares[2][6], [2, 7]])).to eq('c8=Q')
+      board2.move('c8=Q')
+    end
+
+    it 'translates yet another promoting pawn into queen' do
+      board2.move('g5')
+
+      board2.move('a4')
+      expect(board2.get_input([board2.squares[4][1], [5, 0]])).to eq('exf1=Q')
+      board2.move('exf1=Q')
+    end
+
+    it 'translates yet another promoting pawn into queen' do
+      board2.move('Kd2')
+      board2.move('g4')
+
+      board2.move('a5')
+      board2.move('g3')
+
+      board2.move('a6')
+      board2.move('gxf2')
+
+      board2.move('axb7')
+      board2.move('Qa6')
+
+      expect(board2.get_input([board.squares[1][6], [0, 7]])).to eq('bxa8=Q')
+      board2.move('bxa8=Q')
+      expect(board2.get_input([board.squares[5][1], [5, 0]])).to eq('f1=Q')
+    end
+
     it 'translates king move' do
       board.move('bxc1=Q')
       
@@ -135,12 +189,38 @@ describe Engine do
       board.move('Qxd4')
       expect(board.evaluate(board)[1]).to eq(-265)
     end
+    
+    it 'evaluates correctly when a pawn promotes into queen' do
+      board = Board.new
+
+      board.move('c4')
+      board.move('c5')
+
+      board.move('d4')
+      board.move('cxd4')
+
+      board.move('e3')
+      board.move('d5')
+
+      board.move('c5')
+      board.move('Be6')
+
+      board.move('c6')
+      board.move('dxe3')
+
+      board.move('c7')
+      board.move('e2')
+
+      board.move('c7')
+      board.move('e2')
+
+      board.move('c8=Q')
+      expect(board.evaluate(board)[1]).to eq(520)
+    end
   end
 
   describe 'choose_move' do
     context 'depth of 1' do
-      
-      
       it 'finds mate in 1' do
         board = Board.new
         board.move('e4')
@@ -153,6 +233,34 @@ describe Engine do
         board.move('Nf6')
         # checkmate sign # not added until move is actually made
         expect(board.choose_move(1)).to eq('Qxf7')
+      end
+
+      it 'finds another mate in 1' do
+        board = Board.new
+
+        board.move('Nf3')
+        board.move('h6')
+
+        board.move('e3')
+        board.move('g6')
+
+        board.move('Bc4')
+        board.move('d6')
+
+        board.move('Ne5')
+        board.move('b6')
+
+        expect(board.choose_move(1)).to eq('Bxf7')
+      end
+
+      it 'finds a mate for black' do
+        board = Board.new
+
+        board.move('f4')
+        board.move('e5')
+
+        board.move('g4')
+        expect(board.choose_move(1)).to eq('Qh4')
       end
     end
 
