@@ -1,5 +1,6 @@
 require_relative 'board'
 
+# semi-slav
 board = Board.new
 
 board.move('d4')
@@ -41,6 +42,35 @@ board.move('Qb6')
 board.move('Nde4')
 board.move('a5')
 
-# move 14... (main line semi-slav)
+board.benchmark
+
+# Sicilian Najdorf
+board = Board.new
+
+board.move('e4')
+board.move('c5')
+
+board.move('Nf3')
+board.move('d6')
+
+board.move('d4')
+board.move('cxd4')
+
+board.move('Nxd4')
+board.move('Nf6')
+
+board.move('Nc3')
+board.move('a6')
+
+board.move('Be3')
+board.move('e5')
+
+board.move('Nb3')
+board.move('Be6')
+
+board.move('f3')
+board.move('Be7')
+
+board.move('Qd2')
 
 board.benchmark

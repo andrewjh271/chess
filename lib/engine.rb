@@ -1,39 +1,33 @@
 # methods for Board class to allow engine logic
 module Engine
 
-  MIN = -9999
-  MAX = 9999
+  MIN = -99999
+  MAX = 99999
   @@positions_searched = 0
 
   def find_valid_moves
-    # Board#move will reject castling laster if not valid
-    positive_captures = []
-    negative_captures = []
-    positive_moves = []
-    negative_moves = []
-    other = %w[O-O O-O-O]
+    all = []
+    en_passants = []
     each_piece do |piece|
       next unless piece.white? == white_to_move
-
+      
       piece.valid_captures.each do |capture|
-        if piece.points < squares[capture[0]][capture[1]].points
-          positive_captures << get_input([piece, capture])
-        else
-          negative_captures << get_input([piece, capture])
-        end
+        value = squares[capture[0]][capture[1]].points.abs +
+        piece.points(capture).abs - piece.points.abs 
+        all << [get_input([piece, capture]), value]
       end
       piece.valid_moves.each do |the_move|
-        if piece.points < piece.points(the_move)
-          positive_moves << get_input([piece, the_move])
-        else
-          negative_moves << get_input([piece, the_move])
-        end
+        value = piece.points(the_move).abs - piece.points.abs
+        all << [get_input([piece, the_move]), value]
       end
       if piece.is_a?(Pawn) && piece.en_passant
-        other << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
+        en_passants << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
       end
     end
-    other + positive_captures + positive_moves + negative_moves + negative_captures
+    # will reject castling laster if not valid
+    # insert toward end to avoid deep copy if pruned
+    all.sort! { |a, b| b[1] <=> a[1] }.map!(&:first).insert(all.length / 1.5, 'O-O', 'O-O-O')
+    en_passants + all
   end
 
   def choose_move(depth = 3)
@@ -245,19 +239,19 @@ module Engine
     choose_move(2)
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     elapsed = ending - starting
-    puts "Semi-slav move 13, depth of 2: #{elapsed} seconds"
+    puts "Depth of 2: #{elapsed} seconds"
 
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     choose_move(3)
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     elapsed = ending - starting
-    puts "Semi-slav move 13, depth of 3: #{elapsed} seconds"
+    puts "Depth of 3: #{elapsed} seconds"
 
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     choose_move(4)
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     elapsed = ending - starting
-    puts "Semi-slav move 13, depth of 4: #{elapsed} seconds"
+    puts "Depth of 4: #{elapsed} seconds"
   end
 
   def get_input(info)
