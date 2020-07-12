@@ -323,7 +323,7 @@ module Piece_Square_Tables
     [7, 7] => -50,
   }.freeze
 
-  # subtract!
+  # subtract
   BLACK_KNIGHT_TABLE = {
     [0, 0] => -50,
     [1, 0] => -40,
@@ -458,6 +458,7 @@ module Piece_Square_Tables
     [7, 7] => 0
   }.freeze
 
+  # subtract
   BLACK_ROOK_TABLE = {
     [0, 0] => 0,
     [1, 0] => 0,
