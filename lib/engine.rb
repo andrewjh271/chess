@@ -24,19 +24,17 @@ module Engine
       end
     end
     # will reject castling laster if not valid; insert in middle
-    all.sort! { |a, b| b[1] <=> a[1] }.map!(&:first).insert(all.length / 2, 'O-O', 'O-O-O')
-    en_passants + all
+    en_passants + all.sort { |a, b| b[1] <=> a[1] }
+                     .map(&:first).insert(all.length / 2, 'O-O', 'O-O-O')
   end
 
   def choose_move(depth = 4)
     @@positions_searched = 0
-    move = white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
-    # puts @positions_searched
-    move
+    white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
   end
 
   def alpha_beta_max(current, depth, alpha = -Float::INFINITY, beta = Float::INFINITY)
-    # MIN - depth to prioritize move that gets checkmate sooner
+    # (MIN - depth) to prioritize move that gets checkmate sooner
     return end_score(current, MIN - depth) if current.over?
     return evaluate(current) if depth.zero?
     
@@ -54,13 +52,11 @@ module Engine
       if score > alpha
         alpha = score
         # add move/score pair to hash only if it is a candidate
+        # (avoids incorrectly assigning alpha score to pruned move)
         move_hash[move] = score
       end
     end
-
-    # binding.pry
-    move_pair = move_hash.find { |_k, v| v == alpha }
-    move_pair || [nil, alpha]
+    [move_hash.key(alpha), alpha]
   end
 
   def alpha_beta_min(current, depth, alpha = -Float::INFINITY, beta = Float::INFINITY)
@@ -73,7 +69,7 @@ module Engine
       # necessary in order to make deep copy
       copy = Marshal.load(Marshal.dump(current))
       next unless copy.move(move)
-
+      
       score = alpha_beta_max(copy, depth - 1, alpha, beta)[1]
       if score <= alpha
         return [nil, alpha]
@@ -84,8 +80,14 @@ module Engine
       end
     end
 
-    move_pair = move_hash.find { |_k, v| v == beta }
-    move_pair || [nil, beta]
+    # move = move_hash.select { |_k, v| (beta - v).abs < 11 }.keys.sample
+    # move ? [move, beta] : [nil, beta]
+
+    # move = move_hash.key(beta)
+    [move_hash.key(beta), beta]
+
+    # move_pair = move_hash.find { |_k, v| v == beta }
+    # move_pair || [nil, beta]
   end
 
   def end_score(current, bound)

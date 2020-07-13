@@ -1,52 +1,5 @@
 require_relative 'board'
 
-# test
-board = Board.new
-
-board.move('Nc3')
-board.move('Nf6')
-
-board.move('Nf3')
-board.move('Nc6')
-
-board.move('e3')
-board.move('e6')
-
-board.move('Bb5')
-board.move('Bb4')
-
-board.move('a3')
-board.move('Bxc3')
-
-board.move('dxc3')
-board.move('O-O')
-
-board.move('Bxc6')
-board.move('dxc6')
-
-board.move('Qxd8')
-board.move('Rxd8')
-
-board.move('Ke2')
-board.move('b6')
-
-board.move('Ne5')
-board.move('Bb7')
-
-board.move('Re1')
-board.move('c5')
-
-board.move('Rg1')
-board.move('Be4')
-
-board.move('c4')
-board.move('Bxc2')
-
-board.move(board.choose_move(4))
-board.display(0)
-
-
-
 # semi-slav
 board = Board.new
 
