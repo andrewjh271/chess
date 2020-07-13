@@ -1,10 +1,12 @@
 require_relative 'board'
 require_relative 'color'
 require_relative 'korchnoi'
+require_relative 'escape_sequences'
 require 'pry'
 
 class Computer
   include Korchnoi
+  include EscapeSequences
 
   attr_reader :color, :board
 
@@ -26,16 +28,16 @@ class Computer
   end
 
   def move
+    hide_cursor
     if book_move = find_book_move
       book_animation(book_move)
       board.move(book_move)
     else
-      print "Calculating computer's move... ".yellow
+      puts "Calculating computer's move...".yellow
       move = board.choose_move(4)
-      puts move
-      sleep(0.5)
       board.move(move)
     end
+    show_cursor
   end
 
   def find_book_move

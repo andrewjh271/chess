@@ -29,9 +29,7 @@ module Engine
   end
 
   def choose_move(depth = 4)
-    # opening_move = find_match(move_list)
-    # binding.pry
-    # return opening_move if opening_move
+    @@main_line = Array.new(depth)
     @@positions_searched = 0
     white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
   end
@@ -53,8 +51,11 @@ module Engine
 
       if score > alpha
         alpha = score
+        # binding.pry
         # add move/score pair to hash only if it is a candidate
         # (avoids incorrectly assigning alpha score to pruned move)
+        @@main_line[depth - 1] = move
+        show_main_line
         move_hash[move] = score
       end
     end
@@ -77,6 +78,9 @@ module Engine
 
       if score < beta
         beta = score
+        # binding.pry
+        @@main_line[depth - 1] = move
+        show_main_line
         move_hash[move] = score
       end
     end
@@ -107,6 +111,14 @@ module Engine
       return false if material > 4500 || queens > 1
     end
     true
+  end
+
+  def show_main_line
+    return unless @@main_line.all?
+
+    clear_line
+    puts "Main line: #{@@main_line.reverse.join(' ')}"
+    move_up(1)
   end
 
   def benchmark
