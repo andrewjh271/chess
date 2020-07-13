@@ -46,9 +46,8 @@ module Engine
       next unless copy.move(move)
 
       score = alpha_beta_min(copy, depth - 1, alpha, beta)[1]
-      if score >= beta
-        return [nil, beta]
-      end
+      return [nil, beta] if score >= beta
+
       if score > alpha
         alpha = score
         # add move/score pair to hash only if it is a candidate
@@ -56,6 +55,7 @@ module Engine
         move_hash[move] = score
       end
     end
+    binding.pry if depth == 4
     [move_hash.key(alpha), alpha]
   end
 
@@ -71,23 +71,14 @@ module Engine
       next unless copy.move(move)
       
       score = alpha_beta_max(copy, depth - 1, alpha, beta)[1]
-      if score <= alpha
-        return [nil, alpha]
-      end
+      return [nil, alpha] if score <= alpha
+
       if score < beta
         beta = score
         move_hash[move] = score
       end
     end
-
-    # move = move_hash.select { |_k, v| (beta - v).abs < 11 }.keys.sample
-    # move ? [move, beta] : [nil, beta]
-
-    # move = move_hash.key(beta)
     [move_hash.key(beta), beta]
-
-    # move_pair = move_hash.find { |_k, v| v == beta }
-    # move_pair || [nil, beta]
   end
 
   def end_score(current, bound)
@@ -140,7 +131,6 @@ module Engine
   def get_input(info)
     piece = info[0]
     target = info[1]
-
     input = if piece.is_a?(Pawn)
               ''
             elsif piece.is_a?(Knight)
@@ -155,7 +145,6 @@ module Engine
               'K'
             end
     action = squares[target[0]][target[1]].nil? ? 'move' : 'capture'
-
     if piece.is_a?(Pawn)
       if action == 'capture'
         input << (piece.location[0] + 97).chr
