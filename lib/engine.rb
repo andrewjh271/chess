@@ -1,5 +1,8 @@
+require_relative 'korchnoi'
+
 # methods for Board class to allow engine logic
 module Engine
+  include Korchnoi
 
   MIN = -99999
   MAX = 99999
@@ -29,6 +32,9 @@ module Engine
   end
 
   def choose_move(depth = 4)
+    opening_move = find_match(move_list)
+    # binding.pry
+    return opening_move if opening_move
     @@positions_searched = 0
     white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
   end
@@ -55,7 +61,6 @@ module Engine
         move_hash[move] = score
       end
     end
-    binding.pry if depth == 4
     [move_hash.key(alpha), alpha]
   end
 
