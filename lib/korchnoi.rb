@@ -10,14 +10,10 @@ module Korchnoi
       \r\n\r\n
       (?<moves>.+)
     /mx
-    moves = games.each_with_object([]) do |game, array|
+    games.each_with_object([]) do |game, array|
       data = game.match(regexp)
-      list = data[:moves].gsub(/\r\n/, ' ').gsub(/\d+\./, '').split
-      # don't include result
-      array << list.take(list.length - 1)
-    end
-    # binding.pry
-    moves
+      array << data[:moves].gsub(/\r\n/, ' ').gsub(/\d+\./, '').split
+    end.shuffle
   end
 
   def find_match(move_list)
@@ -30,17 +26,3 @@ module Korchnoi
     false
   end
 end
-
-include Korchnoi
-
-
-# load_openings
-
-
-move_list =  ["1.  Nc3     Nf6     ", "2.  Nf3     Nc6     ", "3.  e3      e6      ", "4.  Bb5     Bb4     "]
-
-move_list2 = %w[1.c4 Nf6 2.d4        e6 3.Nc3 Bb4      4.e3 c5     5.Ne2          d5]
-
-move_list3 = []
-
-p find_match(move_list3)

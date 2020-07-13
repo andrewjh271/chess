@@ -31,10 +31,14 @@ module Engine
                      .map(&:first).insert(all.length / 2, 'O-O', 'O-O-O')
   end
 
+  def find_book_move
+    find_match(move_list)
+  end
+
   def choose_move(depth = 4)
-    opening_move = find_match(move_list)
+    # opening_move = find_match(move_list)
     # binding.pry
-    return opening_move if opening_move
+    # return opening_move if opening_move
     @@positions_searched = 0
     white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
   end

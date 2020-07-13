@@ -23,7 +23,7 @@ class Game
     @board = Board.new
     @white = white
     # need to fix this implementation
-    @white.set_board(board)
+    # @white.set_board(board)
     @black = black
     @black.set_board(board)
     @to_move = white
