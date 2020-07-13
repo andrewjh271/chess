@@ -1,14 +1,16 @@
 require_relative 'board'
 require_relative 'color'
+require_relative 'korchnoi'
 require 'pry'
 
 class Computer
-  attr_reader :color, :board, :in_book
+  include Korchnoi
+
+  attr_reader :color, :board
 
   def initialize(color)
     @color = color
     @board = board
-    @in_book = true
   end
 
   def to_s
@@ -24,26 +26,25 @@ class Computer
   end
 
   def move
-    book_move = book if in_book
-
-    if in_book
+    if book_move = find_book_move
       book_animation(book_move)
       board.move(book_move)
     else
       print "Calculating computer's move... ".yellow
-      move = board.choose_move(3)
+      move = board.choose_move(4)
       puts move
       sleep(0.5)
       board.move(move)
     end
   end
 
-  def book
-    copy = Marshal.load(Marshal.dump(board))
-    book_move = board.find_book_move
-    return book_move if book_move && copy.move(book_move)
-  
-    @in_book = false
+  def find_book_move
+    book_move = find_match(board.move_list)
+    if book_move
+      copy = Marshal.load(Marshal.dump(board))
+      return book_move if copy.move(book_move)
+    end
+    false
   end
 
   def book_animation(the_move)

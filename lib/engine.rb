@@ -1,8 +1,5 @@
-require_relative 'korchnoi'
-
 # methods for Board class to allow engine logic
 module Engine
-  include Korchnoi
 
   MIN = -99999
   MAX = 99999
@@ -29,10 +26,6 @@ module Engine
     # will reject castling laster if not valid; insert in middle
     en_passants + all.sort { |a, b| b[1] <=> a[1] }
                      .map(&:first).insert(all.length / 2, 'O-O', 'O-O-O')
-  end
-
-  def find_book_move
-    find_match(move_list)
   end
 
   def choose_move(depth = 4)
