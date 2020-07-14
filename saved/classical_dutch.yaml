@@ -139,6 +139,8 @@ board: &1 !ruby/object:Board
       - - 2
         - 0
       - - 3
+        - 1
+      - - 3
         - 2
       valid_captures:
       - - 0
@@ -209,25 +211,7 @@ board: &1 !ruby/object:Board
       en_passant: 
     - 
   - - 
-    - !ruby/object:WhiteKnight
-      board: *1
-      location:
-      - 3
-      - 1
-      color: white
-      valid_moves:
-      - - 1
-        - 0
-      - - 1
-        - 2
-      - - 4
-        - 3
-      - - 5
-        - 0
-      - - 5
-        - 2
-      valid_captures: []
-      identifier: i
+    - 
     - 
     - !ruby/object:WhitePawn
       board: *1
@@ -337,6 +321,10 @@ board: &1 !ruby/object:Board
       - 2
       color: white
       valid_moves:
+      - - 3
+        - 1
+      - - 2
+        - 0
       - - 5
         - 3
       - - 6
@@ -380,16 +368,30 @@ board: &1 !ruby/object:Board
       - 5
       - 1
       color: white
-      valid_moves:
-      - - 5
-        - 3
-      - - 5
-        - 2
+      valid_moves: []
       valid_captures: []
       moved: false
       identifier: k
       en_passant: 
-    - 
+    - !ruby/object:WhiteKnight
+      board: *1
+      location:
+      - 5
+      - 2
+      color: white
+      valid_moves:
+      - - 3
+        - 1
+      - - 6
+        - 0
+      - - 6
+        - 4
+      - - 7
+        - 3
+      valid_captures:
+      - - 4
+        - 4
+      identifier: i
     - 
     - 
     - !ruby/object:BlackBishop
@@ -451,8 +453,6 @@ board: &1 !ruby/object:Board
       valid_moves:
       - - 5
         - 0
-      - - 5
-        - 2
       - - 6
         - 0
       - - 7
@@ -586,7 +586,7 @@ board: &1 !ruby/object:Board
   - '2.  Nf3     e6      '
   - '3.  g3      Nf6     '
   - '4.  Bg2     Be7     '
-  - '5.  0-0     0-0     '
+  - '5.  O-O     O-O     '
   - '6.  c4      d6      '
   - '7.  Nc3     a5      '
   - '8.  Re1     Ne4     '
@@ -598,17 +598,24 @@ board: &1 !ruby/object:Board
   - '14. Nd2     Bxg2    '
   - '15. Kxg2    d5      '
   - '16. a3      Bf6     '
-  move_number: 16
-  white_to_move: true
+  - 17. Nf3
+  move_number: 17
+  white_to_move: false
   flip: true
   old_locations: []
   captured_pieces: []
-  fifty_move_count: 1.0
+  moved_stack: []
+  fifty_move_count: 1.5
   repetition_hash:
     1ezkzlzzfzkzzzzlzzzckzjlzzizklzzdEzgzlzhzzkzzzzzFzAkzzzlBzkzzzzlz: 1
     0ezkzlzzfzkzzzzlzzzckzjlzzizklzzdEzgzlzzzzkzzzhzFzAkzzzlBzkzzzzlz: 1
+    1ezkzlzzfzkzzzzlzzzckzjlzzzzklzzdEzgzlzzzzkizzhzFzAkzzzlBzkzzzzlz: 1
   score: 
-  error_message: 'Invalid input: Bf6'
+  error_message: Invalid input
   remainder:
   - ''
-to_move: White
+white: !ruby/object:Human
+  color: White
+black: &2 !ruby/object:Human
+  color: Black
+to_move: *2

@@ -471,8 +471,6 @@ board: &1 !ruby/object:Board
       - - 6
         - 4
       - - 7
-        - 1
-      - - 7
         - 3
       valid_captures:
       - - 3
@@ -566,20 +564,22 @@ board: &1 !ruby/object:Board
       en_passant: 
     - 
   - - 
-    - 
     - !ruby/object:WhitePawn
       board: *1
       location:
       - 7
-      - 2
+      - 1
       color: white
       valid_moves:
       - - 7
         - 3
+      - - 7
+        - 2
       valid_captures: []
-      moved: true
+      moved: false
       identifier: k
       en_passant: 
+    - 
     - 
     - 
     - 
@@ -612,22 +612,27 @@ board: &1 !ruby/object:Board
   - '10. Qd6     Bd7     '
   - '11. Bc3     f6      '
   - '12. Nf3     Ne7     '
-  - '13. 0-0-0   Qxe2    '
+  - '13. O-O-O   Qxe2    '
   - '14. Qxd7+   Kf7     '
   - '15. Rhe1    Qxc4    '
   - '16. Re3     Rhe8    '
   - '17. b3      Qd4     '
-  - 18. h3
-  move_number: 18
-  white_to_move: false
+  move_number: 17
+  white_to_move: true
   flip: false
   old_locations: []
   captured_pieces: []
-  fifty_move_count: 0.5
+  moved_stack: []
+  fifty_move_count: 1.0
   repetition_hash:
-    1zkzzzjlfzzkzzlzzAzgzzlzzEzzdzzczzzEzzljFzkizzlBzzkzzzzlzzzkzzzlz: 1
+    1zkzzzjlfzzkzzlzzAzgdzlzzEzzzzzczzzEzzljFzkizzlBzzkzzzzlzzkzzzzlz: 1
+    0zkzzzjlfzzkzzlzzAzgzzlzzEzzdzzczzzEzzljFzkizzlBzzkzzzzlzzkzzzzlz: 1
   score: 
-  error_message: 'Invalid input: h3'
+  error_message: Invalid input
   remainder:
   - ''
-to_move: Black
+white: &2 !ruby/object:Human
+  color: White
+black: !ruby/object:Human
+  color: Black
+to_move: *2
