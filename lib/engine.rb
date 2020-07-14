@@ -29,6 +29,7 @@ module Engine
   end
 
   def choose_move(depth = 4)
+    @@main_line_hash = {}
     @@main_depth = depth
     @@positions_searched = 0
     white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
@@ -51,10 +52,12 @@ module Engine
 
       if score > alpha
         alpha = score
-        # binding.pry
-        # add move/score pair to hash only if it is a candidate
-        # (avoids incorrectly assigning alpha score to pruned move)
-        show_current_line(copy.move_list) if depth == 1
+        if depth == 1
+          show_current_line(copy.move_list)
+          @@main_line_hash[score] = copy.move_list
+        end
+        show_main_line(@@main_line_hash[score]) if depth == @@main_depth
+        # add to hash only if candidate to avoid assigning alpha score to pruned move
         move_hash[move] = score
       end
     end
@@ -77,7 +80,11 @@ module Engine
 
       if score < beta
         beta = score
-        show_current_line(copy.move_list) if depth == 1
+        if depth == 1
+          show_current_line(copy.move_list)
+          @@main_line_hash[score] = copy.move_list
+        end
+        show_main_line(@@main_line_hash[score]) if depth == @@main_depth
         move_hash[move] = score
       end
     end
@@ -111,8 +118,6 @@ module Engine
   end
 
   def show_current_line(array)
-    # return unless @@main_line.all?
-
     line = array.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
     clear_line
     prefix = white_to_move ? '' : '...'
@@ -120,10 +125,13 @@ module Engine
     move_up(1)
   end
 
-  def format_move(move, white, number)
-    prefix = white ? " #{number}. " : ''
-    super_prefix = white_to_move ? '' : '...'
-    super_prefix + prefix + move
+  def show_main_line(array)
+    line = array.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
+    prefix = white_to_move ? '' : '...'
+    puts
+    clear_line
+    puts "Main line:    #{prefix}#{line.join(' ').gsub('.', '. ')}".green
+    move_up(2)
   end
 
   def benchmark
