@@ -326,7 +326,7 @@ describe Engine do
     end
 
     context 'depth of 5' do
-      # about 20 minutes to run
+      # about 5 minutes to run
       xit 'finds mate in 3' do
         board = Board.new
 
