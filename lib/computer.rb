@@ -34,7 +34,7 @@ class Computer
       board.move(book_move)
     else
       puts "Calculating computer's move...".yellow
-      move = board.choose_move(4)
+      move = board.choose_move(5)
       board.move(move)
     end
     show_cursor

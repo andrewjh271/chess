@@ -29,7 +29,7 @@ module Engine
   end
 
   def choose_move(depth = 4)
-    @@main_line = Array.new(depth)
+    @@main_depth = depth
     @@positions_searched = 0
     white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
   end
@@ -54,8 +54,7 @@ module Engine
         # binding.pry
         # add move/score pair to hash only if it is a candidate
         # (avoids incorrectly assigning alpha score to pruned move)
-        @@main_line[depth - 1] = move
-        show_main_line
+        show_current_line(copy.move_list) if depth == 1
         move_hash[move] = score
       end
     end
@@ -78,9 +77,7 @@ module Engine
 
       if score < beta
         beta = score
-        # binding.pry
-        @@main_line[depth - 1] = move
-        show_main_line
+        show_current_line(copy.move_list) if depth == 1
         move_hash[move] = score
       end
     end
@@ -113,12 +110,20 @@ module Engine
     true
   end
 
-  def show_main_line
-    return unless @@main_line.all?
+  def show_current_line(array)
+    # return unless @@main_line.all?
 
+    line = array.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
     clear_line
-    puts "Main line: #{@@main_line.reverse.join(' ')}"
+    prefix = white_to_move ? '' : '...'
+    puts "Current line: #{prefix}#{line.join(' ').gsub('.', '. ')}"
     move_up(1)
+  end
+
+  def format_move(move, white, number)
+    prefix = white ? " #{number}. " : ''
+    super_prefix = white_to_move ? '' : '...'
+    super_prefix + prefix + move
   end
 
   def benchmark
