@@ -70,9 +70,9 @@ class Board
     puts
   end
 
-  def flip_board
+  def flip_board(show_display = true)
     @flip = flip ? false : true
-    display
+    display if show_display
   end
 
   def over?

@@ -22,10 +22,10 @@ class Game
   def initialize(white, black)
     @board = Board.new
     @white = white
-    # need to fix this implementation
-    # @white.set_board(board)
+    @white.set_board(board) if white.is_a?(Computer)
     @black = black
-    @black.set_board(board)
+    @black.set_board(board) if black.is_a?(Computer)
+    board.flip_board(false) if white.is_a?(Computer) && black.is_a?(Human)
     @to_move = white
   end
 
