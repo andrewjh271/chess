@@ -235,7 +235,19 @@ describe Engine do
         expect(board.choose_move(1)).to eq('Qxf7')
       end
 
-      it 'finds another mate in 1' do
+      it 'finds a mate for black' do
+        board = Board.new
+
+        board.move('f4')
+        board.move('e5')
+
+        board.move('g4')
+        expect(board.choose_move(1)).to eq('Qh4')
+      end
+    end
+
+    context 'depth of 2' do
+      it 'finds mate in 1' do
         board = Board.new
 
         board.move('Nf3')
@@ -250,17 +262,26 @@ describe Engine do
         board.move('Ne5')
         board.move('b6')
 
-        expect(board.choose_move(1)).to eq('Bxf7')
+        expect(board.choose_move(2)).to eq('Bxf7')
       end
 
-      it 'finds a mate for black' do
+      it 'finds mate in 1 for black' do
         board = Board.new
 
-        board.move('f4')
+        board.move('e4')
         board.move('e5')
 
-        board.move('g4')
-        expect(board.choose_move(1)).to eq('Qh4')
+        board.move('Nf3')
+        board.move('Nf6')
+
+        board.move('Nxe5')
+        board.move('Nxe4')
+
+        board.move('Nxf7')
+        board.move('Qh4')
+
+        board.move('Nxh8')
+        expect(board.choose_move(2)).to eq('Qxf2')
       end
     end
 
@@ -278,7 +299,7 @@ describe Engine do
         board.move('Qh4+')
   
         board.move('g3')
-        expect(board.choose_move(3)).to eq('Qxg3').or eq('Bxg3')
+        expect(board.choose_move(5)).to eq('Qxg3').or eq('Bxg3')
       end
 
       it 'finds 3 move tactic' do
@@ -322,6 +343,32 @@ describe Engine do
 
         board.move('Bxd8')
         expect(board.choose_move(3)).to eq('Bb4')
+      end
+    end
+
+    context 'depth of 4' do
+      it 'finds a mate in 3' do
+        board = Board.new
+
+        board.move('d4')
+        board.move('f5')
+
+        board.move('Bg5')
+        board.move('h6')
+
+        board.move('Bf4')
+        board.move('g5')
+
+        board.move('Bg3')
+        board.move('f4')
+
+        board.move('e3')
+        board.move('h5')
+
+        board.move('Bd3')
+        board.move('Rh6')
+
+        expect(board.choose_move(4)).to eq('Qxh5')
       end
     end
 

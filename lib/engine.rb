@@ -52,7 +52,7 @@ module Engine
 
       if score > alpha
         alpha = score
-        if depth == 1
+        if depth == 1 || copy.over?
           show_current_line(copy.move_list)
           @@main_line_hash[score] = copy.move_list
         end
@@ -80,7 +80,7 @@ module Engine
 
       if score < beta
         beta = score
-        if depth == 1
+        if depth == 1 || copy.over?
           show_current_line(copy.move_list)
           @@main_line_hash[score] = copy.move_list
         end
