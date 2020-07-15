@@ -30,6 +30,7 @@ module Engine
 
   def choose_move(depth = 4)
     @@main_line_hash = {}
+    @@prefix = white_to_move ? '' : '...'
     @@main_depth = depth
     @@positions_searched = 0
     white_to_move ? alpha_beta_max(self, depth)[0] : alpha_beta_min(self, depth)[0]
@@ -129,16 +130,16 @@ module Engine
 
   def show_current_line(line)
     clear_line
-    prefix = white_to_move ? '' : '...'
-    puts "Current line: #{prefix}#{line.join(' ').gsub('.', '. ')}"
+    # prefix = white_to_move ? '' : '...'
+    puts "Current line: #{@@prefix}#{line.join(' ').gsub('.', '. ')}"
     move_up(1)
   end
 
   def show_main_line(line)
-    prefix = white_to_move ? '' : '...'
+    # prefix = white_to_move ? '' : '...'
     puts
     clear_line
-    puts "Main line:    #{prefix}#{line.join(' ').gsub('.', '. ')}".green
+    puts "Main line:    #{@@prefix}#{line.join(' ').gsub('.', '. ')}".green
     move_up(2)
   end
 
