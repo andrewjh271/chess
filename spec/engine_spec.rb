@@ -299,7 +299,7 @@ describe Engine do
         board.move('Qh4+')
   
         board.move('g3')
-        expect(board.choose_move(5)).to eq('Qxg3').or eq('Bxg3')
+        expect(board.choose_move(3)).to eq('Qxg3').or eq('Bxg3')
       end
 
       it 'finds 3 move tactic' do

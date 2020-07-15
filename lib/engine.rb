@@ -52,9 +52,14 @@ module Engine
 
       if score > alpha
         alpha = score
-        if depth == 1 || copy.over?
-          show_current_line(copy.move_list)
-          @@main_line_hash[score] = copy.move_list
+        if depth == 1
+          line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
+          show_current_line(line)
+          @@main_line_hash[score] = line
+        elsif copy.over?
+          line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth - depth + 1)
+          show_current_line(line)
+          @@main_line_hash[score] = line
         end
         show_main_line(@@main_line_hash[score]) if depth == @@main_depth
         # add to hash only if candidate to avoid assigning alpha score to pruned move
@@ -80,9 +85,14 @@ module Engine
 
       if score < beta
         beta = score
-        if depth == 1 || copy.over?
-          show_current_line(copy.move_list)
-          @@main_line_hash[score] = copy.move_list
+        if depth == 1
+          line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
+          show_current_line(line)
+          @@main_line_hash[score] = line
+        elsif copy.over?
+          line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth - depth + 1)
+          show_current_line(line)
+          @@main_line_hash[score] = line
         end
         show_main_line(@@main_line_hash[score]) if depth == @@main_depth
         move_hash[move] = score
@@ -117,16 +127,14 @@ module Engine
     true
   end
 
-  def show_current_line(array)
-    line = array.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
+  def show_current_line(line)
     clear_line
     prefix = white_to_move ? '' : '...'
     puts "Current line: #{prefix}#{line.join(' ').gsub('.', '. ')}"
     move_up(1)
   end
 
-  def show_main_line(array)
-    line = array.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
+  def show_main_line(line)
     prefix = white_to_move ? '' : '...'
     puts
     clear_line
