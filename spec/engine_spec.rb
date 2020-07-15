@@ -320,9 +320,8 @@ describe Engine do
         expect(board.choose_move(3)).to eq('Nc6')
       end
 
+      board = Board.new
       it 'finds another 3 move tactic' do
-        board = Board.new
-
         board.move('d4')
         board.move('d5')
 
@@ -343,6 +342,70 @@ describe Engine do
 
         board.move('Bxd8')
         expect(board.choose_move(3)).to eq('Bb4')
+      end
+
+      it 'finds a clear best move when depth is higher than needed' do
+        board.move('Bb4')
+
+        board.move('Qd2')
+        board.move('Bxd2')
+
+        board.move('Kxd2')
+        board.move('Kxd8')
+
+        board.move('e4')
+        board.move('Nc3')
+
+        board.move('bxc3')
+        board.move('b5')
+
+        board.move('Bxb5')
+        board.move('c6')
+
+        board.move('Bxc6')
+        board.move('h5')
+
+        expect(board.choose_move(3)).to eq('Bxa8')
+      end
+
+      it 'chooses 1 move checkmate over 3 move checkmate' do
+        board.move('Nf3')
+        board.move('g5')
+
+        board.move('Nxg5')
+        board.move('Rb8')
+
+        board.move('Nxf7')
+        board.move('Kc7')
+
+        board.move('Nxh8')
+        board.move('h4')
+
+        board.move('Bxd7')
+        board.move('h3')
+
+        board.move('Bxc8')
+        board.move('Rb7')
+
+        board.move('Bxb7')
+        board.move('Kb8')
+
+        board.move('gxh3')
+        board.move('a6')
+
+        board.move('Rhg1')
+        board.move('a5')
+
+        board.move('Rg7')
+        board.move('a4')
+
+        board.move('Bd5')
+        board.move('Kc8')
+
+        board.move('Rb1')
+        board.move('Kd8')
+
+        expect(board.choose_move(3)).to eq('Rb8')
       end
     end
 
