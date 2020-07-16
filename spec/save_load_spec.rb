@@ -5,6 +5,8 @@ require './lib/computer.rb'
 
 # tests SaveLoad module using Game class; excludes methods w/ user input
 describe SaveLoad do
+  after(:all) { File.delete(File.join(Dir.pwd, '/saved/test.yaml')) }
+
   describe '#save' do
     it 'saves a game' do
       game = Game.new(Human.new('White'), Computer.new('Black'))
