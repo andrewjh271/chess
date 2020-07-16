@@ -15,7 +15,7 @@ class Game
   include SaveLoad
   include Instructions
 
-  COMMANDS = %w[flip help resign save quit exit format].freeze
+  COMMANDS = %w[flip help resign save quit exit tutorial].freeze
 
   attr_reader :board, :to_move, :white, :black
 
@@ -73,10 +73,10 @@ class Game
         puts '1-0 White wins by resignation'.green
       end
     elsif input == 'help'
-      print_info('Input move or enter a command: flip | draw | resign | quit | save | format'.green)
+      print_info('Input move or enter a command: flip | draw | resign | quit | save | tutorial'.green)
     elsif input == 'save'
       save_game(self)
-    elsif input == 'format'
+    elsif input == 'tutorial'
       show_instructions
       clear_board
       board.display
