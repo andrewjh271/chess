@@ -14,24 +14,29 @@ class Main
   prompt = <<~HEREDOC
 
     #{'Chess!'.green}
+
     Would you like to: 1) Human vs Human
                        2) Human vs Computer
                        3) Computer vs Human
                        4) Computer vs Computer
                        5) Load a game
                        6) View a game from the collection library
+
   HEREDOC
 
   puts prompt
 
   user_choice = gets.chomp
-  move_up(8)
-  puts_clear
 
   until %w[1 2 3 4 5 6].include?(user_choice)
-    puts 'Invalid input. Please enter 1, 2, 3, 4, 5, or 6.'
+    move_up(2)
+    print_clear
+    puts "Invalid input: #{user_choice} Please enter 1, 2, 3, 4, 5, or 6.".red
     user_choice = gets.chomp
   end
+  
+  move_up(10)
+  puts_clear
 
   if user_choice.to_i < 5
     white = %w[1 2].include?(user_choice) ? Human.new('White') : Computer.new('White')
@@ -41,8 +46,10 @@ class Main
     game.play
   elsif user_choice == '5'
     game = load_game
-    2.times { puts }
-    game.play
+    if game
+      2.times { puts }
+      game.play
+    end
   else
     view_game
   end
