@@ -10,7 +10,7 @@ require 'io/console'
 module GameViewer
   include EscapeSequences
 
-  CONTROLS = "#{'p'.green}lay | #{'m'.yellow}ove | #{'q'.red}uit"
+  CONTROLS = "#{'m'.yellow}ove | #{'p'.green}lay | #{'z'.magenta}oom | #{'q'.red}uit"
 
   def view_game
     game = select_game
@@ -24,10 +24,12 @@ module GameViewer
     char = nil
     loop do
       if char == 'p'
-        sleep(1)
+        sleep(2)
+      elsif char == 'z'
+        sleep(0.2)
       else
         char = STDIN.getch
-        char = STDIN.getch until %w[m p q].include? char
+        char = STDIN.getch until %w[m p z q].include? char
 
         return if char == 'q'
       end
