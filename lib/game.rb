@@ -40,7 +40,6 @@ class Game
           %w[quit exit save resign].include?(input) ? break : next
         elsif input == 'draw'
           if draw_accepted?
-            board.display
             puts '1/2 - 1/2 Drawn by agreement'.green
             break
           else
@@ -58,6 +57,7 @@ class Game
       @to_move = to_move == white ? black : white
       board.display
     end
+    board.display
     puts board.move_list
     puts
     puts board.score.green if board.score
@@ -85,7 +85,6 @@ class Game
   end
 
   def draw_accepted?
-    # need to eventually handle if opponent is computer
     opponent = to_move == white ? black : white
     return false if opponent.is_a?(Computer)
 
