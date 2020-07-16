@@ -38,6 +38,8 @@ module SaveLoad
 
   def load_game
     filename = choose_game
+    return unless filename
+
     saved = File.open(File.join(Dir.pwd, filename), 'r')
     loaded_game = YAML.load(saved)
     saved.close
@@ -45,17 +47,30 @@ module SaveLoad
   end
 
   def choose_game
+    puts "Here are the current saved games. Please choose which you'd like to load: "
+    filenames = Dir.glob('saved/*').map.with_index do |file, index|
+      "#{index + 1}) #{file[(file.index('/') + 1)...(file.index('.'))]}"
+    end
+    puts filenames
+    puts
     begin
-      puts "Here are the current saved games. Please choose which you'd like to load."
-      filenames = Dir.glob('saved/*').map { |file| file[(file.index('/') + 1)...(file.index('.'))] }
-      puts filenames
-      filename = gets.chomp
-      raise "#{filename} does not exist.".red unless filenames.include?(filename)
+      input = gets.chomp
+      return if %w[q quit exit].include?(input)
 
+      filename = filenames.find { |f| f.match?(/^#{Regexp.quote(input)}/) }.dup
+      raise "#{input} does not exist.".red unless filename
+
+      filename.slice!(/\d\) /)
+      (filenames.length + 3).times do
+        move_up(1)
+        print_clear
+      end
       puts "#{filename} loaded..."
       puts
       "/saved/#{filename}.yaml"
     rescue StandardError => e
+      move_up(2)
+      print_clear
       puts e
       retry
     end
