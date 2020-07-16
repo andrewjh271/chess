@@ -15,6 +15,7 @@ class Game
   include SaveLoad
   include Instructions
 
+  # omits 'draw' b/c it is not known whether game should end
   COMMANDS = %w[flip help resign save quit exit tutorial].freeze
 
   attr_reader :board, :to_move, :white, :black
@@ -57,6 +58,8 @@ class Game
       @to_move = to_move == white ? black : white
       board.display
     end
+    @to_move = to_move == white ? black : white
+    puts if to_move.is_a?(Computer)
     board.display
     puts board.move_list
     puts
