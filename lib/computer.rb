@@ -2,7 +2,6 @@ require_relative 'board'
 require_relative 'color'
 require_relative 'korchnoi'
 require_relative 'escape_sequences'
-require 'pry'
 
 class Computer
   include Korchnoi
@@ -29,7 +28,7 @@ class Computer
 
   def move
     hide_cursor
-    if book_move = find_book_move
+    if (book_move = find_book_move)
       book_animation(book_move)
       board.move(book_move)
     else

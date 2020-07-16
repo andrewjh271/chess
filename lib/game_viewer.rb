@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'pry'
 require_relative 'color'
 require_relative 'escape_sequences'
 require_relative 'board'

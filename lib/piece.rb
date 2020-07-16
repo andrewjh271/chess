@@ -26,5 +26,5 @@ class Piece
   def white?
     color == 'white'
   end
-
 end
+

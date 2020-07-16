@@ -9,7 +9,6 @@ require_relative 'queen'
 require_relative 'king'
 require_relative 'pawn'
 require_relative 'engine'
-require 'pry'
 
 # Board class handles all board logic
 class Board
@@ -253,11 +252,9 @@ class Board
     @error_message = ERRORS[:disambiguation]
     # first check if any of the moves is illegal
     finalists = filter_by_legality(candidates, target_square)
-    if finalists.length == 1
-      return finalists.first
-    else
-      finalists = filter_by_location(candidates, notation.slice!(0))
-    end
+    return finalists.first if finalists.length == 1
+
+    finalists = filter_by_location(candidates, notation.slice!(0))
     finalists.first if finalists.length == 1
   end
 

@@ -74,9 +74,9 @@ class WhiteKing < King
 
   def points(square = location)
     if board.endgame?
-      20000 + WHITE_KING_END[square]
+      20_000 + WHITE_KING_END[square]
     else
-      20000 + WHITE_KING_MIDDLE[square]
+      20_000 + WHITE_KING_MIDDLE[square]
     end
   end
 end
@@ -90,9 +90,9 @@ class BlackKing < King
 
   def points(square = location)
     if board.endgame?
-      -20000 - BLACK_KING_END[square]
+      -20_000 - BLACK_KING_END[square]
     else
-      -20000 - BLACK_KING_MIDDLE[square]
+      -20_000 - BLACK_KING_MIDDLE[square]
     end
   end
 end

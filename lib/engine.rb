@@ -1,18 +1,18 @@
 # methods for Board class to allow engine logic
 module Engine
 
-  MIN = -99999
-  MAX = 99999
+  MIN = -99_999
+  MAX = 99_999
 
   def find_valid_moves
     all = []
     en_passants = []
     each_piece do |piece|
       next unless piece.white? == white_to_move
-      
+
       piece.valid_captures.each do |capture|
         value = squares[capture[0]][capture[1]].points.abs +
-                piece.points(capture).abs / 1.5 - piece.points.abs 
+                piece.points(capture).abs / 1.5 - piece.points.abs
         all << [get_input([piece, capture]), value]
       end
       piece.valid_moves.each do |the_move|
@@ -51,21 +51,21 @@ module Engine
       score = alpha_beta_min(copy, depth - 1, alpha, beta)[1]
       return [nil, beta] if score >= beta
 
-      if score > alpha
-        alpha = score
-        if depth == 1
-          line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
-          show_current_line(line)
-          @@main_line_hash[score] = line
-        elsif copy.over?
-          line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth - depth + 1)
-          show_current_line(line)
-          @@main_line_hash[score] = line
-        end
-        show_main_line(@@main_line_hash[score]) if depth == @@main_depth
-        # add to hash only if candidate to avoid assigning alpha score to pruned move
-        move_hash[move] = score
+      next unless score > alpha
+
+      alpha = score
+      if depth == 1
+        line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
+        show_current_line(line)
+        @@main_line_hash[score] = line
+      elsif copy.over?
+        line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth - depth + 1)
+        show_current_line(line)
+        @@main_line_hash[score] = line
       end
+      show_main_line(@@main_line_hash[score]) if depth == @@main_depth
+      # add to hash only if candidate to avoid assigning alpha score to pruned move
+      move_hash[move] = score
     end
     [move_hash.key(alpha), alpha]
   end
@@ -84,20 +84,20 @@ module Engine
       score = alpha_beta_max(copy, depth - 1, alpha, beta)[1]
       return [nil, alpha] if score <= alpha
 
-      if score < beta
-        beta = score
-        if depth == 1
-          line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
-          show_current_line(line)
-          @@main_line_hash[score] = line
-        elsif copy.over?
-          line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth - depth + 1)
-          show_current_line(line)
-          @@main_line_hash[score] = line
-        end
-        show_main_line(@@main_line_hash[score]) if depth == @@main_depth
-        move_hash[move] = score
+      next unless score < beta
+
+      beta = score
+      if depth == 1
+        line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth)
+        show_current_line(line)
+        @@main_line_hash[score] = line
+      elsif copy.over?
+        line = copy.move_list.join.gsub(/\. {1,2}/, '.').split.last(@@main_depth - depth + 1)
+        show_current_line(line)
+        @@main_line_hash[score] = line
       end
+      show_main_line(@@main_line_hash[score]) if depth == @@main_depth
+      move_hash[move] = score
     end
     [move_hash.key(beta), beta]
   end
@@ -111,7 +111,7 @@ module Engine
     current.each_piece do |piece|
       score += piece.points
     end
-    # evaluating leaf position — no associated move
+    # evaluating leaf position so no associated move
     [nil, score]
   end
 
@@ -202,6 +202,6 @@ module Engine
       input << 'x' if action == 'capture'
       input << to_alg(target)
     end
-    input    
+    input
   end
 end

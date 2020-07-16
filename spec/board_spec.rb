@@ -934,8 +934,5 @@ describe Board do
         expect(board.move('Rhxh3#')).to eq(true)
       end
     end
-
   end
-
-
 end

@@ -1,5 +1,3 @@
-# require_relative 'game'
-
 class Human
   attr_reader :color
 
@@ -10,5 +8,4 @@ class Human
   def to_s
     color
   end
-
 end

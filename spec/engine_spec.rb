@@ -62,7 +62,6 @@ describe Engine do
 
     board2 = Board.new
     it 'translates another promoting pawn into queen' do
-
       board2.move('c4')
       board2.move('c5')
 
@@ -116,14 +115,14 @@ describe Engine do
 
     it 'translates king move' do
       board.move('bxc1=Q')
-      
+
       board.move('Qxc1')
       expect(board.get_input([board.squares[4][7], [3, 7]])).to eq('Kd8')
     end
 
     it 'translates rook capture' do
       board.move('Kd8')
-      
+
       board.move('Qa3')
       expect(board.get_input([board.squares[0][7], [0, 2]])).to eq('Rxa3')
     end
@@ -189,7 +188,7 @@ describe Engine do
       board.move('Qxd4')
       expect(board.evaluate(board)[1]).to eq(-265)
     end
-    
+
     it 'evaluates correctly when a pawn promotes into queen' do
       board = Board.new
 
@@ -291,13 +290,13 @@ describe Engine do
 
         board.move('f3')
         board.move('e6')
-  
+
         board.move('Nc3')
         board.move('Bd6')
-  
+
         board.move('b3')
         board.move('Qh4+')
-  
+
         board.move('g3')
         expect(board.choose_move(3)).to eq('Qxg3').or eq('Bxg3')
       end
@@ -454,5 +453,4 @@ describe Engine do
       end
     end
   end
-
 end

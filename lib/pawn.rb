@@ -59,7 +59,6 @@ end
 
 # White Pawn
 class WhitePawn < Pawn
-
   def initialize(board, location)
     super(board, location, 'white')
     @identifier = 'k'.dup
@@ -91,7 +90,6 @@ end
 
 # Black Pawn
 class BlackPawn < Pawn
-
   def initialize(board, location)
     super(board, location, 'black')
     @identifier = 'l'.dup

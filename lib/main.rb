@@ -3,6 +3,7 @@
 require_relative 'game'
 require_relative 'save_load'
 require_relative 'escape_sequences'
+require_relative 'color'
 require_relative 'game_viewer'
 
 # driver script for chess application
@@ -34,7 +35,7 @@ class Main
     puts "Invalid input: #{user_choice} Please enter 1, 2, 3, 4, 5, or 6.".red
     user_choice = gets.chomp
   end
-  
+
   move_up(10)
   puts_clear
 
@@ -55,4 +56,3 @@ class Main
   end
   puts
 end
-

@@ -1,5 +1,3 @@
-require 'pry'
-
 # used as opening database
 module Korchnoi
   def load_openings
@@ -19,9 +17,7 @@ module Korchnoi
   def find_match(move_list)
     moves = move_list.join.split.reject { |move| move.match?(/\./) }
     load_openings.each do |game|
-      if game.take(moves.length) == moves
-        return game[moves.length]
-      end
+      return game[moves.length] if game.take(moves.length) == moves
     end
     false
   end
