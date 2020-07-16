@@ -61,7 +61,7 @@ module GameViewer
       input = gets.chomp
       return if %w[q quit exit].include? input
 
-      game = collection.find { |k, _v| k.match?(/^#{input}/) }
+      game = collection.find { |k, _v| k.match?(/^#{Regexp.quote(input)}/) }
       move_up(2)
       raise "#{input} does not exist.".red unless game
 
@@ -107,18 +107,20 @@ module GameViewer
   def choose_collection
     puts 'Here are the available game collections:'
     puts
-    filenames = Dir.glob('collections/*').map do |file|
-      file[(file.index('/') + 1)...(file.index('.'))]
+    filenames = Dir.glob('collections/*').map.with_index do |file, index|
+      "#{index + 1}) #{file[(file.index('/') + 1)...(file.index('.'))]}"
     end
     puts filenames
     puts
     begin
       print "Please choose which you'd like to load: "
-      filename = gets.chomp
-      return if %w[q quit exit].include? filename
+      input = gets.chomp
+      return if %w[q quit exit].include?(input)
 
-      raise "#{filename} does not exist.".red unless filenames.include?(filename)
+      filename = filenames.find { |f| f.match?(/^#{Regexp.quote(input)}/) }.dup
+      raise "#{input} does not exist.".red unless filename
 
+      filename.slice!(/\d\) /)
       move_up(filenames.length + 5)
       puts_clear
       puts "#{filename} loaded..."
