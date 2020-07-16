@@ -58,8 +58,9 @@ class Game
       @to_move = to_move == white ? black : white
       board.display
     end
-    puts board.score.green if board.score
     puts board.move_list
+    puts
+    puts board.score.green if board.score
   end
 
   def enter_command(input)
