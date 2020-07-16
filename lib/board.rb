@@ -170,9 +170,9 @@ class Board
 
   def validate_input(input)
     @error_message = ERRORS[:invalid]
-    return false unless input.match(/[a-h][1-8]|O-O|O-O-O/)
+    return false unless input.match?(/[a-h][1-8]|O-O|O-O-O/)
 
-    input.each_char { |char| return false unless char.match(/[a-h]|[1-8]|[KQRBNOx\-=\+#]/) }
+    input.each_char { |char| return false unless char.match?(/[a-h]|[1-8]|[KQRBNOx\-=\+#]/) }
   end
 
   def find_target_piece(string)
@@ -209,7 +209,7 @@ class Board
   end
 
   def find_pawn_file(char)
-    if char&.match(/[a-h]/)
+    if char&.match?(/[a-h]/)
       char.ord - 97
     else
       @error_message = ERRORS[:no_file]
@@ -273,9 +273,9 @@ class Board
   def filter_by_location(candidates, selection)
     finalists = []
     # only accepts the rank or file that narrows down candidates
-    if selection&.match(/[a-h]/)
+    if selection&.match?(/[a-h]/)
       candidates.each { |c| finalists << c if c.location[0] == selection.ord - 97 }
-    elsif selection&.match(/[1-8]/)
+    elsif selection&.match?(/[1-8]/)
       candidates.each { |c| finalists << c if c.location[1] == selection.to_i - 1 }
     end
     finalists
