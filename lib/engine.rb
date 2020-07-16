@@ -130,16 +130,14 @@ module Engine
 
   def show_current_line(line)
     clear_line
-    # prefix = white_to_move ? '' : '...'
-    puts "Current line: #{@@prefix}#{line.join(' ').gsub('.', '. ')}"
+    puts "Analyzing:  #{@@prefix}#{line.join(' ').gsub('.', '. ')}"
     move_up(1)
   end
 
   def show_main_line(line)
-    # prefix = white_to_move ? '' : '...'
     puts
     clear_line
-    puts "Main line:    #{@@prefix}#{line.join(' ').gsub('.', '. ')}".green
+    puts "Main line:  #{@@prefix}#{line.join(' ').gsub('.', '. ')}".green
     move_up(2)
   end
 
@@ -191,7 +189,7 @@ module Engine
     else
       candidates = find_candidates(piece.class, target, action)
       candidates = filter_by_legality(candidates, target)
-      # don't need to check if length is 0 because move is legal
+      # don't need to check if length is 0 because already known that move is legal
       if candidates.length > 1
         finalists = []
         candidates.each { |c| finalists << c if c.location[0] == piece.location[0] }
