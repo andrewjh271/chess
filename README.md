@@ -9,8 +9,8 @@ Command line chess program written in Ruby. View on [Repl.it](https://chess.andr
 - When inputting a move that comes with check or checkmate, + and # respectively should be appended to the end of the input, but are not required. The move list will show the symbols regardless.
 - O-O and O-O-O are used for castling (captial o, not zero)
 - En passant capture is entered as if capturing a pawn that had only moved 1 square (no e.p. at end)
-- Disambiguation is required if more than one of the specified piece can move to the target square (e.g. Nbd2 to specify that the Knight on the b file is meant to move to d2, or R1e1 to specify that the Rook on  the 1st rank is meant to move to e1)
-- Promote to Queen, Rook, Bishop, or Knight by appending to move =Q, =R, =B, or =K respectively
+- Disambiguation is required if more than one of the specified piece can move to the target square (e.g. Nbd2 to specify that the Knight on the b file is meant to move to d2; R1e1 to specify that the Rook on  the 1st rank is meant to move to e1)
+- Promote to Queen, Rook, Bishop, or Knight by appending to move =Q, =R, =B, or =N respectively
 
 Enforces the rules of chess, including, but not limited to:
 
