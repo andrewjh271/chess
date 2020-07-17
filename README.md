@@ -45,7 +45,7 @@ A note on display: the pieces are tragically small, but the display I ended up w
 
 The chess engine uses a minimax algorithm with alpha beta pruning, but only very modest depths are searched within a reasonable amount of time. A collection of about 4,500 games by [Victor Korchnoi](https://en.wikipedia.org/wiki/Viktor_Korchnoi) is used as the opening database. (Note: The engine depth on Repl.it is by necessity set particularly low.)
 
-![engine](public/screenshots/chess_engine.gif)
+![engine](public/chess_engine.gif)
 
 ------
 
@@ -56,6 +56,6 @@ There is an option to play through games from a handful of major chess events ov
 - **z** - zoom through moves at a brisk tempo (every 0.2 seconds)
 - **q** - quit
 
-![game_viewer](public/screenshots/game_viewer.gif)
+![game_viewer](public/game_viewer.gif)
 
 -Andrew Hayhurst
