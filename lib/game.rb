@@ -84,6 +84,7 @@ class Game
       show_instructions
       clear_board
       board.display
+      show_cursor
     end
   end
 
