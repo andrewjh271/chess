@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'piece'
-require 'pry'
 
 # parent class for White and Black Pawns
 class Pawn < Piece
