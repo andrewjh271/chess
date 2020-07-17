@@ -15,6 +15,7 @@ module GameViewer
     game = select_game
     return unless game
 
+    hide_cursor
     moves = game[1]
     puts "    Controls: #{CONTROLS}"
     2.times { puts }
@@ -30,7 +31,10 @@ module GameViewer
         char = STDIN.getch
         char = STDIN.getch until %w[m p z q].include? char
 
-        return if char == 'q'
+        if char == 'q'
+          show_cursor
+          return
+        end
       end
       move = moves.shift
       unless board.move(move)
@@ -50,6 +54,7 @@ module GameViewer
            else 'Result not found'.red
            end
     end
+    show_cursor
   end
 
   def select_game
