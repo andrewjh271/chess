@@ -1,6 +1,6 @@
 # Chess
 
-Command line chess program written in Ruby. View on [Repl.it](https://chess.andrewjh271.repl.run/)
+Command line chess program written in Ruby. View on [Repl.it](https://chess.andrewjh271.repl.run/) (View a faster and more stable version by cloning the repo.)
 
 ------
 
@@ -33,8 +33,8 @@ User can enter any of the following commands instead of a move:
 
 - **help** - show commands
 - **flip** - flip board
-- **draw** - offer oponent a draw (the engine will never accept a draw (i.e. never loses hope and has nowhere to be)
-- **resign**
+- **draw** - offer opponent a draw (the engine will never accept a draw offer (i.e. it's counting on you to blunder))
+- **resign** (the engine will never resign (i.e. it never loses hope and has nowhere to be))
 - **quit** (also **q** or **exit**)
 - **save**
 - **tutorial** - shows instructions and examples on inputting moves
@@ -43,7 +43,7 @@ A note on display: the pieces are tragically small, but the display I ended up w
 
 ------
 
-The chess engine uses a minimax algorithm with alpha beta pruning. A collection of about 4,500 games by [Victor Korchnoi](https://en.wikipedia.org/wiki/Viktor_Korchnoi) is used as the opening database.
+The chess engine uses a minimax algorithm with alpha beta pruning, but only very modest depths are searched within a reasonable amount of time. A collection of about 4,500 games by [Victor Korchnoi](https://en.wikipedia.org/wiki/Viktor_Korchnoi) is used as the opening database.
 
 ![engine](public/screenshots/chess_engine.gif)
 
