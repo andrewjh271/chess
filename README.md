@@ -6,13 +6,13 @@ Command line chess program written in Ruby. View on [Repl.it](https://chess.andr
 
 [Standard Algebraic Notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)) with [PGN](https://en.wikipedia.org/wiki/Portable_Game_Notation) standards is used for both display and input. A few clarifying notes regarding input:
 
-- When inputting a move that comes with check or checkmate, + and # respectively should be appended to the end of the input, but are not required. The move list will show the symbols regardless.
-- O-O and O-O-O are used for castling (captial o, not zero)
+- A move that comes with check or checkmate should have + or #, respectively, appended to the end of the input, but this is not required. The move list will show the symbols regardless.
+- O-O and O-O-O are used for castling (the letter, not zero)
 - En passant capture is entered as if capturing a pawn that had only moved 1 square (no e.p. at end)
-- Disambiguation is required if more than one of the specified piece can move to the target square (e.g. Nbd2 to specify that the Knight on the b file is meant to move to d2; R1e1 to specify that the Rook on  the 1st rank is meant to move to e1)
-- Promote to Queen, Rook, Bishop, or Knight by appending to move =Q, =R, =B, or =N respectively
+- Disambiguation is required if more than one of the specified piece can move to the target square (e.g. Nbd2 to specify that the Knight on the b-file is meant to move to d2; R1e1 to specify that the Rook on  the 1st rank is meant to move to e1)
+- Promote a pawn to a Queen, Rook, Bishop, or Knight by appending to the move =Q, =R, =B, or =N, respectively
 
-Enforces the rules of chess, including, but not limited to:
+Enforces the rules of chess, including:
 
 - King cannot move into or ignore check
 - Castling is only legal if:
@@ -33,13 +33,13 @@ User can enter any of the following commands instead of a move:
 
 - **help** - show commands
 - **flip** - flip board
-- **draw** - offer opponent a draw (the engine will never accept a draw offer (i.e. it's counting on you to blunder))
-- **resign** (the engine will never resign (i.e. it never loses hope and has nowhere to be))
-- **quit** (also **q** or **exit**)
+- **draw** - offer opponent a draw (the engine will never accept a draw offer)
+- **resign** (the engine will never resign)
+- **quit** (alias: **exit**)
 - **save**
 - **tutorial** - shows instructions and examples on inputting moves
 
-A note on display: the pieces are tragically small, but the display I ended up with is the best of quite a few worse options I tried. The pieces can get a bit larger depending on the font in terminal.
+A note on display: the pieces are tragically small, but can get a bit larger depending on the font in terminal.
 
 ------
 
