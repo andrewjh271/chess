@@ -58,8 +58,7 @@ class Game
       @to_move = to_move == white ? black : white
       board.display
     end
-    @to_move = to_move == white ? black : white
-    puts if to_move.is_a?(Computer) && board.over?
+    puts if board.over?
     board.display
     puts board.move_list
     puts
