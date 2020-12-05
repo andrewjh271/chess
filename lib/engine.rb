@@ -23,7 +23,7 @@ module Engine
         en_passants << "#{(piece.location[0] + 97).chr}x#{to_alg(piece.en_passant)}"
       end
     end
-    # will reject castling laster if not valid; insert in middle
+    # will reject castling later if not valid; insert in middle
     en_passants + all.sort { |a, b| b[1] <=> a[1] }
                      .map(&:first).insert(all.length / 2, 'O-O', 'O-O-O')
   end
