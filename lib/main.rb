@@ -16,12 +16,12 @@ class Main
 
     #{'Chess!'.green}
 
-    Would you like to: 1) Human vs Human
-                       2) Human vs Computer
-                       3) Computer vs Human
-                       4) Computer vs Computer
-                       5) Load a game
-                       6) View a game from the collection library
+    Please select from the following: 1) Human vs Human
+                                      2) Human vs Computer
+                                      3) Computer vs Human
+                                      4) Computer vs Computer
+                                      5) Load a game
+                                      6) View a game from the collection library
 
   HEREDOC
 
