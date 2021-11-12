@@ -1,6 +1,6 @@
 # Chess
 
-Command line chess program written in Ruby. View on [Repl.it](https://chess.andrewjh271.repl.run/) (But view a faster and more stable version by cloning the repo.)
+Command line chess program written in Ruby. View on [Replit](https://andrewjh271.github.io/chess/) (But view a faster and more stable version by cloning the repo.)
 
 ------
 
