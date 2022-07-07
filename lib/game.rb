@@ -41,7 +41,8 @@ class Game
           %w[quit exit save resign].include?(input) ? break : next
         elsif input == 'draw'
           if draw_accepted?
-            puts '1/2 - 1/2 Drawn by agreement'.green
+            board.display
+            board.score = '1/2 - 1/2 Drawn by agreement'
             break
           else
             print_info("#{to_move}: Your draw offer was not accepted.".red)
@@ -58,11 +59,9 @@ class Game
       @to_move = to_move == white ? black : white
       board.display
     end
-    puts if board.over?
-    board.display
     puts board.move_list
     puts
-    puts board.score.green if board.score
+    puts board.score&.green
   end
 
   def enter_command(input)
@@ -71,10 +70,12 @@ class Game
     elsif input == 'resign'
       board.display
       if to_move == 'White'
-        puts '0-1 Black wins by resignation'.green
+        board.score = '0-1 Black wins by resignation'
       else
-        puts '1-0 White wins by resignation'.green
+        board.score = '1-0 White wins by resignation'
       end
+    elsif ['quit',  'exit'].include? input
+      board.display
     elsif input == 'help'
       print_info('Input move or enter a command: flip | draw | resign | quit | save | tutorial'.green)
     elsif input == 'save'
