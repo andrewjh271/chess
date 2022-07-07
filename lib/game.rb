@@ -74,7 +74,7 @@ class Game
       else
         board.score = '1-0 White wins by resignation'
       end
-    elsif ['quit',  'exit'].include? input
+    elsif %w[quit,  exit].include? input
       board.display
     elsif input == 'help'
       print_info('Input move or enter a command: flip | draw | resign | quit | save | tutorial'.green)
