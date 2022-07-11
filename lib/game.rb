@@ -69,7 +69,7 @@ class Game
       board.flip_board
     elsif input == 'resign'
       board.display
-      if to_move == 'White'
+      if to_move == white
         board.score = '0-1 Black wins by resignation'
       else
         board.score = '1-0 White wins by resignation'
