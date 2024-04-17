@@ -41,7 +41,7 @@ module SaveLoad
     return unless filename
 
     saved = File.open(File.join(Dir.pwd, filename), 'r')
-    loaded_game = YAML.load(saved)
+    loaded_game = YAML.unsafe_load(saved)
     saved.close
     loaded_game
   end
